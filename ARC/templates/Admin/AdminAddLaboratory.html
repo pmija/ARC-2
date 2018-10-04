@@ -1,0 +1,568 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'admin-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Manage Laboratory</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+          		      <form method="post" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">{% csrf_token %}
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="labname">Laboratory Name </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="labname" name="labname" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fullname">Room Number </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="roomno" name="roomno" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="capacity" class="control-label col-md-3 col-sm-3 col-xs-12">Capacity </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="capacity" class="form-control col-md-7 col-xs-12" type="number" name="capacity" min="1">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-md-12" align="center">
+                          <hr class="no-margin" width="80%">
+                          <button class="btn btn-default" type="button">Cancel</button>
+                          <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+
+                    </form>
+
+                <div class="ln_solid"></div>
+
+                <!-- START Table-->
+                <div class="row">
+                  <div clas="col-md-6 col-sm-12 col-xs-12" style="margin-left:10px;">
+		                <h4><b>List of Laboratories</b></h4>
+				          </div>
+                </div>
+
+                <div class="row">
+
+              		<div class="col-md-12 col-sm-12 col-xs-12">
+          			    <div class="clearfix">
+          				  <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+          					  <thead style="background-color: #4CAF50; color:white;">
+                        <tr>
+                          <th style="width: 20%">Laboratory Name</th>
+                          <th style="width: 20%">Room Number</th>
+                          <th style="width: 14%">Capacity</th>
+                          <th style="width: 14%">Status</th>
+                          <th style="width: 12%">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+              				{% block content2 %}
+              					{% for labs in Labs %}
+              						<tr>
+              						  <td>{{ labs.1 }}</td>
+              						  <td>{{ labs.2 }}</td>
+              						  <td>{{ labs.3 }}</td>
+                                      {% if labs.4 == 1 %}
+                                    <td style="color:green;">Active</td>
+                                      {% else %}
+                                      <td style="color:red;">Inactive</td>
+                                      {% endif %}
+              						  <td class="actions"><button type="button" onclick="editClick(this)" id="{{ labs.0 }}" name="details" class="btn btn-success hello" data-toggle="modal" data-target=".div-edit-lab-modal">Edit Details</button></td>
+              					    </tr>
+              					{% endfor %}
+              				{% endblock %}
+                      </tbody>
+                    </table>
+                    </div>
+          		    </div>
+
+                  <!-- END Table-->
+
+                  <!-- MODAL FOR EDITING LABS -->
+
+                  <div class="modal fade div-edit-lab-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-sm" id="edit-lab-modal">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel2">Edit Laboratory Information</h4>
+                    </div>
+                    <div class="modal-body">
+
+                    <form method="post" action="{% url 'Admin/EditLaboratory' %}" class="form-horizontal form-label-left">{% csrf_token %}
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>Edit Information<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div id="modal" class="x_content">
+
+                        <!-- AJAX APPEND FIELDS -->
+
+                        </div>
+
+                      </div>
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b id="edit-title">Edit Available Timeslots<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content" id="edit-sched">
+
+                          <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                            <thead>
+                              <tr>
+                                <th style="width: 20%; text-align: center;">Monday</th>
+                                <th style="width: 20%; text-align: center;">Tuesday</th>
+                                <th style="width: 20%; text-align: center;">Wednesday</th>
+                                <th style="width: 20%; text-align: center;">Thursday</th>
+                                <th style="width: 20%; text-align: center;">Friday</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="M_07+30-09+00" value="M_07+30-09+00"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="T_07+30-09+00" value="T_07+30-09+00"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="W_07+30-09+00" value="W_07+30-09+00"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="H_07+30-09+00" value="H_07+30-09+00"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="F_07+30-09+00" value="F_07+30-09+00"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="M_09+15-10+45" value="M_09+15-10+45"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="T_09+15-10+45" value="T_09+15-10+45"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="W_09+15-10+45" value="W_09+15-10+45"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="H_09+15-10+45" value="H_09+15-10+45"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="F_09+15-10+45" value="F_09+15-10+45"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="M_11+00-12+30" value="M_11+00-12+30"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="T_11+00-12+30" value="T_11+00-12+30"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="W_11+00-12+30" value="W_11+00-12+30"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="H_11+00-12+30" value="H_11+00-12+30"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="F_11+00-12+30" value="F_11+00-12+30"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="M_12+45-14+15" value="M_12+45-14+15"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="T_12+45-14+15" value="T_12+45-14+15"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="W_12+45-14+15" value="W_12+45-14+15"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="H_12+45-14+15" value="H_12+45-14+15"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="F_12+45-14+15" value="F_12+45-14+15"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="M_14+30-16+00" value="M_14+30-16+00"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="T_14+30-16+00" value="T_14+30-16+00"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="W_14+30-16+00" value="W_14+30-16+00"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="H_14+30-16+00" value="H_14+30-16+00"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="F_14+30-16+00" value="F_14+30-16+00"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="M_16+15-17+45" value="M_16+15-17+45"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="T_16+15-17+45" value="T_16+15-17+45"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="W_16+15-17+45" value="W_16+15-17+45"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="H_16+15-17+45" value="H_16+15-17+45"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="F_16+15-17+45" value="F_16+15-17+45"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="M_18+00-19+30" value="M_18+00-19+30"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="T_18+00-19+30" value="T_18+00-19+30"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="W_18+00-19+30" value="W_18+00-19+30"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="H_18+00-19+30" value="H_18+00-19+30"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="F_18+00-19+30" value="F_18+00-19+30"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="M_19+45-21+15" value="M_19+45-21+15"> &nbsp; 7:45 PM - 9:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="T_19+45-21+15" value="T_19+45-21+15"> &nbsp; 7:45 PM - 9:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="W_19+45-21+15" value="W_19+45-21+15"> &nbsp; 7:45 PM - 9:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="H_19+45-21+15" value="H_19+45-21+15"> &nbsp; 7:45 PM - 9:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" id="F_19+45-21+15" value="F_19+45-21+15"> &nbsp; 7:45 PM - 9:15 PM
+                                  </label>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div id="modalbutton" class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					            <button id="labid" type="submit" name="labid" class="btn btn-success">Accept Changes</button>
+                    </div>
+
+                    </form>
+
+                  </div>
+                  </div>
+                  </div>
+
+                  <!-- END MODAL FOR EDITING LABS -->
+
+                </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    {% include 'import-js.html' %}
+
+	<script>
+	function editClick(elem) {
+		var tableid = elem.id;
+
+		$.ajax({
+			url: "/ajax/schedajax",
+			method: "POST",
+			data:{
+				'tableid':tableid,
+				 'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+			},
+
+			success: function(data){
+				var newdata = JSON.parse(data);
+				for (var i = 0; i < newdata.length; i++){
+					//var join = '#'+newdata[i].fields.Schedule
+					$('#'+newdata[i].fields.Schedule).prop("checked");
+					//console.log($('#'+newdata[i].fields.Schedule+'').);
+				}
+			}
+		});
+
+		$.ajax({
+			url: "/ajax/editlab",
+			method: "POST",
+			data:{
+				'tableid':tableid,
+				 'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+			},
+
+			success: function(data){
+				$('#modal').empty();
+				var newdata = JSON.parse(data);
+        console.log(newdata);
+				document.getElementById("labid").value = newdata[0].pk;
+
+        var has_sched = false;
+        $('#edit-sched').show();
+        $('#edit-title').text('Edit Available Timeslots')
+
+        for (var m = 0; m < newdata.length; m++) {
+
+          if (newdata[m].model == 'ARC.residencytimeslot') {
+
+            has_sched = true;
+            m = newdata.length;
+
+          }
+
+        }
+
+				$('#modal').append('\
+						  <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12" for="quantity">Laboratory Name</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <input value=' + newdata[0].fields.LaboratoryName +' type="input" name="labname" required="required" class="form-control col-md-12 col-xs-12" style="margin-top: 10px">\
+                </div>\
+              </div>\
+						  <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12" for="quantity">Room Number</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <input value=' + newdata[0].fields.RoomNum+' type="input" name="roomno" required="required" class="form-control col-md-12 col-xs-12">\
+                </div>\
+              </div>\
+						  <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12" for="quantity">Capacity</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <input value=' + newdata[0].fields.Capacity+' type="number" name="capacity" required="required" class="form-control col-md-12 col-xs-12">\
+                </div>\
+              </div>\
+						  <div class="form-group" hidden>\
+                <label class="control-label col-md-3 col-xs-12" >Status</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <select name="status" class="form-control">\
+                    <option value="1">Active</option>\
+                    <option value="2">Inactive</option>\
+                  </select>\
+                </div>\
+              </div>\
+              ');
+
+        if (has_sched) {
+
+          $('#edit-sched').hide();
+          $('#edit-title').text('This laboratory\'s timeslots has already been set.');
+
+        }
+
+			}
+		});
+	}
+
+	</script>
+
+    {% block content %}
+      {% for c in Check %}
+        {% if c == 'Success' %}
+
+          <script>
+            new PNotify({
+              title: 'Done Adding Laboratory',
+              text: 'You have successfully added [labname] on [roomname]!',
+              type: 'success',
+              styling: 'bootstrap3'
+            });
+          </script>
+
+        {% endif %}
+      {% endfor %}
+    {% endblock %}
+
+  </body>
+</html>

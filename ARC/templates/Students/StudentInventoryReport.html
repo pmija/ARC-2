@@ -1,0 +1,191 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+  {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'student-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="dashboard_graph">
+               <div class="page-title">
+					<div class="title_left">
+						<h2>Inventory	 Report</h2>
+					</div>
+				</div>
+
+			  <div style="margin-top:0px;" class="ln_solid"></div>
+		      <!-- Control buttons -->
+
+
+			  <!-- LOG -->
+			  <div id="log" style="display: none">
+				<br><h4 id="title_table" align="center" style="margin-top:0px;"><b>Borrowed Items Log</b><br>
+					<small>as of August 3, 2018</small></h4>
+				<div class="table-responsive">
+				<table id="table2" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
+					<thead style="background-color: #4CAF50;color:white">
+					  <tr>
+            <th class="column-title">Date Borrowed</th>
+						<th class="column-title">Date Returned</th>
+						<th class="column-title">Item Name</th>
+						<th class="column-title">Quantity</th>
+						<th class="column-title">Person In-Charge</th>
+					  </tr>
+					</thead>
+
+					<tbody>
+            {%for b in borrowed%}
+            <tr>
+                <td>{{b.DateTime}}</td>
+            <td>{{b.DateTimeReturned}}</td>
+            <td>{{b.ItemID.ItemName}}</td>
+            <td>{{b.Quantity}}</td>
+            <td>{{b.Admin.Name}}</td>
+            </tr>
+            {%endfor%}
+					</tbody>
+				</table>
+				</div>
+			  </div>
+
+
+			  <!-- STATUS -->
+			  <div id="status" style="display: none">
+				<br><h4 id="title_table" align="center" style="margin-top:0px;"><b>Incident Report</b><br>
+					<small>as of August 3, 2018</small></h4>
+				<div class="table-responsive">
+				<table id="table3" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
+					<thead style="background-color: #4CAF50;color:white">
+					  <tr>
+						<th class="column-title">Date</th>
+						<th class="column-title">Action</th>
+						<th class="column-title">Remarks</th>
+						<th class="column-title">Item Name</th>
+						<th class="column-title">Borrower's Name</th>
+						<th class="column-title">Person In-Charge</th>
+					  </tr>
+					</thead>
+
+					<tbody>
+            {%for i in incident%}
+            <tr>
+
+            <td>{{i.DateTime}}</td>
+            {%if i.AuditAction == 4%}
+              <td>Enabled</td>
+            {%else%}
+            <td>Disabled</td>
+            {%endif%}
+            <td>{{i.Remarks}}</td>
+            <td>{{i.ItemID.ItemName}}</td>
+            <td>{{i.Borrower.Name}}</td>
+            <td>{{i.Admin.Name}}</td>
+            </tr>
+            {%endfor%}
+					</tbody>
+				</table>
+				</div>
+			  </div>
+			  </div>
+
+
+				<div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    {% include 'import-js.html' %}
+	<script>
+  $('#log').show();
+	function audit() {
+     $('#audit').show();
+	 $('#log').hide();
+	 $('#status').hide();
+	}
+
+	function log() {
+     $('#log').show();
+	 $('#audit').hide();
+	 $('#status').hide();
+	}
+
+	function status() {
+     $('#status').show();
+	 $('#audit').hide();
+	 $('#log').hide();
+	}
+
+	$(document).ready(function() {
+    $('table.display').dataTable();
+} )	;
+	</script>
+
+  </body>
+</html>

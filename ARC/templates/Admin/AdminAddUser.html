@@ -1,0 +1,227 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'admin-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Manage User Accounts</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                  <div class="row">
+          					<div class="col-md-12 col-sm-12 col-xs-12">
+                      <h4><b>List of User Accounts</b></h4>
+          						<div class="clearfix">
+
+                      <form method="POST" action="#">
+
+            						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                          <thead style="background-color: #4CAF50; color:white;">
+                            <tr>
+                              <th style="width: 10%">Date Approved</th>
+                              <th style="width: 14%">ID Number</th>
+                              <th style="width: 23%">Full Name</th>
+                              <th style="width: 13%">Role</th>
+                              <th style="width: 11%">Status</th>
+                              <th style="width: 15%">Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>99/99/9999</td>
+                              <td>11412345</td>
+                              <td>Bianca Marie Cauyao</td>
+                              <td>Faculty Technician</td>
+                              <td>Active</td>
+                              <td class="actions"><button type="button" name="details" class="btn btn-primary" data-toggle="modal" data-target=".div-edit-user-details-modal">&nbsp;Edit Details&nbsp;</button></td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                      </form>
+
+                      </div>
+          					</div>
+
+  						      <!-- END Table-->
+
+
+
+                    <!-- MODAL FOR EDIT USER DETAILS -->
+                    <!-- MODAL FOR EDIT USER DETAILS -->
+
+                    <div class="modal fade div-edit-user-details-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" id="edit-user-details-modal">
+                    <div class="modal-content">
+
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel2">Edit User Information</h4>
+                      </div>
+                      <div class="modal-body">
+
+                        <form method="POST" action="#" class="form-horizontal form-label-left">
+
+                          <div class="x_content">
+
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-xs-12" for="quantity">Last Name</label>
+                              <div class="col-md-8 col-sm-7 col-xs-12">
+                                <input type="input" name="quantity" required="required" class="form-control col-md-12 col-xs-12">
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-xs-12" for="quantity">First Name</label>
+                              <div class="col-md-8 col-sm-7 col-xs-12">
+                                <input type="input" name="quantity" required="required" class="form-control col-md-12 col-xs-12">
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-xs-12" for="quantity">Email</label>
+                              <div class="col-md-8 col-sm-7 col-xs-12">
+                                <input type="input" name="quantity" required="required" class="form-control col-md-12 col-xs-12">
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-xs-12" for="quantity">Mobile Number</label>
+                              <div class="col-md-8 col-sm-7 col-xs-12">
+                                <input type="number" name="quantity" required="required" class="form-control col-md-12 col-xs-12" style="margin-top: 10px">
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-xs-12" for="quantity">Thesis Adviser</label>
+                              <div class="col-md-8 col-sm-7 col-xs-12">
+                                <select class="form-control">
+                                  <option>Fritz Flores</option>
+                                  <option>Danny Cheng</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-xs-12" for="quantity">Laboratory</label>
+                              <div class="col-md-8 col-sm-7 col-xs-12">
+                                <select class="form-control">
+                                  <option>CEHCI</option>
+                                  <option>G405</option>
+                                  <option>ADRIC</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="form-group">
+                              <label class="control-label col-md-3 col-xs-12" for="quantity">Status</label>
+                              <div class="col-md-8 col-sm-7 col-xs-12">
+                                <select class="form-control">
+                                  <option>Active</option>
+                                  <option>Inactive</option>
+                                </select>
+                              </div>
+                            </div>
+
+                          </div>
+
+
+                      </div>
+
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Accept Changes</button>
+                      </div>
+
+                      </form>
+
+                    </div>
+                    </div>
+                    </div>
+
+                    <!-- END MODAL FOR EDIT USER DETAILS -->
+                    <!-- END MODAL FOR EDIT USER DETAILS -->
+
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    {% include 'import-js.html' %}
+  </body>
+</html>

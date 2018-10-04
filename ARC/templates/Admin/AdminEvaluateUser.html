@@ -1,0 +1,444 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    <!-- CSS dependencies import here -->
+
+    {% include 'import-css.html' %}
+
+    <!-- CSS dependencies import here -->
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'admin-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Evaluate Pending Users</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+								<!-- START Table-->
+                <div class="row">
+        					<div class="col-md-12 col-sm-12 col-xs-12">
+
+        						<div class="clearfix">
+
+                    <form method="POST" action="Admin/EvaluateUser">{% csrf_token %}
+
+          						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" align="center" width="100%">
+                        <thead>
+                          <tr>
+                            <th>ID Number</th>
+                            <th>Name</th>
+                            <th>Contact No</th>
+                            <th>Email</th>
+                            <th>Remarks</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {%for User in Users %}
+                          <tr>
+                            <td>{{User.IDNumber}}</td>
+                            <td>{{User.Name}}</td>
+                            <td>{{User.PhoneNumber}}</td>
+                            <td>{{User.Email}}</td>
+                            <td>{{User.Remarks}}</td>
+                            <td class="actions">
+                              <button type="submit" name="reject" value="{{User.UserID}}" class="btn btn-danger">Reject</button>
+                              <button type="button" id="{{User.UserID}}" onclick="approve(this)" class="btn btn-success" data-toggle="modal" data-target=".div-eval-user-modal">Approve</button>
+                          </tr>
+                          {%endfor%}
+                        </tbody>
+                      </table>
+
+                    </form>
+
+                    </div>
+        					</div>
+
+						      <!-- END Table-->
+
+                  <!-- MODAL FOR USER DETAILS -->
+                  <!-- MODAL FOR USER DETAILS -->
+
+                  <div class="modal fade div-eval-user-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-sm" id="eval-user-modal">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel2">User Information</h4>
+                    </div>
+                    <div class="modal-body">
+
+                    <form method="POST" action="#" class="form-horizontal form-label-left">{% csrf_token %}
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" name="nfc" for="uniqueid">Unique ID Number
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="uniquieid" name="nfc" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Account Type</label>
+
+            						<div style="margin-left:150px;" class="radio" id="student">
+            							<label>
+            							  <input type="radio" value="1" id="s" onclick="dropdown(this)" name="accType"> Student
+            							</label>
+            						</div>
+
+            						<div style="margin-left:150px;" class="radio" id="faculty">
+            							<label>
+            							  <input type="radio" value="2" id="f" onclick="dropdown(this)" name="accType"> Faculty
+            							</label>
+            					   </div>
+
+            					  <div style="margin-left:150px;" class="radio" id="factech">
+              						<label>
+              						  <input type="radio" value="3" id="ft" onclick="dropdown(this)" name="accType"> Faculty-Technician
+              						</label>
+            					  </div>
+
+            					  <div style="margin-left:150px;" class="radio" id="technician">
+              						<label>
+              						  <input type="radio" value="4" id="t" onclick="dropdown(this)" name="accType"> Technician
+              						</label>
+            					  </div>
+
+                        <!--<div style="margin-left:150px;" class="radio" id="technician">
+                          <label>
+                            <input type="radio" value="5" id="admin" name="accType"> Admin
+                          </label>
+                        </div>-->
+
+                      </div>
+
+                      <div class="form-group" id="dyna_drop">
+
+                        <!-- AJAXX -->
+
+                      </div>
+
+                      <div class="modal-footer" id="footer-buttons">
+
+                        <!-- AJAX -->
+
+                      </div>
+
+                    </form>
+
+                  </div>
+                  </div>
+                  </div>
+
+                  <!-- END MODAL FOR USER DETAILS -->
+                  <!-- END MODAL FOR USER DETAILS -->
+
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- JavaScript dependencies import here -->
+
+        {% include 'import-js.html' %}
+
+        <script>
+
+          function approve(elem) {
+
+            var id = elem.id;
+            console.log(id);
+
+            $('#footer-buttons').empty();
+
+            $('#footer-buttons').append(
+              '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\
+              <button type="submit" name="accept" value="'+ id +'" class="btn btn-success">Approve</button>'
+            );
+
+          }
+
+          function dropdown(elem) {
+
+            var id = elem.id
+
+            $.ajax({
+
+              url: "ajax/evaluser",
+              method: "POST",
+              data:{
+                'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+              },
+
+              success: function(data){
+
+                var newdata = JSON.parse(data);
+                console.log(newdata);
+
+                var degree = []; var degree_id = [];
+                var lab = []; var lab_id = [];
+                var adviser = []; var adviser_id = [];
+                var dept = []; var dept_id = [];
+
+                for (var i = 0; i < newdata.length; i++) {
+
+                  if (newdata[i].model == 'ARC.ref_laboratory') {
+
+                    lab.push(newdata[i].fields.LaboratoryName);
+                    lab_id.push(newdata[i].pk);
+
+                  }
+
+                  else if (newdata[i].model == 'ARC.ref_degree') {
+
+                    degree.push(newdata[i].fields.DegreeName);
+                    degree_id.push(newdata[i].pk);
+
+                  }
+
+                  else if (newdata[i].model == 'ARC.user') {
+
+                    adviser.push(newdata[i].fields.Name);
+                    adviser_id.push(newdata[i].pk);
+
+                  }
+
+                  else if (newdata[i].model == 'ARC.ref_department') {
+
+                    dept.push(newdata[i].fields.DepartmentName);
+                    dept_id.push(newdata[i].pk);
+
+                  }
+
+                }
+
+                $('#dyna_drop').empty();
+
+                // ########## STUDENT ########## //
+
+                if (id == 's') {
+
+                  $('#dyna_drop').append(
+
+                    '<div class="form-group">\
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="degree">Degree\
+                      </label>\
+                      <div class="col-md-6 col-sm-6 col-xs-12">\
+                        <select id="degree" name="degree" class="form-control" required>\
+                          <option disabled selected value="">-- Select Degree --</option>\
+                        </select>\
+                      </div>\
+                    </div>\
+                    \
+                    <div class="form-group">\
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adviser">Adviser\
+                      </label>\
+                      <div class="col-md-6 col-sm-6 col-xs-12">\
+                        <select id="adviser" name="adviser" class="form-control" required>\
+                          <option disabled selected value="">-- Select Faculty --</option>\
+                        </select>\
+                      </div>\
+                    </div>'
+
+                  );
+
+                  for (var i = 0; i < degree_id.length; i++) {
+
+                    $('#degree').append(
+
+                      '<option value="'+ degree_id[i] +'">'+ degree[i] +'</option>'
+
+                    )
+
+                  }
+
+                  for (var i = 0; i < adviser_id.length; i++) {
+
+                    $('#adviser').append(
+
+                      '<option value="'+ adviser_id[i] +'">'+ adviser[i] +'</option>'
+
+                    )
+
+                  }
+
+                }
+
+                // ########## FACULTY / FACULTY TECH ########## //
+
+                else if (id == 'f' || id == 'ft') {
+
+                  $('#dyna_drop').append(
+
+                    '<div class="form-group">\
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="degree">Department\
+                      </label>\
+                      <div class="col-md-6 col-sm-6 col-xs-12">\
+                        <select id="dept" name="dept" class="form-control" required>\
+                          <option disabled selected value="">-- Select Department --</option>\
+                        </select>\
+                      </div>\
+                    </div>\
+                    \
+                    <div class="form-group">\
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adviser">Laboratory\
+                      </label>\
+                      <div class="col-md-6 col-sm-6 col-xs-12">\
+                        <select id="lab" name="lab" class="form-control" required>\
+                          <option disabled selected value="">-- Select Laboratory --</option>\
+                        </select>\
+                      </div>\
+                    </div>'
+
+                  );
+
+                  for (var i = 0; i < lab_id.length; i++) {
+
+                    $('#lab').append(
+
+                      '<option value="'+ lab_id[i] +'">'+ lab[i] +'</option>'
+
+                    )
+
+                  }
+
+                  for (var i = 0; i < dept_id.length; i++) {
+
+                    $('#dept').append(
+
+                      '<option value="'+ dept_id[i] +'">'+ dept[i] +'</option>'
+
+                    )
+
+                  }
+
+                }
+
+                else if (id == 't') {
+
+                  $('#dyna_drop').append(
+
+                    '<div class="form-group">\
+                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adviser">Laboratory\
+                      </label>\
+                      <div class="col-md-6 col-sm-6 col-xs-12">\
+                        <select id="lab" name="lab" class="form-control" required>\
+                          <option disabled selected value="">-- Select Laboratory --</option>\
+                        </select>\
+                      </div>\
+                    </div>'
+
+                  );
+
+                  for (var i = 0; i < lab_id.length; i++) {
+
+                    $('#lab').append(
+
+                      '<option value="'+ lab_id[i] +'">'+ lab[i] +'</option>'
+
+                    )
+
+                  }
+
+                }
+
+              }
+
+            });
+
+          }
+
+          $(document).ready(
+
+  function() {
+    setInterval(function() {
+    $.ajax({url: 'ajax/nfcajax',
+              type: 'GET',
+              success: function(response) {
+          var data = JSON.parse(response);
+          if(data['ready']==true){
+
+            var x = document.getElementById('uniquieid');
+            x.value = data['tag'];
+          }
+
+              }
+          });
+    }, 1000);
+  });
+
+      	</script>
+
+        <!-- JavaScript dependencies import here -->
+
+
+
+
+  </body>
+</html>

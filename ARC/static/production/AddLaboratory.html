@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+	<link href="custom-font/montserrat.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <!-- NProgress -->
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="../build/css/custom.css" rel="stylesheet">
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <ul class="nav side-menu">
+                  
+                  <li><a href="Dashboard.html"><i class="fas fa-home"></i>Home</a></li>
+                  
+                  <li><a href="#"><i class="fas fa-user-circle "></i>Profile</a></li>
+                  
+                  <li><a><i class="fa fa-user"></i>Accounts<span class="fas fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="ManageUser.html">Manage Users</a></li>
+                      <li><a href="AddUser.html">Add User</a></li>
+                      <li><a href="#">Evaluate Users</a></li>
+
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-users"></i>Groups<span class="fas fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Manage Groups</a></li> <!-- Admin View/Edit Groups -->
+                      <li><a href="#">Add Group</a></li>
+                      <li><a href="#">Edit Group</a></li> <!-- Student Edit Group -->
+
+                    </ul>
+                  </li>
+                  
+                  <li><a><i class="fa fa-user-clock"></i>Residency<span class="fas fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Set Residency</a></li> 
+                      <li><a href="#">Manage Residency</a></li> <!-- Student View/Edit Inventory -->
+                      <li><a href="#">View Residencies</a></li> <!-- Admin View Residency -->
+                      <li><a href="#">Evaluate Residency</a></li>
+                      <li><a href="#">Manage Term and Year</a></li> 
+
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-building"></i>Laboratories<span class="fas fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Add Laboratory</a></li> 
+                      <li><a href="#">Edit Laboratory</a></li>
+                      <li><a href="#">Manage Timeslots</a></li>
+
+                    </ul>
+                  </li>
+                  
+                  <li><a><i class="fa fa-warehouse"></i>Inventory<span class="fas fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">View Inventory</a></li> <!-- View Student/Group Inventory -->
+                      <li><a href="#">Add Items</a></li>
+                      <li><a href="#">Manage Items</a></li> <!-- Admin View/Edit Inventory -->
+
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-exchange-alt"></i>Item Lending<span class="fas fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Borrow Item</a></li> 
+                      <li><a href="#">Return Item</a></li>
+
+                    </ul>
+                  </li>
+                  
+                  <li><a><i class="fa fa-file"></i>Reports<span class="fas fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Groups Inventory</a></li> <!-- Faculty (Thesis Adviser) View Groups Inventory -->
+                      <li><a href="#">Groups Attendance</a></li>
+                      <li><a href="#">Student Attendance</a></li>
+
+                    </ul>
+                  </li>
+
+                  <li><a href="#"><i class="fa fa-envelope"></i>Inbox</a></li>
+
+                </ul>
+              </div>
+            </div>
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="Login.html">Log Out &nbsp;<i class="fa fa-sign-out"></i></a>
+                </li>
+              </ul>
+
+              <ul class="nav navbar-nav navbar-left">
+                <li id="welcome-banner">
+                  Welcome! Bianca Marie R. Cauyao
+                </li>
+              </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+           
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Add Laboratory</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+					         <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="labname">Laboratory Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="labname" name="labname" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fullname">Room Number <span class="required">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="roomno" name="roomno" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="capacity" class="control-label col-md-3 col-sm-3 col-xs-12">Capacity<span class="required">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="capacity" class="form-control col-md-7 col-xs-12" type="number" name="capacity">
+                        </div>
+                      </div>
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-12" align="center">
+                          <button class="btn btn-default" type="button">Cancel</button>
+                          <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="../vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="../vendors/Chart.js/dist/Chart.min.js"></script>
+    <!-- jQuery Sparklines -->
+    <script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <!-- Flot -->
+    <script src="../vendors/Flot/jquery.flot.js"></script>
+    <script src="../vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="../vendors/Flot/jquery.flot.time.js"></script>
+    <script src="../vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="../vendors/Flot/jquery.flot.resize.js"></script>
+    <!-- Flot plugins -->
+    <script src="../vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="../vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="../vendors/flot.curvedlines/curvedLines.js"></script>
+    <!-- DateJS -->
+    <script src="../vendors/DateJS/build/date.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="../vendors/moment/min/moment.min.js"></script>
+    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="../build/js/custom.min.js"></script>
+  </body>
+</html>

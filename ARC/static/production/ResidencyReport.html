@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+	<link href="custom-font/montserrat.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="../build/css/custom.css" rel="stylesheet">
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <ul class="nav side-menu">
+                  
+                  <li><a href="Dashboard.html"><i class="fa fa-home"></i> Home</a></li>
+                  
+                  <li><a href="#"><i class="fa fa-user"></i>Profile</a></li>
+				          
+                  <li><a><i class="fa fa-users"></i>Accounts<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Manage Users</a></li>
+                      <li><a href="#">Add User</a></li>
+                      <li><a href="#">Evaluate Users</a></li>
+
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-users"></i>Groups<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Manage Groups</a></li>
+                      <li><a href="#">Add Group</a></li>
+                      <li><a href="#">Edit Group</a></li>
+
+                    </ul>
+                  </li>
+                  
+                  <li><a><i class="fa fa-users"></i>Residency<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Set Residency</a></li>
+                      <li><a href="#">Edit Residency</a></li>
+                      <li><a href="#">View Residencies</a></li>
+                      <li><a href="#">Evaluate Residency</a></li>
+                      <li><a href="#">Manage Term and Year</a></li>
+
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-users"></i>Laboratories<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Add Laboratory</a></li>
+                      <li><a href="#">Edit Laboratory</a></li>
+                      <li><a href="#">Edit Timeslots</a></li>
+
+                    </ul>
+                  </li>
+				          
+                  <li><a><i class="fa fa-table"></i>Inventory</a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">View Inventory</a></li>
+                      <li><a href="#">Add Items</a></li>
+                      <li><a href="#">Edit Items</a></li>
+
+                    </ul>
+                  </li>
+                  
+                  <li><a><i class="fa fa-file"></i>Reports<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="tables.html">Residency</a></li>
+                      <li><a href="tables_dynamic.html">Inventory</a></li>
+
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-envelope"></i>Inbox</a></li>
+
+                </ul>
+              </div>
+            </div>
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="Login.html">Log Out &nbsp;<i class="fa fa-sign-out"></i></a>
+                </li>
+              </ul>
+
+              <ul class="nav navbar-nav navbar-left">
+                <li id="welcome-banner">
+                  Welcome! Bianca Marie R. Cauyao
+                </li>
+              </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="dashboard_graph">
+               <div class="page-title">
+					<div class="title_left">
+						<h2>Residency Report</h2>
+					</div>
+				</div>
+				
+			  <div style="margin-top:0px;" class="ln_solid"></div> 
+		      <div class="row">
+				<div class="col-md-12">
+					<div class="x_content">
+					
+					<form action="" method="post">
+
+					<!--START 1st-->
+					<div class="row">
+					<div class="column" style="float: left;height:200px;width:350px;margin-bottom:0px;margin-left:20px;">
+						
+						  <div class="x_title">
+							<h3><b>Student Information</b></h3>
+							<div class="clearfix"></div>
+						  </div>
+						  <div class="x_content">
+							<div class="dashboard-widget-content">
+							<h5><b>Unique ID No: </b> &nbsp 01234567</h5>
+							<h5><b>Student No: </b> &nbsp 11425733</h5>
+							<h5><b>Name: </b> &nbsp Bianca Marie R. Cauyao</h5>
+								</div>
+							</div>
+					</div>
+						<!--END-->
+						<!--START Table-->
+						<div class="column" style="float: right;height:200px;width:550px;margin-bottom:0px;margin-right:20px">
+							<div class="form-group">
+								<div class="x_content">
+								<h4 id="title_table" align="left" style="margin-top:0px;"><h4><b>Total Hours:</b> 5 hours, 30 minutes 
+							  <br><small>(June 17, 2018 - June 23, 2018)</small></h4>
+									<div class="table-responsive">
+										<table class="table table-striped jambo_table bulk_action" id="printTable"  border="1" rules="all">
+											<thead>
+											  <tr class="headings">
+											    <th class="column-title">Date</th> 
+												<th class="column-title">Laboratory</th>
+												<th class="column-title">Start Time</th>
+												<th class="column-title">End Time</th>
+											  </tr>
+											</thead>
+											
+											<tbody id="tbodyid">
+											  <td>June 18, 2018</td>
+											  <td>G402</td>
+											  <td>09:00 AM</td> 
+											  <td>10:30 AM</td> 
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div>
+						<!--END Radio-->
+						<!--Date Picker-->
+						<div style="margin-left:15px;">
+                        <form class="form-horizontal">
+                          <fieldset>
+                            <div class="control-group">
+                              <div class="controls">
+                                <div class="input-prepend input-group">
+                                  <span class="add-on input-group-addon"><i class="glyphicon glyphicon-calendar fa fa-calendar"></i></span>
+                                  <input type="text" style="width: 200px" name="reservation" id="reservation" class="form-control" value="01/01/2016 - 01/25/2016" />
+                                </div>
+                              </div>
+                            </div>
+                          </fieldset>
+                        </form>
+						</div>
+						<!--START Table-->
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<div class="form-group">
+								<div class="x_content">
+								<h4 id="title_table" align="center" style="margin-top:0px;"><b>Residency Log</b><br>
+								<small>June 01, 2018 to June 16, 2018</small></h4><br>
+									<div class="table-responsive">
+										<table class="table table-striped jambo_table bulk_action" id="printTable"  border="1" rules="all">
+											<thead>
+											  <tr class="headings">
+											    <th class="column-title">Date</th> 
+												<th class="column-title">Laboratory</th>
+												<th class="column-title">Start Time</th>
+												<th class="column-title">End Time</th>
+												<th class="column-title">Duration</th>
+											  </tr>
+											</thead>
+											
+											<tbody id="tbodyid">
+											<tr>
+											  <td>June 01, 2018</td>
+											  <td>G402</td>
+											  <td>09:00 AM</td> 
+											  <td>10:30 AM</td>
+											  <td>01 hour, 30 minutes</td>
+											</tr>	
+											<tr>
+											  <td>June 03, 2018</td>
+											  <td>G402</td>
+											  <td>10:00 AM</td> 
+											  <td>12:30 AM</td>
+											  <td>2 hours, 30 minutes</td>
+											</tr>		
+											<tr>
+											  <td>June 03, 2018</td>
+											  <td>G402</td>
+											  <td>10:00 AM</td> 
+											  <td>12:30 AM</td>
+											  <td>2 hours, 30 minutes</td>
+											</tr>											
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--END Radio-->
+						
+						
+						</form>
+					
+					
+					</div>
+				</div>
+			  </div>
+				
+					
+				<div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="../vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="../vendors/Chart.js/dist/Chart.min.js"></script>
+    <!-- jQuery Sparklines -->
+    <script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <!-- Flot -->
+    <script src="../vendors/Flot/jquery.flot.js"></script>
+    <script src="../vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="../vendors/Flot/jquery.flot.time.js"></script>
+    <script src="../vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="../vendors/Flot/jquery.flot.resize.js"></script>
+    <!-- Flot plugins -->
+    <script src="../vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="../vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="../vendors/flot.curvedlines/curvedLines.js"></script>
+    <!-- DateJS -->
+    <script src="../vendors/DateJS/build/date.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="../vendors/moment/min/moment.min.js"></script>
+    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="../build/js/custom.min.js"></script>
+  </body>
+</html>

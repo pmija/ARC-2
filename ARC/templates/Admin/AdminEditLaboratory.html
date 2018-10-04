@@ -1,0 +1,498 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'admin-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Edit Laboratory</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+				<!-- START Table-->
+                <div class="clearfix">
+                <div class="row">
+                  <div clas="col-md-12 col-sm-12 col-xs-12">
+
+                    <div class="x_panel">
+
+                      <b style="font-size: 15px">General Information</b><hr class="no-margin">
+
+                      <div class="clearfix">
+
+                        <span class="label label-success gen-info">Active Laboratories: 4</span>&nbsp;
+                        <span class="label label-warning gen-info">Inactive Laboratories: 1</span>
+
+                      </div>
+
+                  </div>
+                </div>
+                </div>
+
+                <div class="row">
+
+        		<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="clearfix">
+					  <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+						<thead>
+                          <tr>
+                            <th style="width: 20%">Laboratory Name</th>
+                            <th style="width: 20%">Room Number</th>
+                            <th style="width: 14%">Capacity</th>
+                            <th style="width: 14%">Status</th>
+                            <th style="width: 12%">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+						{% block content2 %}
+							{% for labs in Labs %}
+								<tr>
+								  <td>{{ labs.1 }}</td>
+								  <td>{{ labs.2 }}</td>
+								  <td>{{ labs.3 }}</td>
+								  <td>Active</td>
+								  <td class="actions"><button type="button" onclick="editClick(this)" id="{{ labs.0 }}" name="details" class="btn btn-success hello" data-toggle="modal" data-target=".div-edit-lab-modal">Edit Details</button></td>
+							    </tr>
+							{% endfor %}
+						{% endblock %}
+                        </tbody>
+                      </table>
+                    </div>
+				</div>
+				<!-- END Table-->
+
+                  <!-- MODAL FOR EDITING LABS -->
+
+                  <div class="modal fade div-edit-lab-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-sm" id="edit-lab-modal">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel2">Edit Laboratory Information</h4>
+                    </div>
+                    <div class="modal-body">
+
+                    <form method="post" action="" class="form-horizontal form-label-left">{% csrf_token %}
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>Edit Information<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div id="modal" class="x_content">
+
+                        <!-- AJAX APPEND FIELDS -->
+
+                        </div>
+
+                      </div>
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>Edit Available Timeslots<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+
+                          <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                            <thead>
+                              <tr>
+                                <th style="width: 20%; text-align: center;">Monday</th>
+                                <th style="width: 20%; text-align: center;">Tuesday</th>
+                                <th style="width: 20%; text-align: center;">Wednesday</th>
+                                <th style="width: 20%; text-align: center;">Thursday</th>
+                                <th style="width: 20%; text-align: center;">Friday</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="M730A900A"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="T730A900A"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="W730A900A"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="H730A900A"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="F730A900A"> &nbsp; 7:30 AM - 9:00 AM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 9:15 AM - 10:45 AM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 11:00 AM - 12:30 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 12:45 PM - 2:15 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 2:30 PM - 4:00 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 4:15 PM - 5:45 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 6:00 PM - 7:30 PM
+                                  </label>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 7:30 PM - 9:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 7:30 PM - 9:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 7:30 PM - 9:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 7:30 PM - 9:00 PM
+                                  </label>
+                                </td>
+                                <td>
+                                  <label>
+                                    <input type="checkbox" class="flat" name="sched[]" value="damaged"> &nbsp; 7:30 PM - 9:00 PM
+                                  </label>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div id="modalbutton" class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					            <button id="labid" type="submit" name="labid" class="btn btn-success">Accept Changes</button>
+                    </div>
+
+                    </form>
+
+                  </div>
+                  </div>
+                  </div>
+
+                  <!-- END MODAL FOR EDITING LABS -->
+
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+    <!-- jQuery -->
+    {% include 'import-js.html' %}
+
+	<script>
+	function editClick(elem) {
+		var tableid = elem.id;
+		console.log(tableid);
+
+		$.ajax({
+			url: "/ajax/editlab",
+			method: "POST",
+			data:{
+				'tableid':tableid,
+				 'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+			},
+
+			success: function(data){
+				$('#modal').empty();
+				var newdata = JSON.parse(data);
+				document.getElementById("labid").value = newdata[0].pk;
+				console.log(newdata[0].fields.LaboratoryName);
+				$('#modal').append('\
+						  <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12" for="quantity">Laboratory Name</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <input value=' + newdata[0].fields.LaboratoryName +' type="input" name="labname" required="required" class="form-control col-md-12 col-xs-12" style="margin-top: 10px">\
+                </div>\
+              </div>\
+						  <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12" for="quantity">Room Number</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <input value=' + newdata[0].fields.RoomNum+' type="input" name="roomno" required="required" class="form-control col-md-12 col-xs-12">\
+                </div>\
+              </div>\
+						  <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12" for="quantity">Capacity</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <input value=' + newdata[0].fields.Capacity+' type="number" name="capacity" required="required" class="form-control col-md-12 col-xs-12">\
+                </div>\
+              </div>\
+						  <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12" for="quantity">Status</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <select class="form-control">\
+                    <option>Active</option>\
+                    <option>Inactive</option>\
+                  </select>\
+                </div>\
+              </div>\
+              ')
+			}
+		});
+	}
+
+	</script>
+
+    {% block check %}
+      {% for c in Check %}
+        {% if c == 'Success' %}
+
+          <script>
+
+            new PNotify({
+              title: 'Done Adding Laboratory',
+              text: 'You have successfully added [labname] on [roomname]!',
+              type: 'success',
+              styling: 'bootstrap3'
+            });
+
+          </script>
+
+        {% endif %}
+      {% endfor %}
+    {% endblock %}
+
+  </body>
+</html>

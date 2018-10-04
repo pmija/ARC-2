@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'faculty-tech-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="Login.html">{%url 'logout' %} &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                </li>
+              </ul>
+
+              <ul class="nav navbar-nav navbar-left">
+                <li id="welcome-banner">
+                  Welcome! Bianca Marie R. Cauyao
+                </li>
+              </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Manage Inventory</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+								<!-- START Table-->
+
+                <div class="row">
+        					<div class="col-md-12 col-sm-12 col-xs-12">
+
+        						<div class="clearfix">
+
+                    <form method="POST" action="#">{% csrf_token %}
+
+          						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead>
+                          <tr>
+                            <th>Item Name</th>
+                            <th>Description</th>
+                            <th style="width: 10%">Quantity</th>
+                            <th style="width: 10%">Type</th>
+                            <th style="width: 11%">Status</th>
+                            <th style="width: 24%">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for item in items %}
+                          <tr>
+                            <td>{{item.ItemName}}</td>
+                            <td>{{item.Description}}</td>
+                            <td id="td_qty{{item.ItemID}}"></td>
+                            <td>{{item.ItemType}}</td>
+                            {% if item.ItemStatus == 1 %}
+                            <td>Available</td>
+                            {% else %}
+                            <td>Unavailable</td>
+                            {% endif %}
+                            <td class="actions"><button type="button" class="btn btn-default" id="{{item.ItemID}}" onclick="details(this)" data-toggle="modal" data-target=".div-view-item-details-modal">&nbsp;Details&nbsp;</button>
+                            <button type="button" class="btn btn-default" data-toggle="modal" id="{{item.ItemID}}" onclick="log(this)" data-target=".div-view-item-log-modal">&nbsp;Item Log&nbsp;</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" id="{{item.ItemID}}" onclick="edit(this)" data-target=".div-edit-item-details-modal">Edit Details</button></td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+
+                    </form>
+
+                    </div>
+        					</div>
+
+						      <!-- END Table-->
+
+                  <!-- MODAL FOR ITEM DETAILS -->
+                  <!-- MODAL FOR ITEM DETAILS -->
+
+                  <div class="modal fade div-view-item-details-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-sm" id="view-item-details-modal">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel2">Item Details</h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>General Item Information<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content" id="item_details">
+
+                          <!-- ajax -->
+
+                        </div>
+
+                      </div>
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>Item Status & Details<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content" id="item_details_audit">
+
+                          <!-- ajax -->
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                  </div>
+                  </div>
+
+                  <!-- END MODAL FOR ITEM DETAILS -->
+                  <!-- END MODAL FOR ITEM DETAILS -->
+
+                  <!-- MODAL FOR ITEM LOGS -->
+                  <!-- MODAL FOR ITEM LOGS -->
+
+                  <div class="modal fade div-view-item-log-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-sm" id="view-item-log-modal">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel2">Item Log</h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>Item Activity Log<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+
+                          <!-- Item Log Table -->
+                          <!-- JS > Auto sort by date borrowed on first load -->
+
+                          <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th style="width: 30%;">Technician Name</th>
+                              <th style="width: 18%;">Activity</th>
+                              <th style="width: 18%;">Date of Activity</th>
+                            </tr>
+                          </thead>
+                          <tbody id="activity_log">
+                            <tr>
+                              <!-- AJAX -->
+                            </tr>
+                          </tbody>
+                          </table>
+
+                          <!-- Item Log Table -->
+
+                        </div>
+
+                      </div>
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>Item Borrow Log<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+
+                          <!-- Item Log Table -->
+                          <!-- JS > Auto sort by date borrowed on first load -->
+
+                          <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th style="width: 28%;">Student Name</th>
+                              <th style="width: 12%;">Quantity</th>
+                              <th style="width: 15%;">Date Borrowed</th>
+                              <th style="width: 15%;">Date Returned</th>
+                              <th style="width: 23%;">Technician In Charge</th>
+                            </tr>
+                          </thead>
+                          <tbody id="borrow_log">
+                              <!-- ajax -->
+                          </tbody>
+                          </table>
+
+                          <!-- Item Log Table -->
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                  </div>
+                  </div>
+
+                  <!-- END MODAL FOR ITEM LOGS -->
+                  <!-- END MODAL FOR ITEM LOGS -->
+
+                  <!-- MODAL FOR EDIT ITEM DETAILS -->
+                  <!-- MODAL FOR EDIT ITEM DETAILS -->
+
+                  <div class="modal fade div-edit-item-details-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-sm" id="edit-item-details-modal">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel2">Edit Item Details</h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                    <form method="POST" action="#" class="form-horizontal form-label-left">{% csrf_token %}
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>Edit Information<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content" id="edit_details">
+
+                          <!-- ajax -->
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-success">Apply Changes</button>
+                    </div>
+
+                    </form>
+
+                  </div>
+                  </div>
+                  </div>
+
+                  <!-- END MODAL FOR EDIT ITEM DETAILS -->
+                  <!-- END MODAL FOR EDIT ITEM DETAILS -->
+
+
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+    <!-- jQuery -->
+    {% include 'import-js.html' %}
+
+    <script>
+
+      $(document).ready(function(){
+
+        $.ajax({
+
+          url: "ajax/manageitems",
+          method: "POST",
+          data:{ 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
+
+          success: function(data){
+
+            var newdata = JSON.parse(data);
+            console.log(newdata);
+
+            for (var i = 0; i < newdata.length; i++) {
+
+              var result = newdata[i].fields.Quantity - newdata[i].fields.QtyBorrowed;
+
+              $('#td_qty' + newdata[i].pk).append(result);
+
+            }
+
+          }
+
+        });
+
+      });
+
+      // ****** START VIEW ITEM DETAILS ****** //
+
+      function details(elem) {
+
+        var id = elem.id;
+
+        $.ajax({
+
+          url: "ajax/itemdetails",
+          method: "POST",
+          data:{ 'id': id, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
+
+          success: function(data){
+
+            var newdata = JSON.parse(data);
+            console.log(newdata);
+
+            $('#item_details').empty()
+            $('#item_details_audit').empty()
+
+            var iteminfo = []; var added = []; var last = [];
+
+            for (var i = 0; i < newdata.length; i++) {
+
+              if (newdata[i].model == 'ARC.inventory') {
+                iteminfo.push(newdata[i]);
+              }
+
+              else if (newdata[i].fields.AuditAction == '2') {
+                
+                var date = newdata[i].fields.DateTime;
+                var split = date.split('T');
+                added.push(split[0]);
+
+              }
+
+              else {
+
+                var date = newdata[i].fields.DateTime;
+                var split = date.split('T');
+                last.push(split[0]);
+
+              }
+
+            }
+
+            $('#item_details').append(
+
+              '<h5><b>Item Name: </b> &nbsp; '+ iteminfo[0].fields.ItemName +'</h5>\
+              <h5><b>Item Description: </b> &nbsp; '+ iteminfo[0].fields.Description +'</h5>\
+              <h5><b>Quantity: </b> &nbsp; '+ (iteminfo[0].fields.Quantity - iteminfo[0].fields.QtyBorrowed) +'</h5>\
+              <h5><b>Classification: </b> &nbsp; '+ iteminfo[0].fields.ItemType +'</h5>'
+
+            );
+
+            $('#item_details_audit').append(
+
+              '<h5><b>Date Added: </b> &nbsp; '+ added[0] +'</h5>'
+
+            )
+
+            if (iteminfo[0].fields.ItemStatus == 1) {
+
+              $('#item_details_audit').append(
+
+                '<h5><b>Status: </b> &nbsp; Available</h5>'
+
+              )
+
+            }
+
+            else {
+
+              $('#item_details_audit').append(
+
+                '<h5><b>Status: </b> &nbsp; Unavailable</h5>'
+
+              )
+
+            }
+
+            if (newdata.length == 3) { //has last added
+              $('#item_details_audit').append(
+                '<h5><b>Date Last Borrowed: </b> &nbsp; '+ last[0] +'</h5>'
+              );
+            }
+
+            else {
+              $('#item_details_audit').append(
+                '<h5><b>Date Last Borrowed: </b> &nbsp; Not yet borrowed.</h5>'
+              );
+            }
+
+          }
+
+        });
+
+      }
+
+      // ****** END VIEW ITEM DETAILS ****** //
+
+      // ****** ****** //
+
+      // ****** START VIEW ITEM LOG ****** //
+
+      function log(elem) {
+
+        var id = elem.id;
+
+        $.ajax({
+
+          url: "ajax/itemlog",
+          method: "POST",
+          data:{ 'id': id, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
+
+          success: function(data){
+
+            var newdata = JSON.parse(data);
+            console.log(newdata);
+
+            $('#activity_log').empty()
+            $('#borrow_log').empty()
+
+            var add = []; var add_date = [];
+            var disable = []; var d_date = [];
+            var enable = []; var e_date = [];
+            var mod = []; var m_date = [];
+            var borrow = []; var brw_date = []; var rtn_date = [];
+
+            for (var i = 0; i < newdata.length; i++) {
+
+              if (newdata[i].fields.AuditAction == '2') { //add item
+                  
+                add.push(newdata[i]);
+                var date = newdata[i].fields.DateTime;
+                var split = date.split('T');
+                add_date.push(split[0]);
+
+              }
+
+              else if (newdata[i].fields.AuditAction == '3') { //disabled
+
+                disable.push(newdata[i]);
+                var date = newdata[i].fields.DateTime;
+                var split = date.split('T');
+                d_date.push(split[0]);
+
+              }
+
+              else if (newdata[i].fields.AuditAction == '4') { //enabled
+
+                enable.push(newdata[i]);
+                var date = newdata[i].fields.DateTime;
+                var split = date.split('T');
+                e_date.push(split[0]);
+
+              }
+
+              else if (newdata[i].fields.AuditAction == '5') { //modified fields
+
+                mod.push(newdata[i]);
+                var date = newdata[i].fields.DateTime;
+                var split = date.split('T');
+                m_date.push(split[0]);
+
+              }
+
+              else { //borrow acts
+
+                borrow.push(newdata[i]);
+
+                var bdate = newdata[i].fields.DateTime;
+                var bsplit = bdate.split('T');
+                brw_date.push(bsplit[0]);
+
+                if (!newdata[i].fields.DateTimeReturned == null) {
+
+                  var rdate = newdata[i].fields.DateTimeReturned;
+                  var rsplit = rdate.split('T');
+                  rtn_date.push(rsplit[0]);
+
+                }
+
+              }
+
+            }
+
+            for (var i = 0; i < add.length; i++) {
+
+              $('#activity_log').append(
+
+                '<tr>\
+                  <td>'+ add[i].fields.Admin[0] +'</td>\
+                  <td>Item Added</td>\
+                  <td>'+ add_date[i] +'</td>\
+                </tr>'
+
+              )
+
+            }
+
+            for (var i = 0; i < disable.length; i++) {
+
+              $('#activity_log').append(
+
+                '<tr>\
+                  <td>'+ disable[i].fields.Admin[0] +'</td>\
+                  <td>Item Disabled</td>\
+                  <td>'+ d_date[i] +'</td>\
+                </tr>'
+
+              )
+
+            }
+
+            for (var i = 0; i < enable.length; i++) {
+
+              $('#activity_log').append(
+
+                '<tr>\
+                  <td>'+ enable[i].fields.Admin[0] +'</td>\
+                  <td>Item Enabled</td>\
+                  <td>'+ e_date[i] +'</td>\
+                </tr>'
+
+              )
+
+            }
+
+            for (var i = 0; i < mod.length; i++) {
+
+              $('#activity_log').append(
+
+                '<tr>\
+                  <td>'+ mod[i].fields.Admin[0] +'</td>\
+                  <td>Item Detail Modified</td>\
+                  <td>'+ m_date[i] +'</td>\
+                </tr>'
+
+              )
+
+            }
+
+            for (var i = 0; i < borrow.length; i++) {
+
+              if (!rtn_date[i] == null) { //items returned
+
+                $('#borrow_log').append(
+
+                  '<tr>\
+                    <td>'+ borrow[i].fields.Borrower[0] +'</td>\
+                    <td>'+ borrow[i].fields.Quantity +'</td>\
+                    <td>'+ brw_date[i] +'</td>\
+                    <td>'+ rtn_date[i] +'</td>\
+                    <td>'+ borrow[i].fields.Admin[0] +'</td>\
+                  </tr>'
+
+                );
+
+              }
+
+              else { // items not yet returned
+
+                $('#borrow_log').append(
+
+                  '<tr>\
+                    <td>'+ borrow[i].fields.Borrower[0] +'</td>\
+                    <td>'+ borrow[i].fields.Quantity +'</td>\
+                    <td>'+ brw_date[i] +'</td>\
+                    <td>Not yet returned</td>\
+                    <td>'+ borrow[i].fields.Admin[0] +'</td>\
+                  </tr>'
+
+                );
+
+              }
+
+            }
+
+          }
+
+        });
+
+      }
+
+      // ****** END VIEW ITEM LOG ****** //
+
+      // ****** ****** //
+
+      // ****** START EDIT ITEM DETAILS ****** //
+
+      function edit(elem) {
+
+        var id = elem.id;
+
+        $.ajax({
+
+          url: "ajax/edititem",
+          method: "POST",
+          data:{ 'id': id, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
+
+          success: function(data){
+
+            var newdata = JSON.parse(data);
+            console.log(newdata);
+
+            $('#edit_details').empty();
+
+            $('#edit_details').append(
+
+              '<div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12">Item Name</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <input type="input" name="name" required="required" class="form-control col-md-12 col-xs-12" value="'+ newdata[0].fields.ItemName +'">\
+                </div>\
+              </div>\
+              \
+              <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12">Item Description</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <input type="input" name="desc" required="required" class="form-control col-md-12 col-xs-12" style="margin-top: 10px" value="'+ newdata[0].fields.Description +'">\
+                </div>\
+              </div>\
+              \
+              <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12">Quantity</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <input type="number" name="qty" required="required" class="form-control col-md-12 col-xs-12" value="'+ newdata[0].fields.Quantity +'">\
+                </div>\
+              </div>\
+              \
+              <div class="form-group">\
+                <label class="control-label col-md-3 col-xs-12">Status</label>\
+                <div class="col-md-8 col-sm-7 col-xs-12">\
+                  <select class="form-control" name="status">\
+                    <option value="1">Available</option>\
+                    <option value="0">Unavailable</option>\
+                  </select>\
+                </div>\
+              </div>\
+              \
+              <input type="hidden" name="id" value="'+ newdata[0].pk +'">'
+
+            );
+
+          }
+
+        });
+
+      }
+
+      // ****** END EDIT ITEM DETAILS ****** //
+
+    </script>
+
+  </body>
+</html>

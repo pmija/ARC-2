@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+  	{% include 'import-css.html' %}
+
+    </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'technician-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>View Groups Inventory</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+								<!-- START Table-->
+
+                <div class="row">
+                  <div class="col-md-2"></div>
+        					<div class="col-md-8 col-sm-10 col-xs-10">
+
+        						<div class="clearfix">
+
+                    <form method="POST" action="#">
+
+          						<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                        <thead>
+                          <tr>
+                            <th>Group Name</th>
+                            <th style="width: 25%">Items Borrowed</th>
+                            <th style="width: 30%">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>TIM MIJARES</td>
+                            <td>5</td>
+                            <td class="actions"><button type="button" class="btn btn-success" data-toggle="modal" data-target=".div-view-group-inv-modal">&nbsp;View Inventory&nbsp;</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>TIM MIJARES</td>
+                            <td>5</td>
+                            <td class="actions"><button type="button" class="btn btn-success" data-toggle="modal" data-target=".div-view-group-inv-modal">&nbsp;View Inventory&nbsp;</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>TIM MIJARES</td>
+                            <td>5</td>
+                            <td class="actions"><button type="button" class="btn btn-success" data-toggle="modal" data-target=".div-view-group-inv-modal">&nbsp;View Inventory&nbsp;</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>TIM MIJARES</td>
+                            <td>5</td>
+                            <td class="actions"><button type="button" class="btn btn-success" data-toggle="modal" data-target=".div-view-group-inv-modal">&nbsp;View Inventory&nbsp;</button>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>TIM MIJARES</td>
+                            <td>5</td>
+                            <td class="actions"><button type="button" class="btn btn-success" data-toggle="modal" data-target=".div-view-group-inv-modal">&nbsp;View Inventory&nbsp;</button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                    </form>
+
+                    </div>
+        					</div>
+
+						      <!-- END Table-->
+
+                  <!-- MODAL FOR ITEM DETAILS -->
+                  <!-- MODAL FOR ITEM DETAILS -->
+
+                  <div class="modal fade div-view-group-inv-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-sm" id="view-group-inv-modal">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel2">Group Inventory</h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>Group Information<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+
+                          <h5><b>Group Name: </b> &nbsp; TIM MIJARES</h5>
+                          <h5><b>Group Adviser: </b> &nbsp; Fritz Flores</h5>
+                          <h5><b>Laboratory: </b> &nbsp; CEHCI</h5>
+                          <h5><b>Degree: </b> &nbsp; BS Information Technology</h5>
+                          <h5><b>Members: </b> &nbsp; 4</h5>
+
+                          <div class="row"></div>
+
+                          <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th>ID Number</th>
+                              <th>Full Name</th>
+                              <th>Email</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>11499999</td>
+                              <td>CAUYAO, Bianca Marie R.</td>
+                              <td>bianca_cauyao@dlsu.edu.ph</td>
+                            </tr>
+                            <tr>
+                              <td>11499999</td>
+                              <td>CAUYAO, Bianca Marie R.</td>
+                              <td>bianca_cauyao@dlsu.edu.ph</td>
+                            </tr>
+                            <tr>
+                              <td>11499999</td>
+                              <td>CAUYAO, Bianca Marie R.</td>
+                              <td>bianca_cauyao@dlsu.edu.ph</td>
+                            </tr>
+                            <tr>
+                              <td>11499999</td>
+                              <td>CAUYAO, Bianca Marie R.</td>
+                              <td>bianca_cauyao@dlsu.edu.ph</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        </div>
+
+                      </div>
+
+                      <div class="x_panel">
+
+                        <div class="x_title">
+                          <h4><b>Group Inventory<b></b>
+                          <div class="clearfix"></div>
+                        </div>
+
+                        <div class="x_content">
+
+                          <h5><b>Items Borrowed: </b> &nbsp; 5</h5>
+
+                          <div class="row"></div>
+
+                          <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th>Date Borrowed</th>
+                              <th>Item Name</th>
+                              <th>Quantity</th>
+                              <th>Borrowed By</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>99/99/9999</td>
+                              <td>Raspberry Pi Model B+</td>
+                              <td>1</td>
+                              <td>CAUYAO, Bianca Marie R.</td>
+                            </tr>
+                            <tr>
+                              <td>99/99/9999</td>
+                              <td>Raspberry Pi Model B+</td>
+                              <td>1</td>
+                              <td>CAUYAO, Bianca Marie R.</td>
+                            </tr>
+                            <tr>
+                              <td>99/99/9999</td>
+                              <td>Raspberry Pi Model B+</td>
+                              <td>1</td>
+                              <td>CAUYAO, Bianca Marie R.</td>
+                            </tr>
+                            <tr>
+                              <td>99/99/9999</td>
+                              <td>Raspberry Pi Model B+</td>
+                              <td>1</td>
+                              <td>CAUYAO, Bianca Marie R.</td>
+                            </tr>
+                            <tr>
+                              <td>99/99/9999</td>
+                              <td>Raspberry Pi Model B+</td>
+                              <td>1</td>
+                              <td>CAUYAO, Bianca Marie R.</td>
+                            </tr>
+                          </tbody>
+                        </table>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+
+                  </div>
+                  </div>
+                  </div>
+
+                  <!-- END MODAL FOR ITEM DETAILS -->
+                  <!-- END MODAL FOR ITEM DETAILS -->
+
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+        {% include 'import-js.html' %}
+
+  </body>
+</html>

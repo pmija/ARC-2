@@ -1,0 +1,40 @@
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+  <div class="menu_section">
+    <ul class="nav side-menu">
+
+      <li><a href="{% url 'Technician/Profile' %}"><i class="fa fa-home"></i>Home</a></li>
+
+      <li><a href="{%url 'Technician/Profile'%}"><i class="fa fa-user"></i>Profile</a></li>
+
+
+      <li><a><i class="fa fa-warehouse"></i>Inventory<span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+
+          <li><a href="#">Manage Items</a></li>
+          <li><a href="{% url 'Technician/AddItem' %}">Add Items</a></li>
+
+        </ul>
+      </li>
+
+      <li><a><i class="fa fa-exchange-alt"></i>Item Lending<span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+
+          <li><a href="{% url 'Technician/BorrowItem' %}">Borrow Item</a></li>
+          <li><a href="{% url 'Technician/ReturnItem' %}">Return Item</a></li>
+
+        </ul>
+      </li>
+
+      <li><a><i class="fa fa-file"></i>Reports<span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+
+          <li><a href="{%url 'Technician/GroupsInventory'%}">Inventory Report</a></li>
+
+        </ul>
+      </li>
+
+      <li><a href="{% url 'Technician/Inbox' %}"><i class="fa fa-envelope"></i>Inbox</a></li>
+
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+	<link href="custom-font/montserrat.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- bootstrap-daterangepicker -->
+    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+	<!-- FullCalendar -->
+	<link href="../vendors/fullcalendar/dist/fullcalendar.css" rel="stylesheet">
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js'></script>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+	<script>
+	function date_time(id)
+	{
+        date = new Date;
+        year = date.getFullYear();
+        month = date.getMonth();
+        months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'Jully', 'August', 'September', 'October', 'November', 'December');
+        d = date.getDate();
+        day = date.getDay();
+        days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+        h = date.getHours();
+        if(h<10)
+        {
+                h = "0"+h;
+        }
+        m = date.getMinutes();
+        if(m<10)
+        {
+                m = "0"+m;
+        }
+        s = date.getSeconds();
+        if(s<10)
+        {
+                s = "0"+s;
+        }
+        result = ''+days[day]+' '+months[month]+' '+d+', '+year+' '+h+':'+m+':'+s;
+        document.getElementById(id).innerHTML = result;
+        setTimeout('date_time("'+id+'");','1000');
+        return true;
+	}
+	
+
+	$(document).ready(function() {
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			defaultView: 'month',
+			editable: true,
+			events: [
+			
+				<?php
+				for ($i = 0; $i < count($UpcomingServices); $i++){
+					echo '{';
+					echo "title: '{$UpcomingServices[$i]["Name"]}'";
+					echo ",";
+					echo "start: '{$UpcomingServices[$i]["JODate"]}'";
+					echo '},';
+				}?>
+			]
+		});
+		
+	});
+
+	</script>
+    <!-- Custom Theme Style -->
+    <link href="../build/css/custom.css" rel="stylesheet">
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+            
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+              <div class="menu_section">
+                <ul class="nav side-menu">
+                  
+                  <li><a href="Dashboard.html"><i class="fa fa-home"></i> Home</a></li>
+                  
+                  <li><a href="#"><i class="fa fa-user"></i>Profile</a></li>
+				          
+                  <li><a><i class="fa fa-users"></i>Accounts<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Manage Users</a></li>
+                      <li><a href="#">Add User</a></li>
+                      <li><a href="#">Evaluate Users</a></li>
+
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-users"></i>Groups<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Manage Groups</a></li>
+                      <li><a href="#">Add Group</a></li>
+                      <li><a href="#">Edit Group</a></li>
+
+                    </ul>
+                  </li>
+                  
+                  <li><a><i class="fa fa-users"></i>Residency<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Set Residency</a></li>
+                      <li><a href="#">Edit Residency</a></li>
+                      <li><a href="#">View Residencies</a></li>
+                      <li><a href="#">Evaluate Residency</a></li>
+                      <li><a href="#">Manage Term and Year</a></li>
+
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-users"></i>Laboratories<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">Add Laboratory</a></li>
+                      <li><a href="#">Edit Laboratory</a></li>
+                      <li><a href="#">Edit Timeslots</a></li>
+
+                    </ul>
+                  </li>
+				          
+                  <li><a><i class="fa fa-table"></i>Inventory</a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="#">View Inventory</a></li>
+                      <li><a href="#">Add Items</a></li>
+                      <li><a href="#">Edit Items</a></li>
+
+                    </ul>
+                  </li>
+                  
+                  <li><a><i class="fa fa-file"></i>Reports<span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+
+                      <li><a href="tables.html">Residency</a></li>
+                      <li><a href="tables_dynamic.html">Inventory</a></li>
+
+                    </ul>
+                  </li>
+
+                  <li><a><i class="fa fa-envelope"></i>Inbox</a></li>
+
+                </ul>
+              </div>
+            </div>
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+              <ul class="nav navbar-nav navbar-right">
+                <li class="">
+                  <a href="Login.html">Log Out &nbsp;<i class="fa fa-sign-out"></i></a>
+                </li>
+              </ul>
+
+              <ul class="nav navbar-nav navbar-left">
+                <li id="welcome-banner">
+                  Welcome! Bianca Marie R. Cauyao
+                </li>
+              </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+         <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="dashboard_graph">
+               <div class="page-title">
+					<div class="title_left">
+						<h2>Dashboard</h2>
+					</div>
+					<!-- DATE AND TIME -->
+					<div align="right" class="">
+						<h5>Today is <b id="date_time"></b></h5>
+						<script type="text/javascript">window.onload = date_time('date_time');</script>
+					</div>
+					<!-- DATE AND TIME -->
+				</div>
+				
+			  <div style="margin-top:0px;" class="ln_solid"></div> 
+		      <div class="row">
+				<div class="col-md-12">
+					<div class="x_content">
+						
+					
+						<!--START CALENDAR-->
+						<div class="col-md-8 col-sm-12 col-xs-12">
+							<div class="form-group">
+								<div class="x_content">
+									<div id='calendar'></div>
+								</div>
+							</div>
+						</div>
+						<!--END CALENDAR-->
+					
+						<!--START HOURS-->
+						<div class="col-md-4 col-sm-12 col-xs-12">
+							<div class="x_title">
+							  <h4><b>Total Hours:</b> 5 hours, 30 minutes 
+							  <br><small>(June 17, 2018 - June 23, 2018)</small></h4>
+							  <div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+								<article class="media event">
+								  <a class="pull-left date">
+									<p class="month">June</p>
+									<p class="day">19</p>
+								  </a>
+								  <div class="media-body">
+									<a>Bianca Cauyao</a>
+									<p>Start Time: 9:00 AM</p>
+									<p>End Time: 10:30 AM</p>
+								  </div>
+								</article>
+								<article class="media event">
+								  <a class="pull-left date">
+									<p class="month">June</p>
+									<p class="day">20</p>
+								  </a>
+								  <div class="media-body">
+									<a>Bianca Cauyao</a>
+									<p>Start Time: 11:00 AM</p>
+									<p>End Time: 12:30 AM</p>
+								  </div>
+								</article>
+							</div>
+						</div>
+						<!--END HOURS-->
+						
+						<!--START INVENTORY-->
+						<div style="margin-top:20px" class="col-md-4 col-sm-12 col-xs-12">
+							<div class="x_title">
+							  <h4><b>Borrowed Items</b></h4>
+							  <div class="clearfix"></div>
+							</div>
+							<div class="x_content">
+								<table class="table table-striped" rules="all">
+								<thead>
+								  <tr class="headings">
+									<th class="column-title">Item</th>
+									<th class="column-title">Date Borrowed</th>
+								  </tr>
+								</thead>
+								<tbody id="tbodyid">
+								<tr>
+								  <td>Breadboard</td>
+								  <td>June 13, 2018</td>
+								</tr>
+								<tr>
+								  <td>Arduino</td>
+								  <td>June 13, 2018</td>
+								</tr>
+								</tbody>
+								</table>
+							</div>
+						</div>
+						<!--END HOURS-->
+						
+						
+						
+					</div>
+					
+					
+					
+				</div>
+					
+				<div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- footer content -->
+        
+        <!-- /footer content -->
+      </div>
+    </div>
+	<!-- calendar modal -->
+    <div id="CalenderModalNew" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel">New Calendar Entry</h4>
+          </div>
+          <div class="modal-body">
+            <div id="testmodal" style="padding: 5px 20px;">
+              <form id="antoform" class="form-horizontal calender" role="form">
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Title</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="title" name="title">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Description</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" style="height:55px;" id="descr" name="descr"></textarea>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default antoclose" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary antosubmit">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="CalenderModalEdit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="myModalLabel2">Edit Calendar Entry</h4>
+          </div>
+          <div class="modal-body">
+
+            <div id="testmodal2" style="padding: 5px 20px;">
+              <form id="antoform2" class="form-horizontal calender" role="form">
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Title</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="title2" name="title2">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">Description</label>
+                  <div class="col-sm-9">
+                    <textarea class="form-control" style="height:55px;" id="descr2" name="descr"></textarea>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default antoclose2" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary antosubmit2">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="fc_create" data-toggle="modal" data-target="#CalenderModalNew"></div>
+    <div id="fc_edit" data-toggle="modal" data-target="#CalenderModalEdit"></div>
+    <!-- /calendar modal -->
+    <!-- jQuery -->
+    <script src="../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="../vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="../vendors/Chart.js/dist/Chart.min.js"></script>
+    <!-- jQuery Sparklines -->
+    <script src="../vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <!-- Flot -->
+    <script src="../vendors/Flot/jquery.flot.js"></script>
+    <script src="../vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="../vendors/Flot/jquery.flot.time.js"></script>
+    <script src="../vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="../vendors/Flot/jquery.flot.resize.js"></script>
+    <!-- Flot plugins -->
+    <script src="../vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="../vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="../vendors/flot.curvedlines/curvedLines.js"></script>
+    <!-- DateJS -->
+    <script src="../vendors/DateJS/build/date.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="../vendors/moment/min/moment.min.js"></script>
+    <script src="../vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+	<!-- FullCalendar -->
+    <script src="../vendors/moment/min/moment.min.js"></script>
+    <script src="../vendors/fullcalendar/dist/fullcalendar.min.js"></script>
+    
+    <!-- Custom Theme Scripts -->
+    <script src="../build/js/custom.min.js"></script>
+  </body>
+</html>

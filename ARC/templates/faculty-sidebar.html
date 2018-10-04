@@ -1,0 +1,25 @@
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+  <div class="menu_section">
+    <ul class="nav side-menu">
+
+      <li><a href="{% url 'Faculty/Profile' %}"><i class="fas fa-home"></i>Home</a></li>
+
+      <li><a href="{% url 'Faculty/Profile' %}"><i class="fas fa-user-circle"></i>Profile</a></li>
+
+      <li><a><i class="fa fa-users"></i>Groups<span class="fas fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+
+          <li><a href="{% url 'Faculty/ManageGroups' %}">Manage Groups</a></li>
+          <li><a href="{% url 'Faculty/AddGroup' %}">Add Group</a></li>
+
+        </ul>
+      </li>
+
+      <li><a href="{% url 'Faculty/ViewResidencies' %}"><i class="fa fa-file"></i>Residency Report</a>
+      </li>
+
+      <li><a href="{% url 'Faculty/Inbox' %}"><i class="fas fa-envelope"></i>Inbox</a></li>
+
+    </ul>
+  </div>
+</div>

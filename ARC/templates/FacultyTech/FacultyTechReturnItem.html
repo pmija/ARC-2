@@ -1,0 +1,293 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'faculty-tech-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Return Item</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+					<form action="" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left"> {% csrf_token %}
+
+					         <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="uniqueid">Item ID
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="number" id="uniqueid" name="uniqueid" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+
+                        </div>
+                      </div>
+					<!-- LOG -->
+			 <div id="bigitem" style="display: none;">
+
+			   </div>
+
+			  <div id="smallitem" style="display:none">
+				<h5 align="center" id="itemname"></h5>
+				<br><h4 id="title_table" align="center" style="margin-top:0px;"><b>Borrower's Log</b></h4>
+				<div class="table-responsive">
+				<table id="datatable-responsive" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
+					<thead style="background-color: #4CAF50;color:white">
+					  <tr>
+						<th class="column-title" id="name">ID Number</th>
+						<th class="column-title" id="name">Name</th>
+						<th class="column-title" id="qty">Quantity</th>
+						<th class="column-title" id="date">Date Borrowed</th>
+						<th class="column-title">Action</th>
+					  </tr>
+					</thead>
+
+					<tbody id="toAppend">
+					</tbody>
+				</table>
+				</div>
+			  </div>
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+			<div id="userinfo" style="width:100%; visibility: hidden;" >
+			</div>
+
+
+
+
+                    </form>
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <!-- /footer content -->
+      </div>
+    </div>
+
+  {% include 'import-js.html' %}
+
+  <script>
+
+
+$(document).ready(
+  function() {
+
+    setInterval(function() {
+    $.ajax({url: 'ajax/rfidajax',
+              type: 'GET',
+              success: function(response) {
+          var data = JSON.parse(response);
+          if(data['ready']==true){
+
+            var x = document.getElementById('uniqueid');
+            x.value = data['tag'];
+            appendModal(x);
+          }
+
+              }
+          });
+    }, 1000);
+  });
+
+  $('#smallitem').hide();
+  $('#bigitem').hide();
+	function appendModal(elem){
+		var type;
+		console.log(elem.value);
+		var id = elem.value;
+		$.ajax({
+			url: "/ajax/checkitemtype",
+			method: "POST",
+			data:{
+				'id':id,
+				 'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+			},
+			success: function(data){
+				var newdata = JSON.parse(data);
+				console.log(newdata);
+				type = newdata[0].fields.ItemType;
+				pk = newdata[0].pk;
+				console.log(type);
+				$.ajax({
+					url: "/ajax/returnitemajax",
+					method: "POST",
+					data:{
+						'pk': pk,
+						'type': type,
+						'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+					},
+					success: function(data){
+						var newdata2 = JSON.parse(data);
+						console.log(newdata2);
+						if (newdata2.length == 0){
+						}
+						else{
+							if (type == "small"){
+								$('#itemname').empty();
+								$('#toAppend').empty();
+								$('#smallitem').show();
+								$('#itemname').append('<b>Item Name: </b> &nbsp; '+newdata2[0].fields.ItemID[0] + " " + newdata2[0].fields.ItemID[1]+'')
+								for  (var i = 0; i< newdata2.length; i++){
+
+									var datetime = moment(newdata2[i].fields.DateTime).format('MMMM D, YYYY h:mm:ss a');
+									$('#toAppend').append('<tr>\
+									  <td>'+newdata2[i].fields.Borrower[2]+'</td>\
+									  <td>'+newdata2[i].fields.Borrower[0]+'</td>\
+									  <td>'+newdata2[i].fields.Quantity+'</td>\
+									  <td>'+datetime+'</td>\
+									  <td align="center"><button type="button" id="'+newdata2[i].pk+'" name="returnbutton" onclick="toReturn(this)" class="btn btn-danger">Return</button></td>\
+									</tr>')
+								}
+							}
+							else{
+								var datetime = moment(newdata2[0].fields.DateTime).format('MMMM D, YYYY h:mm:ss a');
+								var datetime2 = moment(newdata2[0].fields.DateTimeReturned).format('MMMM D, YYYY h:mm:ss a');
+								$('#bigitem').show();
+								$('#bigitem').append('\
+								<div style="width:700px;margin-left:150px;"class="row">\
+								<div style="float:left;margin-left:42px;height:70px;width:350px;" class="column">\
+									<h5><b>Item Name: </b> &nbsp; '+newdata2[0].fields.ItemID[0]+ " " + newdata2[0].fields.ItemID[1] + '</h5>\
+									<h5><b>Borrowers Name: </b> &nbsp; '+newdata2[0].fields.Borrower[0]+'</h5>\
+									<h5><b>ID Number: </b> &nbsp; '+newdata2[0].fields.Borrower[2]+'</h5>\
+								</div>\
+								<div style="float:right;margin-right:0px;height:70px;width:300px;" class="column" >\
+									<h5><b>Date Borrowed: </b> &nbsp; '+datetime+'</h5>\
+									<h5><b>Date Returned: </b> &nbsp; '+datetime2+'</h5>\
+								</div>\
+								</div>')
+
+								myClick();
+							}
+						}
+
+					}
+				});
+			}
+		});
+	}
+
+
+	function myClick() {
+	  setTimeout(
+		function() {
+			$('#smallitem').hide();
+			$('#bigitem').hide();
+			$('#bigitem').empty();
+			$('#toAppend').empty();
+		}, 3000);
+	}
+
+	function toReturn(elem){
+		var id = elem.id;
+		console.log(id);
+
+		var p = elem.parentNode.parentNode;
+		p.parentNode.removeChild(p);
+
+		$.ajax({
+			url: "/ajax/return",
+			method: "POST",
+			data:{
+				'id':id,
+				 'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+			},
+			success: function(data){
+				console.log('return');
+				var newdata2 = JSON.parse(data);
+
+								var datetime = moment(newdata2[0].fields.DateTime).format('MMMM D, YYYY h:mm:ss a');
+								var datetime2 = moment(newdata2[0].fields.DateTimeReturned).format('MMMM D, YYYY h:mm:ss a');
+								$('#bigitem').show();
+								$('#bigitem').append('\
+								<div style="width:700px;margin-left:150px;"class="row">\
+								<div style="float:left;margin-left:42px;height:70px;width:350px;" class="column">\
+									<h5><b>Item Name: </b> &nbsp; '+newdata2[0].fields.ItemID[0]+'</h5>\
+									<h5><b>Borrowers Name: </b> &nbsp; '+newdata2[0].fields.Borrower[0]+'</h5>\
+									<h5><b>ID Number: </b> &nbsp; '+newdata2[0].fields.Borrower[2]+'</h5>\
+								</div>\
+								<div style="float:right;margin-right:0px;height:70px;width:300px;" class="column" >\
+									<h5><b>Date Borrowed: </b> &nbsp; '+datetime+'</h5>\
+									<h5><b>Date Returned: </b> &nbsp; '+datetime2+'</h5>\
+								</div>\
+								</div>')
+
+								myClick();
+			}
+		});
+
+	}
+  </script>
+
+  </body>
+</html>

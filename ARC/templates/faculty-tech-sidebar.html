@@ -1,0 +1,48 @@
+<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+  <div class="menu_section">
+    <ul class="nav side-menu">
+
+      <li><a href="{% url 'FacultyTech/Profile' %}"><i class="fa fa-home"></i>Home</a></li>
+
+      <li><a href="{%url 'FacultyTech/Profile'%}"><i class="fa fa-user"></i>Profile</a></li>
+
+      <li><a><i class="fa fa-users"></i>Groups<span class="fas fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+
+          <li><a href="{%url 'FacultyTech/ManageGroups'%}">Manage Groups</a></li>
+          <li><a href="{%url 'FacultyTech/AddGroup'%}">Add Group</a></li>
+
+        </ul>
+      </li>
+
+      <li><a><i class="fa fa-warehouse"></i>Inventory<span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+
+          <li><a href="{% url 'FacultyTech/AddItem' %}">Add Items</a></li>
+          <li><a href="{% url 'FacultyTech/ManageItems' %}">Manage Items</a></li> 
+
+        </ul>
+      </li>
+
+      <li><a><i class="fa fa-exchange-alt"></i>Item Lending<span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+
+          <li><a href="{% url 'FacultyTech/BorrowItem' %}">Borrow Item</a></li>
+          <li><a href="{% url 'FacultyTech/ReturnItem' %}">Return Item</a></li>
+
+        </ul>
+      </li>
+
+      <li><a><i class="fa fa-file"></i>Reports<span class="fa fa-chevron-down"></span></a>
+        <ul class="nav child_menu">
+          <li><a href="{% url 'FacultyTech/InventoryReport' %}">Inventory Report</a></li>
+          <li><a href="{% url 'FacultyTech/ViewResidencies' %}">Residency Report</a></li>
+
+        </ul>
+      </li>
+
+      <li><a href="{% url 'FacultyTech/Inbox' %}"><i class="fa fa-envelope"></i>Inbox</a></li>
+
+    </ul>
+  </div>
+</div>

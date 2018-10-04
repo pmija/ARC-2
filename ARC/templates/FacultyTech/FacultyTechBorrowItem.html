@@ -1,0 +1,515 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'faculty-tech-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Borrow Item</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="row">
+
+                      <div class="col-md-2"></div>
+
+                      <div class="col-md-8">
+                        <div class="x_panel">
+
+                          <div class="x_title">
+                            <h3><b>Items to Borrow</b></h3>
+                            <div class="clearfix"></div>
+                          </div>
+
+                          <div class="x_content">
+
+                            <div class="form-group" style="margin-bottom:50px;">
+                              <label class="control-label col-md-2 col-sm-3 col-xs-12" for="quantity" style="text-align: right;">Unique ID </label>
+                              <div class="col-md-10 col-sm-6 col-xs-12">
+                                <input type="number" id="unique_id_return" name="unique_id" required="required" class="form-control col-md-6 col-xs-12">
+                                <button id="manualreg" type="button" class="btn btn-primary" data-toggle="modal" data-target=".div-register-itemid-borrow-modal" style="display: none;">
+                                Register Item</button>
+                              </div>
+                            </div>
+
+                            <table class="table table-striped table-bordered nowrap" cellspacing="0" width="50px">
+                            <thead style="background-color: #4CAF50; color:white;">
+                              <tr>
+                                <th>Item Name</th>
+                                <th>Quantity</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody id="borrowitem">
+
+                            </tbody>
+                            </table>
+
+                            <hr class="no-margin">
+
+                            <div class="form-group">
+                              <div class="col-md-12" align="center">
+                                <button type="button" class="btn btn-success" onclick="registerItem()" data-toggle="modal" data-target=".div-checkout-items-modal">
+                                Checkout Items</button>
+                              </div>
+                            </div>
+
+                            <!-- MODAL FOR BORROW ITEM CHECKOUT -->
+                            <!-- MODAL FOR BORROW ITEM CHECKOUT -->
+                            <!-- MODAL FOR BORROW ITEM CHECKOUT -->
+
+                            <div class="modal fade div-checkout-items-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-sm" id="checkout-items-modal">
+                            <div class="modal-content">
+
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel2">Checkout Items</h4>
+                              </div>
+                              <div class="modal-body">
+
+                              <form method="POST" action="" class="form-horizontal form-label-left">{% csrf_token %}
+
+                                <div class="x_panel">
+
+                                  <div class="x_title">
+                                    <h4><b>Student Information<b></b>
+                                    <div class="clearfix"></div>
+                                  </div>
+
+                                  <div class="x_content">
+
+                                    <div class="form-group">
+                                      <label class="control-label col-md-3 col-sm-3 col-xs-12" for="quantity" style="text-align: left;">Unique ID </label>
+                                      <div class="col-md-9 col-sm-6 col-xs-12">
+                                        <input type="number" id="unique_id_student_borrow" name="unique_id" required="required" class="form-control col-md-6">
+
+                                      </div>
+                                    </div>
+
+                                    <hr class="no-margin">
+
+                                    <div id="userinfo">
+                  <h5><b>Name: </b> &nbsp; </h5>
+                                    <h5><b>Student No: </b> &nbsp; </h5>
+                                    <!--<h5><b>Adviser: </b> &nbsp;  </h5>
+                                    <h5><b>Laboratory: </b> &nbsp; </h5>-->
+
+
+                  </div>
+
+                                  </div>
+
+                                </div>
+
+                                <div class="x_panel">
+
+                                  <div class="x_title">
+                                    <h4><b>Items Summary</b></h4>
+                                    <div class="clearfix"></div>
+                                  </div>
+
+                                  <div class="x_content">
+
+                                    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                                    <thead>
+                                      <tr>
+                                        <th>Item Name</th>
+                                        <th>Quantity</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody id="checkoutitemtable">
+
+                                    </tbody>
+                                    </table>
+
+                                  </div>
+
+                                </div>
+
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-success">Checkout Items</button>
+                              </div>
+
+                              </form>
+
+                            </div>
+                            </div>
+                            </div>
+
+                            <!-- END MODAL FOR BORROW ITEM CHECKOUT -->
+                            <!-- END MODAL FOR BORROW ITEM CHECKOUT -->
+                            <!-- END MODAL FOR BORROW ITEM CHECKOUT -->
+
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <!-- Manual Item Entry for Borrowing -->
+                    <!-- START Table -->
+
+                    <div class="row">
+
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                      <div class="x_title">
+                      <h5><big><b>Inventory (Manual Entry)</b></big></h5>
+                      </div>
+                          <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                            <thead style="background-color: #4CAF50; color:white;">
+                              <tr>
+                                <th>Item Name</th>
+                                <th>Description</th>
+                                <th>Item Unique ID</th>
+                                <th>DB Quantity</th>
+                                <th>Quantity Borrowed</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                {% block content2 %}
+                            {% for inv in inventory %}
+                              <tr>
+                                <td>{{ inv.1 }}</td>
+
+                                <td>{{ inv.2 }}</td>
+                                <td>{{ inv.5 }}</td>
+                                <td>{{ inv.4 }}</td>
+                                <td>{{ inv.6 }}</td>
+                                <td class="actions"><button {% if inv.4 == inv.6 %} disabled {% endif %} type="button" id="{{ inv.0 }}" onclick="appendModal(this)" name="ids" class="btn btn-success hello" data-toggle="modal" data-target=".div-register-itemid-borrow-modal">Add Item</button></td>
+                              </tr>
+                            {% endfor %}
+                          {% endblock %}
+                            </tbody>
+                          </table>
+                    </div>
+                    </div>
+
+                    <!-- END Table -->
+
+                    <!-- MODAL FOR REGISTER ITEM UNIQUE ID -->
+                    <!-- MODAL FOR REGISTER ITEM UNIQUE ID -->
+                    <!-- MODAL FOR REGISTER ITEM UNIQUE ID -->
+
+                    <div class="modal fade div-register-itemid-borrow-modal" id="mymodal" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" id="register-itemid-borrow-modal">
+                    <div class="modal-content">
+
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel2">Item Information</h4>
+                      </div>
+                      <div class="modal-body">
+
+                      <form method="POST" action="#" class="form-horizontal form-label-left">
+                          <div style="margin-left:20px;" id="modalcontent" class="x_content">
+                            <!--AJAX CONTENT-->
+                          </div>
+                        <div  class="form-group" id="">
+                          <label class="control-label col-md-4 col-xs-12" for="quantity" style="text-align: center;">Quantity to Borrow:</label>
+                          <div id="modalqty" class="col-md-4 col-sm-7 col-xs-12">
+                          </div>
+                        </div>
+
+                      </div>
+                      <div id="modalbutton"class="modal-footer">
+                      </div>
+
+                      </form>
+
+                    </div>
+                    </div>
+                    </div>
+
+                    <!-- END MODAL FOR REGISTER ITEM UNIQUE ID -->
+                    <!-- END MODAL FOR REGISTER ITEM UNIQUE ID -->
+                    <!-- END MODAL FOR REGISTER ITEM UNIQUE ID -->
+
+                    <!-- ######################### -->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    {% include 'import-js.html' %}
+    <script>
+  $('#manualreg').on('click', function(){
+
+    var uniqueid = $('#unique_id_return').val();
+    console.log(uniqueid);
+
+    $.ajax({
+      url: "/ajax/manualborrowitem",
+      method: "POST",
+      data:{
+        'uniqueid':uniqueid,
+         'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+      },
+
+      success: function(data){
+        console.log(data);
+        $('#modalcontent').empty();
+        $('#modalbutton').empty();
+        $('#modalqty').empty();
+        var newdata = JSON.parse(data);
+        var regitem = document.getElementsByName("registeritembutton");
+        regitem.value = newdata[0].pk;
+        $('#modalcontent').append('<h5><b>Item Name: </b> &nbsp;'+ newdata[0].fields.ItemName +'</h5>\
+                            <h5><b>Quantity Available: </b> &nbsp; <span id="curr_qty">'+ newdata[0].fields.Quantity +'</span></h5>\
+                            ')
+
+        $('#modalqty').append('<input type="number" name="quantity" max='+ newdata[0].fields.Quantity +' id="quantity" required="required" class="form-control col-md-12 col-xs-12" style="margin-top: 10px">')
+
+        $('#modalbutton').append('<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\
+                        <button type="button" id='+ newdata[0].pk +' name="registeritembutton[]" onclick="addClick(this)" class="btn btn-success">Register Item</button>')
+      }
+    });
+  });
+
+
+  function hello(){
+  console.log($('#unique_id_student_borrow').val());
+    var studentid = $('#unique_id_student_borrow').val();
+    $.ajax({
+      url: "/ajax/getuserinfo",
+      method: "POST",
+      data:{
+        'studentid':studentid,
+         'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+      },
+
+      success: function(data){
+        var newdata = JSON.parse(data);
+        console.log(newdata);
+        if (newdata.length != 0){
+          $('#userinfo').empty();
+          $('#userinfo').append('<h5><b>Name: </b> &nbsp;'+ newdata[0].fields.Name +'</h5>\
+                    <h5><b>Student No: </b> &nbsp; '+ newdata[0].fields.IDNumber +'</h5>\
+                    ')
+        }
+        else{
+          $('#userinfo').empty();
+          $('#userinfo').append('<h5><b>Name: </b> &nbsp; </h5>\
+                    <h5><b>Student No: </b> &nbsp; </h5>\
+                    >')
+        }
+      }
+    });
+  }
+
+  function removeItem(i){
+
+      var p = i.parentNode.parentNode;
+      p.parentNode.removeChild(p);
+  }
+
+  function appendModal(elem){
+    var id = elem.id;
+
+    $.ajax({
+      url: "/ajax/borrowitem",
+      method: "POST",
+      data:{
+        'id':id,
+         'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+      },
+
+      success: function(data){
+        $('#modalcontent').empty();
+        $('#modalbutton').empty();
+        $('#modalqty').empty();
+        var newdata = JSON.parse(data);
+        var regitem = document.getElementsByName("registeritembutton");
+        regitem.value = newdata[0].pk;
+        $('#modalcontent').append('<h5><b>Item Name: </b> &nbsp;'+ newdata[0].fields.ItemName +'</h5>\
+                            <h5><b>Quantity Available: </b> &nbsp; <span id="curr_qty">'+ newdata[0].fields.Quantity +'</span></h5>')
+
+        $('#modalqty').append('<input type="number" name="quantity" max='+ newdata[0].fields.Quantity +' id="quantity" required="required" class="form-control col-md-12 col-xs-12" style="margin-top: 10px">')
+
+        $('#modalbutton').append('<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\
+                        <button type="button" id='+ newdata[0].pk +' name="registeritembutton[]" onclick="addClick(this)" class="btn btn-success">Register Item</button>')
+      }
+    });
+  }
+
+  function addClick(elem) {
+    var id = elem.id;
+
+    var quantity = $('#quantity').val();
+    var curr_qty = $('#curr_qty').text();
+
+    if (quantity <= curr_qty) {
+
+      $('#mymodal').modal('hide');
+
+      $.ajax({
+        url: "/ajax/borrowitem",
+        method: "POST",
+        data:{
+          'id':id,
+          'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+        },
+
+        success: function(data){
+          var newdata = JSON.parse(data);
+          $('#borrowitem').append('<tr>\
+          <td class="tdforname" id='+newdata[0].fields.ItemName+'>'+ newdata[0].fields.ItemName +'</td>\
+          <td class="tdforqty" align="right" id='+quantity+'>'+ quantity +'</td>\
+          <td class="actions"><button type="button" id='+newdata[0].pk+' name="details" onclick="removeItem(this)" class="btn btn-danger tdforid">Remove</button></td>\
+          </tr>')
+        }
+
+      });
+
+   }
+
+    else {
+
+      new PNotify({
+        title: 'Cannot add to borrow list',
+        text: 'Quantity you entered is greater than the current quantity of this item!',
+        type: 'error',
+        styling: 'bootstrap3'
+      });
+
+    }
+
+  }
+
+  function registerItem(){
+    var element = document.getElementsByClassName('tdforid');
+    var element2 = document.getElementsByClassName('tdforname');
+    var element3= document.getElementsByClassName('tdforqty');
+    $('#checkoutitemtable').empty();
+
+
+    for (var i = 0; i < element.length; i++){
+      console.log(i);
+      $('#checkoutitemtable').append('<tr><td>'+element2[i].id+'</td>\
+                    <td>'+element3[i].id+'</td>\
+                    <td hidden><input name="idborrow[]" id="borrow" value='+element[i].id+'></td>\
+                    <td hidden><input name="qtyborrow[]" id="borrow" value='+element3[i].id+'></td>\
+                    </tr>')
+    }
+
+
+  }
+
+  $(document).ready(
+
+  function() {
+    setInterval(function() {
+    $.ajax({url: 'ajax/nfcajax',
+              type: 'GET',
+              success: function(response) {
+          var data = JSON.parse(response);
+          if(data['ready']==true){
+
+            var x = document.getElementById('unique_id_student_borrow');
+            x.value = data['tag'];
+            hello(x);
+          }
+
+              }
+          });
+    }, 1000);
+
+    setInterval(function() {
+    $.ajax({url: 'ajax/rfidajax',
+              type: 'GET',
+              success: function(response) {
+          var data = JSON.parse(response);
+          if(data['ready']==true){
+
+            var x = document.getElementById('unique_id_return');
+            x.value = data['tag'];
+            document.getElementById("manualreg").click()
+          }
+
+              }
+          });
+    }, 1000);
+  });
+
+  </script>
+  </body>
+</html>

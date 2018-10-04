@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+  {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'student-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="row">
+              <div class="col-md-12">
+
+                    <!-- Manual Item Entry for Borrowing -->
+										<!-- START Table -->
+
+                    <div class="row">
+
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+
+                      <div class="x_panel">
+
+	                      <div class="x_title">
+	                        <h4><b>Set Timeslot for Residency</b></h4>
+	                        <div class="clearfix"></div>
+	                      </div>
+
+	                      <form method="POST">{% csrf_token %}
+
+	                      <div class="x_content">
+
+	                        <div class="col-md-8" id="curr-lab">
+
+	                          <h5><b>Laboratory:</b>&nbsp; {{student.Laboratory.LaboratoryName}}{{studentx.Laboratory.LaboratoryName}}{{Has}}</h5>
+	                          <input type="hidden" name="lab_id" id="lab-id" value="{{student.Laboratory.LabID}}">
+	                          <input type="hidden" name="student_id" value="{{student.NFCUniqueID}}">
+
+	                        </div>
+
+	                        <div class="row"></div>
+
+	                        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+	                          <thead>
+	                            <tr id="t-header">
+
+	                            	<th style="width: 20%; text-align: center;">Monday</th>
+	                            	<th style="width: 20%; text-align: center;">Tuesday</th>
+	                            	<th style="width: 20%; text-align: center;">Wednesday</th>
+	                            	<th style="width: 20%; text-align: center;">Thursday</th>
+	                            	<th style="width: 20%; text-align: center;">Friday</th>
+
+	                            </tr>
+	                          </thead>
+	                          <tbody id="t-content">
+	                          </tbody>
+	                        </table>
+
+	                        <hr class="no-margin">
+
+	                        <div class="form-group">
+	                          <div class="col-md-12" align="center">
+	                            <button type="submit" class="btn btn-success" value="{{student.NFCUniqueID}}" name="NFC_ID">
+	                            Submit Residency</button>
+	                          </div>
+	                        </div><div class="row"></div>
+
+	                      </div>
+
+	                    	</form>
+
+                      </div>
+
+                    </div>
+                    </div>
+
+						        <!-- END Table -->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    {% include 'import-js.html' %}
+
+    <script>
+
+      $(document).ready(function(){
+
+      	var labid = $('#lab-id').val();
+
+        $.ajax({
+
+	        url: "ajax/setresidency",
+	        method: "POST",
+	        data:{ 'labid': labid, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
+
+	        success: function(data){
+
+	        	var newdata = JSON.parse(data);
+	          console.log(newdata);
+
+	          var m = []; var m_slot = []; var m_time = [];
+	          var t = []; var t_slot = []; var t_time = [];
+	          var w = []; var w_slot = []; var w_time = [];
+	          var h = []; var h_slot = []; var h_time = [];
+	          var f = []; var f_slot = []; var f_time = [];
+
+	          function tConvert (time) {
+						  // Check correct time format and split into components
+						  time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+						  if (time.length > 1) { // If time format correct
+						    time = time.slice (1);  // Remove full string match value
+						    time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+						    time[0] = +time[0] % 12 || 12; // Adjust hours
+						  }
+						  return time.join (''); // return adjusted time or original string
+						}
+
+	          // ## APPEND FOR TD and POPULATE ARRAYS ## //
+
+	          for (var i = 0; i < newdata.length; i++) {
+
+	          	if (newdata[i].fields.Schedule.includes("M")) {
+
+	          		var temp = newdata[i].fields.Schedule.substring(2);
+
+	          		for (var x = 0; x < 2; x++) {
+
+	          			temp = temp.replace("+", ":");
+
+	          		}
+
+	          		var split_temp = temp.split('-');
+	          		var temp1, temp2;
+
+	          		temp1 = tConvert(split_temp[0]);
+								temp2 = tConvert(split_temp[1]);
+
+	          		temp = temp1 + " - " + temp2;
+
+	          		m_time.push(temp);
+	          		m.push(newdata[i].fields.Schedule);
+	          		m_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+
+	          	}
+
+	          	else if (newdata[i].fields.Schedule.includes("T")) {
+
+	          		var temp = newdata[i].fields.Schedule.substring(2);
+
+	          		for (var x = 0; x < 2; x++) {
+
+	          			temp = temp.replace("+", ":");
+
+	          		}
+
+	          		var split_temp = temp.split('-');
+	          		var temp1, temp2;
+
+	          		temp1 = tConvert(split_temp[0]);
+								temp2 = tConvert(split_temp[1]);
+
+	          		temp = temp1 + " - " + temp2;
+
+	          		t_time.push(temp);
+	          		t.push(newdata[i].fields.Schedule);
+	          		t_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+
+	          	}
+
+	          	else if (newdata[i].fields.Schedule.includes("W")) {
+
+	          		var temp = newdata[i].fields.Schedule.substring(2);
+
+	          		for (var x = 0; x < 2; x++) {
+
+	          			temp = temp.replace("+", ":");
+
+	          		}
+
+	          		var split_temp = temp.split('-');
+	          		var temp1, temp2;
+
+	          		temp1 = tConvert(split_temp[0]);
+								temp2 = tConvert(split_temp[1]);
+
+	          		temp = temp1 + " - " + temp2;
+
+	          		w_time.push(temp);
+	          		w.push(newdata[i].fields.Schedule);
+	          		w_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+
+	          	}
+	          	else if (newdata[i].fields.Schedule.includes("H")) {
+
+	          		var temp = newdata[i].fields.Schedule.substring(2);
+
+	          		for (var x = 0; x < 2; x++) {
+
+	          			temp = temp.replace("+", ":");
+
+	          		}
+
+	          		var split_temp = temp.split('-');
+	          		var temp1, temp2;
+
+	          		temp1 = tConvert(split_temp[0]);
+								temp2 = tConvert(split_temp[1]);
+
+	          		temp = temp1 + " - " + temp2;
+
+	          		h_time.push(temp);
+	          		h.push(newdata[i].fields.Schedule);
+	          		h_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+
+	          	}
+
+	          	else if (newdata[i].fields.Schedule.includes("F")) {
+
+	          		var temp = newdata[i].fields.Schedule.substring(2);
+
+	          		for (var x = 0; x < 2; x++) {
+
+	          			temp = temp.replace("+", ":");
+
+	          		}
+
+	          		var split_temp = temp.split('-');
+	          		var temp1, temp2;
+
+	          		temp1 = tConvert(split_temp[0]);
+								temp2 = tConvert(split_temp[1]);
+
+	          		temp = temp1 + " - " + temp2;
+
+	          		f_time.push(temp);
+	          		f.push(newdata[i].fields.Schedule);
+	          		f_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+
+	          	}
+
+	          }
+
+	          var max = Math.max(m.length, t.length, w.length, h.length, f.length);
+	          console.log('COUNTER FOR APPEND: ' + max);
+
+	          for (var i = 0; i < max; i++) {
+
+	          	$('#t-content').append('<tr align="center" id="row-'+ i +'"></tr>');
+
+	          	if (m.length <= i) {
+
+	          		$('#row-'+ i).append(
+
+								'<td>\
+									<div class="row"></div>\
+									<div style="text-align: center;">\
+										<b>No timeslot available.</b>\
+									</div>\
+								</td>'
+
+								);
+
+	          	}
+
+	          	else {
+
+	          		$('#row-'+ i).append(
+
+									'<td>\
+										<label style="text-align: center;">\
+											<input type="checkbox" class="flat" name="sched[]" value="'+ m[i] +'"> &nbsp; '+ m_time[i] +'\
+										</label>\
+										<hr class="no-margin">\
+										<div style="text-align: center;">Slots: '+ m_slot[i] +'</div>\
+									</td>'
+
+								);
+
+	          	}
+
+	          	if (t.length <= i) {
+
+	          		$('#row-'+ i).append(
+
+								'<td>\
+									<div class="row"></div>\
+									<div style="text-align: center;">\
+										<b>No timeslot available.</b>\
+									</div>\
+								</td>'
+
+								);
+
+	          	}
+
+	          	else {
+
+	          		$('#row-'+ i).append(
+
+									'<td>\
+										<label>\
+											<input type="checkbox" class="flat" name="sched[]" value="'+ t[i] +'"> &nbsp; '+ t_time[i] +'\
+										</label>\
+										<hr class="no-margin">\
+										<div style="text-align: center;">Slots: '+ t_slot[i] +'</div>\
+									</td>'
+
+								);
+
+	          	}
+
+	          	if (w.length <= i) {
+
+	          		$('#row-'+ i).append(
+
+								'<td>\
+									<div class="row"></div>\
+									<div style="text-align: center;">\
+										<b>No timeslot available.</b>\
+									</div>\
+								</td>'
+
+								);
+
+	          	}
+
+	          	else {
+
+	          		$('#row-'+ i).append(
+
+									'<td>\
+										<label>\
+											<input type="checkbox" class="flat" name="sched[]" value="'+ w[i] +'"> &nbsp; '+ w_time[i] +'\
+										</label>\
+										<hr class="no-margin">\
+										<div style="text-align: center;">Slots: '+ w_slot[i] +'</div>\
+									</td>'
+
+								);
+
+	          	}
+
+	          	if (h.length <= i) {
+
+	          		$('#row-'+ i).append(
+
+								'<td>\
+									<div class="row"></div>\
+									<div style="text-align: center;">\
+										<b>No timeslot available.</b>\
+									</div>\
+								</td>'
+
+								);
+
+	          	}
+
+	          	else {
+
+	          		$('#row-'+ i).append(
+
+									'<td>\
+										<label>\
+											<input type="checkbox" class="flat" name="sched[]" value="'+ h[i] +'"> &nbsp; '+ h_time[i] +'\
+										</label>\
+										<hr class="no-margin">\
+										<div style="text-align: center;">Slots: '+ h_slot[i] +'</div>\
+									</td>'
+
+								);
+
+	          	}
+
+	          	if (f.length <= i) {
+
+	          		$('#row-'+ i).append(
+
+								'<td>\
+									<div class="row"></div>\
+									<div style="text-align: center;">\
+										<b>No timeslot available.</b>\
+									</div>\
+								</td>'
+
+								);
+
+	          	}
+
+	          	else {
+
+	          		$('#row-'+ i).append(
+
+									'<td>\
+										<label>\
+											<input type="checkbox" class="flat" name="sched[]" value="'+ f[i] +'"> &nbsp; '+ f_time[i] +'\
+										</label>\
+										<hr class="no-margin">\
+										<div style="text-align: center;">Slots: '+ f_slot[i] +'</div>\
+									</td>'
+
+								);
+
+	          	}
+
+	          }
+
+	          $('#t-content').iCheck({checkboxClass: 'icheckbox_flat-green'});
+
+	        }
+
+        });
+
+      });
+
+    </script>
+
+  </body>
+</html>

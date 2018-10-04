@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'admin-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Manage Users</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+								<!-- START Table-->
+
+                <div class="row">
+        					<div class="col-md-12 col-sm-12 col-xs-12">
+
+        						<div class="clearfix">
+
+                    <form method="POST" action="">
+
+          						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead style="background-color: #4CAF50; color:white;">
+                          <tr>
+                            <th style="width: 14%">ID Number</th>
+                            <th style="width: 23%">Name</th>
+                            <th style="width: 25%">Email</th>
+                            <th style="width: 13%">Role</th>
+                            <th style="width: 11%">Status</th>
+                            <th style="width: 15%">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% block content2 %}
+                          {% for User in Users %}
+                          <tr>
+                            <td>{{User.IDNumber}}</td>
+                            <td>{{User.Name}}</td>
+                            <td>{{User.Email}}</td>
+                            <td>{{User.Type.UserType}}</td>
+                              {% if User.UserStatus == 1 %}
+                            <td style="color:green;">Active</td>
+                              {% else %}
+                              <td style="color:red;">Inactive</td>
+                              {% endif %}
+                            <td class="actions">
+                            <button type="button" name="details" class="btn btn-primary" onclick="editClick(this)" id="{{User.UserID}}" data-toggle="modal" data-target=".div-edit-user-details-modal">&nbsp;Edit Details&nbsp;</button></td>
+                          </tr>
+                          {% endfor %}
+                          {% endblock %}
+
+                        </tbody>
+                      </table>
+
+                    </form>
+
+                    </div>
+        					</div>
+
+						      <!-- END Table-->
+
+                  <!-- MODAL FOR EDIT USER DETAILS -->
+                  <!-- MODAL FOR EDIT USER DETAILS -->
+
+                  <div class="modal fade div-edit-user-details-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-md">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel2">Edit User Information</h4>
+                    </div>
+                    <div class="modal-body">
+
+                      <form method="POST" action="" class="form-horizontal form-label-left">{% csrf_token %}
+
+
+                        <div id="edit_info">
+
+                          <!-- AJAX -->
+
+                        </div>
+
+                      <div class="modal-footer" id="footer-buttons">
+
+                      </div>
+
+                    </form>
+
+                  </div>
+                  </div>
+                  </div>
+
+                  <!-- END MODAL FOR EDIT USER DETAILS -->
+                  <!-- END MODAL FOR EDIT USER DETAILS -->
+
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+    <!-- jQuery -->
+    {% include 'import-js.html' %}
+
+    <script>
+
+      function editClick(elem) {
+        var dbtableid = elem.id;
+
+        $.ajax({
+
+          url: "ajax/manageusers",
+          method: "POST",
+          data:{
+            'dbtableid':dbtableid,
+            'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+          },
+
+          success: function(data){
+
+            $('#user_info').empty();
+            $('#edit_info').empty();
+            $('#footer-buttons').empty();
+
+            var newdata = JSON.parse(data);
+            console.log(newdata);
+
+            // seperating json data
+
+            var labs = []; //separate array for lab names
+            var labsid = []; //separate array for lab id
+            var advisers = []; //separate array for adviser names
+            var advisersid = []; //separate array for adviser id
+            var roles = []; // usertype
+            var rolesid = []; //usertypeid
+
+            var x = 0; //counter for adding in labs array
+            var y = 0; //counter for adding in advisers array
+            var z = 0; // for roles
+
+            for (var i = 0; i < newdata.length; i++) {
+              if (newdata[i].model == 'ARC.ref_laboratory') {
+
+                labs[x] = newdata[i].fields.LaboratoryName;
+                labsid[x] = newdata[i].pk;
+                x++;
+
+              }
+
+              else if (i != 0 && newdata[i].model == 'ARC.user') {
+
+                console.log(newdata[i].fields.group)
+
+                advisers[y] = newdata[i].fields.Name;
+                advisersid[y] = newdata[i].pk;
+                y++;
+
+              }
+
+              else if (i != 0 && newdata[i].model == 'ARC.ref_usertype') {
+
+                roles[z] = newdata[i].fields.UserType;
+                rolesid[z] = newdata[i].pk;
+                z++;
+
+              }
+            }
+
+            // START appending common fields in modal with sticky data
+
+            if (newdata[0].fields.UserStatus == 1) {
+              var status = 'Active';
+            }
+
+            else {
+              var status = 'Inactive';
+            }
+
+
+            $('#edit_info').append(
+
+              '<div class="form-group">\
+                <label class="control-label col-md-2 col-xs-12">Name</label>\
+                <div class="col-md-9 col-sm-7 col-xs-12">\
+                  <input type="input" name="name" required="required" class="form-control col-md-12 col-xs-12" value="'+ newdata[0].fields.Name +'">\
+                </div>\
+              </div>\
+              \
+              <div class="form-group">\
+                <label class="control-label col-md-2 col-xs-12">ID Number</label>\
+                <div class="col-md-9 col-sm-7 col-xs-12">\
+                  <input type="number" name="idnum" required="required" class="form-control col-md-12 col-xs-12" value="'+ newdata[0].fields.IDNumber +'">\
+                </div>\
+              </div>\
+              \
+              <div class="form-group">\
+                <label class="control-label col-md-2 col-xs-12">Mobile Number</label>\
+                <div class="col-md-9 col-sm-7 col-xs-12">\
+                  <input type="number" name="pnumber" required="required" class="form-control col-md-12 col-xs-12" value="'+ newdata[0].fields.PhoneNumber +'" style="margin-top: 10px;">\
+                </div>\
+              </div>\
+              \
+              <span id="edit_fields">\
+              </span>\
+              <div class="form-group">\
+                <label class="control-label col-md-2 col-sm-3 col-xs-12" for="accounttype">Role</label>\
+                <div class="col-md-9 col-sm-6 col-xs-12">\
+                  <select name="role" id="select_role" class="form-control" required>\
+                    <option value="'+ newdata[0].fields.Type[1] +'">'+ newdata[0].fields.Type[0] +'</option>\
+                  </select>\
+                </div>\
+              </div>\
+              \
+              <div class="form-group">\
+                <label class="control-label col-md-2 col-sm-3 col-xs-12" for="accounttype">Status</label>\
+                <div class="col-md-9 col-sm-6 col-xs-12">\
+                  <select name="status" id="select_lab" class="form-control" required>\
+                    <option value="1">Active</option>\
+                    <option value="2">Inactive</option>\
+                  </select>\
+                </div>\
+              </div>\
+              \
+              <input type="hidden" name="type" value="'+ newdata[0].fields.UserType +'">'
+
+            );
+
+            for (var i = 0; i < roles.length; i++) { // Populate roles dropdown
+              if (roles[i] != newdata[0].fields.Type[0]) {
+
+                $('#select_role').append(
+                  '<option value="'+ rolesid[i] +'">'+ roles[i] +'</option>'
+                );
+
+              }
+            }
+
+            $('#footer-buttons').append(
+
+              '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\
+              <button type="submit" class="btn btn-success" name="submit" value="'+ newdata[0].pk +'">Accept Changes</button>'
+
+            );
+
+            // END appending common fields in modal with sticky data
+
+            // START for student users
+
+            if (newdata[0].fields.UserType == 1) {
+
+              $('#student_fields').append(
+
+                '<h5><b>Degree: </b> &nbsp; ' + newdata[0].fields.Degree + ' </h5>\
+                <h5><b>Thesis Adviser: </b> &nbsp; ' + newdata[0].fields.adviser[0] + ' </h5>'
+
+              );
+
+              $('#tech_fields').append(
+
+                '<h5><b>Laboratory: </b> &nbsp; ' + newdata[0].fields.Laboratory[0] + ' </h5>'
+
+              );
+
+              $('#edit_fields').append(
+
+                '<div class="form-group">\
+                  <label class="control-label col-md-2 col-sm-3 col-xs-12" for="accounttype">Adviser</label>\
+                  <div class="col-md-9 col-sm-6 col-xs-12">\
+                    <select name="adviser" id="select_adviser" class="form-control" required>\
+                      <option value="' + newdata[0].fields.adviser[1] + '">'+ newdata[0].fields.adviser[0] +'</option>\
+                    </select>\
+                  </div>\
+                </div>\
+                \
+                <div class="form-group">\
+                  <label class="control-label col-md-2 col-sm-3 col-xs-12" for="accounttype">Laboratory</label>\
+                  <div class="col-md-9 col-sm-6 col-xs-12">\
+                    <select name="lab" id="select_lab" class="form-control" required>\
+                      <option value="' + newdata[0].fields.Laboratory[1] + '">'+ newdata[0].fields.Laboratory[0] +'</option>\
+                    </select>\
+                  </div>\
+                </div>'
+
+              );
+
+              // append dropdown options
+
+              for (var i = 0; i < advisers.length; i++) {
+
+                if (advisers[i] != newdata[0].fields.adviser[0]) {
+                  $('#select_adviser').append(
+                    '<option value="' + advisersid[i] + '">'+ advisers[i] +'</option>'
+                  );
+
+                }
+              }
+
+              for (var i = 0; i < labs.length; i++) {
+                if (labs[i] != newdata[0].fields.Laboratory[0]) {
+
+                  $('#select_lab').append(
+                    '<option value="' + labsid[i] + '">'+ labs[i] +'</option>'
+                  );
+
+                }
+              }
+
+            }
+
+            // END for student users
+
+            // START for faculty-tech / technician users
+
+            if (newdata[0].fields.UserType == 3 || newdata[0].fields.UserType == 4) {
+
+              $('#tech_fields').append(
+
+                '<h5><b>Laboratory: </b> &nbsp; ' + newdata[0].fields.Laboratory[0] + ' </h5>'
+
+              );
+
+              $('#edit_fields').append(
+
+                '<div class="form-group">\
+                  <label class="control-label col-md-2 col-sm-3 col-xs-12" for="accounttype">Laboratory</label>\
+                  <div class="col-md-9 col-sm-6 col-xs-12">\
+                    <select name="lab" id="select_lab" class="form-control" required>\
+                      <option value="' + newdata[0].fields.Laboratory[1] + '">'+ newdata[0].fields.Laboratory[0] +'</option>\
+                    </select>\
+                  </div>\
+                </div>'
+
+              );
+
+              // append dropdown options
+
+              for (var i = 0; i < labs.length; i++) {
+                if (labs[i] != newdata[0].fields.Laboratory[0]) {
+
+                  $('#select_lab').append(
+                    '<option value="' + labsid[i] + '">'+ labs[i] +'</option>'
+                  );
+
+                }
+              }
+
+            }
+
+            // END for faculty-tech / technician users
+
+          }
+
+        });
+
+      }
+
+    </script>
+
+    {% block check %}
+      {% for c in Check %}
+        {% if c == 'Success' %}
+
+          <script>
+
+            new PNotify({
+              title: 'Done Editing a User',
+              text: 'You have successfully edited a user!',
+              type: 'success',
+              styling: 'bootstrap3'
+            });
+
+          </script>
+
+        {% endif %}
+      {% endfor %}
+    {% endblock %}
+
+  </body>
+</html>

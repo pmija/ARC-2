@@ -1,0 +1,192 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    {% include 'import-css.html' %}
+
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'technician-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Add Item</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <form action="" method="post" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">{% csrf_token %}
+						{% block content %}
+							{% for c in Check %}
+								{% if c == 'Success' %}
+								<div class="form-group">
+									<div class="control-label col-md-6 col-sm-3 col-xs-12">
+										<h4 style="color:green">Success</h4>
+									</div>
+								</div>
+								{% endif %}
+							{% endfor %}
+						{% endblock %}
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="itemname">Item Name
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="last-name" name="itemname" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="description" class="control-label col-md-3 col-sm-3 col-xs-12">Description</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input id="description" class="form-control col-md-7 col-xs-12" type="text" name="description">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="type">Type
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <div class="radio" >
+                            <label>
+                              <input type="radio" class="flat" name="item_type" value="big"> Big
+                            </label>
+                          </div>
+                          <div class="radio">
+                            <label>
+                              <input type="radio" class="flat" name="item_type" value="small"> Small
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+
+					           <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="quantity">Quantity
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="number" id="quantity" name="quantity" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="uid">Unique ID
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="number" id="uid" name="uid" class="form-control col-md-6 col-xs-12">
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".div-scan-item-modal">Scan Item</button>
+                        </div>
+                      </div>
+
+                      <div class="modal fade div-scan-item-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                      <div class="modal-dialog modal-sm" id="item-scan-modal">
+                      <div class="modal-content">
+
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                          </button>
+                          <h4 class="modal-title" id="myModalLabel2">Scan Item RFID Tag</h4>
+                        </div>
+                        <div class="modal-body">
+                          <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="unique_id">Unique ID</label>
+                            <div class="col-md-8 col-sm-7 col-xs-12">
+                              <input type="input" name="unique_id" class="form-control col-md-12 col-xs-12">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+
+                      </div>
+                      </div>
+                      </div>
+
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-12" align="center">
+                          <button class="btn btn-default" type="button">Cancel</button>
+                          <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+
+                    </form>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    {% include 'import-js.html' %}
+
+
+  </body>
+</html>

@@ -1,0 +1,221 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+  {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+        <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'student-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="dashboard_graph">
+               <div class="page-title">
+					<div class="title_left">
+						<h2>Residency Report</h2>
+					</div>
+				</div>
+
+			  <div style="margin-top:0px;" class="ln_solid"></div>
+		      <div class="row">
+				<div class="col-md-12">
+					<div class="x_content" style="margin-top:0px;">
+
+					<form action="" method="post">
+
+					<!--START 1st-->
+					<div class="row">
+					<div class="column" style="float: left;height:220px;width:350px;margin-bottom:0px;margin-left:20px;">
+
+						  <div class="x_title" style="margin-bottom:0px;">
+							<h4><b>Student Information</b></h4>
+							<div class="clearfix"></div>
+						  </div>
+						  <div class="x_content" style="margin-top:0px;">
+							<div class="dashboard-widget-content">
+							<h5><b>ID Number: </b> &nbsp; {{user.IDNumber}}</h5>
+							<h5><b>Full Name: </b> &nbsp; {{user.Name}}</h5>
+							<h5><b>Degree: </b> &nbsp; {{user.Degree.DegreeName}}</h5>
+							<h5><b>Adviser: </b> &nbsp; {{user.adviser.Name}}</h5>
+              {%if user.group != None%}
+							<h5><b>Group Name: </b> &nbsp; {{user.group.GroupName}}</h5>
+							<h5><b>Laboratory: </b> &nbsp; {{user.group.lab.LaboratoryName}}</h5>
+              {%endif%}
+							</div>
+
+
+                        </div>
+					</div>
+						<!--END-->
+						<!--START Table-->
+
+						<div class="column" style="float: right;height:250px;width:700px;margin-bottom:0px;margin-right:20px">
+						<h4><b>Residency Schedule</b></h5>
+						<!-- Actual Residency Schedule Table -->
+
+                          <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                          <thead>
+                            <tr>
+                              <th style="width: 20%;">Monday</th>
+                              <th style="width: 20%;">Tuesday</th>
+                              <th style="width: 20%;">Wednesday</th>
+                              <th style="width: 20%;">Thursday</th>
+                              <th style="width: 20%;">Friday</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {%for d in data%}
+                            <tr>
+                                <td align="center">{{d.Monday}}</td>
+                                <td align="center">{{d.Tuesday}}</td>
+                                <td align="center">{{d.Wednesday}}</td>
+                                <td align="center">{{d.Thursday}}</td>
+                                <td align="center">{{d.Friday}}</td>
+                            </tr>
+                            {%endfor%}
+                          </tbody>
+                          </table>
+
+                          <!-- Actual Residency Schedule Table -->
+						</div>
+						</div>
+						<!--END Radio-->
+
+						<!--START Table-->
+						<div class="col-md-12 col-sm-12 col-xs-12">
+							<!--Date Picker-->
+							<div id="residency" class="tab-pane fade in active">
+
+              {%csrf_token%}
+							<div class="form-group">
+								<div class="x_content">
+								<button style="margin-left:85%;font-size:20px;text-decoration:none;display:inline-block;padding:1px 10px;background-color:#f1f1f1;color:black;" onclick="back()">&laquo;</button>
+								<b> Week 1 </b>
+								<button style="margin-left:1%;font-size:20px;text-decoration:none;display:inline-block;padding:1px 10px;background-color:#4CAF50;color:white;" onclick="next()">&raquo;</button>
+								<h4 id="title_table" align="center" style="margin-top:0px;"><b>Residency Log</b><br>
+								<small>August 01, 2018 to August 16, 2018</small></h4>
+								<h5 style="margin-left:1%;"><b>Required Hours:</b> 6 hours</h5>
+								<h5 style="margin-left:1%;"><b>Total Hours:</b> {{actual_total}}</h5>
+									<div class="table-responsive">
+										<table class="table table-striped jambo_table bulk_action" id="printTable"  border="1" rules="all" align="center" style="width:100%;">
+											<thead style="background-color: #4CAF50;">
+											  <tr class="headings">
+											    <th class="column-title">Date</th>
+												<th class="column-title">Day</th>
+												<th class="column-title">Actual Start Time</th>
+												<th class="column-title">Actual End Time</th>
+												<th class="column-title">Duration</th>
+											  </tr>
+											</thead>
+
+											<tbody id="tbodyid">
+                    {%for a in actual_residency%}
+											<tr>
+											  <td>{{a.Date}}</td>
+											  <td>{{a.Day}}</td>
+											  <td>{{a.Start}}</td>
+											  <td>{{a.End}}</td>
+											  <td>{{a.Duration}}</td>
+											</tr>
+                      {%endfor%}
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							</div>
+							</div>
+						</div>
+						<!--END Radio-->
+
+
+						</form>
+
+
+					</div>
+				</div>
+			  </div>
+
+
+				<div class="clearfix"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    {% include 'import-js.html' %}
+    <script>
+    function back() {
+      console.log("Back Week");
+    }
+
+    function next() {
+      console.log("Next Week");
+    }
+    </script>
+  </body>
+</html>

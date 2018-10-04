@@ -1,0 +1,150 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    {% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'faculty-sidebar.html' %}
+            <!-- /sidebar menu -->
+
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Add Group</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                      <form action="{% url 'Faculty/AddGroup' %}" method="post" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">{% csrf_token %}
+                  <div id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Group Name
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <input type="text" id="last-name" name="groupname" required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Laboratory
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                          <select name="laboratory" id="accounttype" class="form-control" required>
+                            {% for Ref_Laboratory in lab %}
+                            <option name="adviser" value="{{Ref_Laboratory.LabID}}">{{Ref_Laboratory.LaboratoryName}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fullname">Members
+                        </label><br><br>
+						<div style="width:600px;margin-left:315px;">
+						<select multiple="multiple" size="8" name="select2[]" required>
+              {% for User in members %}
+              <option name="select2[]" value="{{User.UserID}}">{{User.Name}}</option>
+              {% endfor %}
+						</select>
+						</div>
+                      </div>
+
+                      <div class="ln_solid"></div>
+                      <div class="form-group">
+                        <div class="col-md-12" align="center">
+                          <button class="btn btn-default" type="button">Cancel</button>
+                          <button type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                      </div>
+
+                  </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <!-- /footer content -->
+      </div>
+    </div>
+
+    {% include 'import-js.html' %}
+
+    <script>
+    var demo1 = $('select[name="select2[]"]').bootstrapDualListbox();
+    var limit1 = document.getElementById("limit").value;
+
+    demo1.on('change', function(){
+    var size = demo1.find(":selected").size();
+    if(size > limit1){
+        demo1.find(":selected").each(function(ind, sel){
+            if(ind > (limit1 - 1))
+                $(this).prop("selected", false)
+        })
+        demo1.bootstrapDualListbox('refresh', true);
+    }
+	})
+	</script>
+
+  </body>
+</html>

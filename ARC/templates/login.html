@@ -1,0 +1,76 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | Login</title>
+
+    <link href="{% static 'production/custom-font/montserrat.css' %}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{% static 'production/../vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{% static 'production/../vendors/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{% static 'production/../vendors/nprogress/nprogress.css' %}" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="{% static 'production/../vendors/animate.css/animate.min.css' %}" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="{% static 'production/../build/css/custom.css' %}" rel="stylesheet">
+  </head>
+
+  <body class="login">
+    <div class="nav">
+
+      <div class="login_wrapper">
+          <section class="login_content">
+
+            <div class="row">
+
+              <div class="col-md-1">
+              </div>
+
+              <div class="col-md-3">
+                <img src="{% static 'production/images/logo.png' %}" id="login_logo">
+              </div>
+
+            </div>
+
+            <form action="{% url 'login'}" method="post"> <!-- Action is the name of the VIEW that handles the processing -->
+              
+              <div>
+                
+                <!-- 
+
+                  The href is needed to prompt the social auth app that it needs to redirect to a google login screen
+                  
+                  The "{{request.path}}" is the prompt to the social auth app that it will redirect to the path specified
+                  at the login view at views.py after a successful login (specifically "return redirect('url name')"). 
+
+                -->
+
+                <a class="btn btn-default submit" href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}""
+                id="login_button" input type="submit"><i class="fa fa-google" id="gmail"></i>&nbsp; Sign in with Google</a>
+                
+                <p><br>
+                <p class="change_link">New to site? Sign in using your DLSU Gmail Account!
+
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+              </div>
+
+            </form>
+          </section>
+
+    </div>
+
+  </body>
+</html>

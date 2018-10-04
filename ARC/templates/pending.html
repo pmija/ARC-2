@@ -1,0 +1,51 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+    <link href="{% static 'production/custom-font/montserrat.css' %}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{% static 'production/../vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="{% static 'production/../vendors/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="{% static 'production/../vendors/nprogress/nprogress.css' %}" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="{% static 'production/../vendors/animate.css/animate.min.css' %}" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="{% static 'production/../build/css/custom.css' %}" rel="stylesheet">
+  </head>
+
+  <body class="login">
+    <div class="nav">
+
+      <div class="login_wrapper">
+          <section class="login_content">
+
+            <div class="row">
+
+              <div class="col-md-1">
+              </div>
+
+              <div class="col-md-9">
+                <img src="{% static 'production/images/logo.png' %}" id="login_logo" style="width:200px;length:100px;">
+              </div>
+
+            </div>
+
+          </section>
+
+    </div>
+
+	<p align="center" style="font-size:15px;">Waiting for confirmation...<br>
+				Please go to the System Administrator and present your <b><u>DLSU ID</u></b>!</p>
+  </body>
+</html>
