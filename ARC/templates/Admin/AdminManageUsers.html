@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -19,7 +20,7 @@
          <div class="col-md-3 left_col menu_fixed">
           <div class="left_col scroll-view">
             <div class="navbar nav_title">
-              <p class="site_title"><img src="images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"></a>
             </div>
 
             <div class="clearfix"></div>
