@@ -305,7 +305,7 @@ def logout_view(request):
 	if UserStatus.filter(UserStatus='0'): # User status of 0 means that the user pending evaluation.
 		logout(request) # This method is created by django and is used to log out a session.
 		return redirect('pending')
-	
+
 	else: # This is used for regular log outs.
 		logout(request)
 		return redirect('login')
@@ -318,7 +318,13 @@ def register(request):
 		lname = request.POST.get('last_name', '')
 		mobileno = request.POST.get('mobileno', '')
 		remarks = request.POST.get('remarks','')
-		user_obj = User (Remarks=remarks, IDNumber = idnum, Email = emailadd, Name = fname +" " + lname, PhoneNumber = mobileno, Type=None, adviser=None,Degree=None,group=None,Department=None,Laboratory=None)
+		degreeno = request.POST.get('degree','')
+		if(degreeno == '0'):
+			degree = None
+		else:
+			degree = Ref_Degree.objects.get(DegreeID=degreeno)
+
+		user_obj = User (Remarks=remarks, IDNumber = idnum, Email = emailadd, Name = fname +" " + lname, PhoneNumber = mobileno, Type=None, adviser=None,Degree=degree,group=None,Department=None,Laboratory=None)
 		user_obj.save();
 		return redirect('logout')
 	else:
@@ -326,8 +332,10 @@ def register(request):
 		email = request.user.email # Gets logged in user's email
 		first_name = request.user.first_name # Gets logged in user's last
 		last_name = request.user.last_name # Gets logged in user's first name
+		Degree = Ref_Degree.objects.all()
 		# Send data to template to render data to the screen
-		return render(request,'register.html',{'email':email,'first_name':first_name,'last_name':last_name})
+		return render(request,'register.html',{'email':email,'first_name':first_name,'last_name':last_name,'degree':Degree})
+
 
 def pending(request):
 	return render(request,'pending.html')
