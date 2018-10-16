@@ -324,7 +324,7 @@ def register(request):
 		else:
 			degree = Ref_Degree.objects.get(DegreeID=degreeno)
 
-		user_obj = User (Remarks=remarks, IDNumber = idnum, Email = emailadd, Name = fname +" " + lname, PhoneNumber = mobileno, Type=None, adviser=None,Degree=degree,group=None,Department=None,Laboratory=None)
+ 		user_obj = User (Remarks=remarks, IDNumber = idnum, Email = emailadd, Name = fname +" " + lname, PhoneNumber = mobileno, Type=None, adviser=None,Degree=degree,group=None,Department=None,Laboratory=None)
 		user_obj.save();
 		return redirect('logout')
 	else:
@@ -399,7 +399,8 @@ def EditLabAjax(request):
 		lab_serialized = serializers.serialize('json', labtoedit)
 
 		if ResidencyTimeSlot.objects.filter(Laboratory=tableid).exists():
-			sched = ResidencyTimeSlot.objects.filter(Laboratory=tableid)
+			get_var = ResidencyTimeSlot.objects.latest('SchedVar')
+			sched = ResidencyTimeSlot.objects.filter(Laboratory=tableid).filter(SchedVar=get_var.SchedVar)
 			result_list = list(chain(labtoedit, sched))
 			lab_serialized = serializers.serialize('json', result_list)
 			return JsonResponse(lab_serialized, safe=False)
@@ -649,18 +650,37 @@ def AdminEditLaboratory(request):
 		capacity = request.POST.get('capacity', '')
 		labid = request.POST.get('labid', '')
 		status = request.POST.get('status', '')
-		asd = request.POST.getlist('sched[]', '')
+		sched = request.POST.getlist('sched[]', '')
 		lab = Ref_Laboratory.objects.all().filter(LabID=labid)
 
-		if (len(asd) > 0):
+		if (len(sched) > 0):
 
+			changes = False
 			lab_obj = Ref_Laboratory.objects.get(LabID=labid)
+			get_var = ResidencyTimeSlot.objects.latest('SchedVar')
+			old_sched = ResidencyTimeSlot.objects.filter(Laboratory=labid).filter(SchedVar=get_var.SchedVar) # current sched used
+			next_var = get_var.SchedVar + 1
 
-			for item in ResidencyTimeSlot.objects.all().filter(Laboratory=labid):
-				item.delete();
-			for i in range(0, len(asd)):
-				ressched = ResidencyTimeSlot(Laboratory=lab_obj, Schedule=asd[i], TotalSlot = lab[0].Capacity, TakenSlot=0);
-				ressched.save()
+			if len(sched) != old_sched.count(): #automatically edited since size is not the same
+
+				for m in range(0, len(sched)):
+					newsched = ResidencyTimeSlot(Laboratory=lab_obj, Schedule=sched[m], TotalSlot = lab[0].Capacity, TakenSlot=0, SchedVar=next_var);
+					newsched.save()
+
+			elif len(sched) == old_sched.count(): #find if changes are made
+
+				for m in range (0, old_sched.count()):
+					if old_sched[m].Schedule != sched[m]:
+						changes = True
+
+				if changes:
+
+					for x in range (0, len(sched)):
+						newsched = ResidencyTimeSlot(Laboratory=lab_obj, Schedule=sched[x], TotalSlot = lab[0].Capacity, TakenSlot=0, SchedVar=next_var);
+						newsched.save()
+
+				else:
+					print('no changes')
 
 		Ref_Laboratory.objects.filter(LabID=labid).update(LaboratoryName=labname,RoomNum=roomno, Capacity=capacity, Status=status)
 		return render(request, 'Admin/AdminAddLaboratory.html', {'Labs': laboratories, 'Check': ['Success']})
