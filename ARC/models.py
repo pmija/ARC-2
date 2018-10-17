@@ -115,6 +115,7 @@ class ResidencyTimeSlot(models.Model):
 class StudentResidencySchedule(models.Model):
 	StudentResSchedID = models.AutoField(primary_key=True)
 	RefSchedVar = models.IntegerField(default=0)
+	StudentSchedVar = models.IntegerField(default=0)
 	Student =  models.CharField(max_length=250,default='')
 	Schedule =  models.CharField(max_length=50,default='')
 

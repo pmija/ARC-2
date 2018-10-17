@@ -324,7 +324,7 @@ def register(request):
 		else:
 			degree = Ref_Degree.objects.get(DegreeID=degreeno)
 
- 		user_obj = User (Remarks=remarks, IDNumber = idnum, Email = emailadd, Name = fname +" " + lname, PhoneNumber = mobileno, Type=None, adviser=None,Degree=degree,group=None,Department=None,Laboratory=None)
+		user_obj = User (Remarks=remarks, IDNumber = idnum, Email = emailadd, Name = fname +" " + lname, PhoneNumber = mobileno, Type=None, adviser=None,Degree=degree,group=None,Department=None,Laboratory=None)
 		user_obj.save();
 		return redirect('logout')
 	else:
@@ -343,9 +343,19 @@ def pending(request):
 def SetResidencyAjax(request):
 	if request.method == 'POST':
 		labid = request.POST['labid']
+		student_nfc = request.POST['student_nfc']
 
-	sched = ResidencyTimeSlot.objects.filter(Laboratory=labid)
-	item_serialized = serializers.serialize('json', sched)
+	get_var = ResidencyTimeSlot.objects.filter(Laboratory=labid).latest('SchedVar')
+	sched = ResidencyTimeSlot.objects.filter(Laboratory=labid).filter(SchedVar=get_var.SchedVar)
+
+	if StudentResidencySchedule.objects.filter(Student=student_nfc).exists():
+		get_Svar = StudentResidencySchedule.objects.filter(Student=student_nfc).latest('RefSchedVar')
+		student_sched = StudentResidencySchedule.objects.filter(Student=student_nfc).filter(RefSchedVar=get_Svar.RefSchedVar)
+		result_list = list(chain(sched, student_sched))
+		item_serialized = serializers.serialize('json', result_list)
+
+	else:
+		item_serialized = serializers.serialize('json', sched)
 
 	return JsonResponse(item_serialized, safe=False)
 
@@ -399,7 +409,7 @@ def EditLabAjax(request):
 		lab_serialized = serializers.serialize('json', labtoedit)
 
 		if ResidencyTimeSlot.objects.filter(Laboratory=tableid).exists():
-			get_var = ResidencyTimeSlot.objects.latest('SchedVar')
+			get_var = ResidencyTimeSlot.objects.filter(Laboratory=tableid).latest('SchedVar')
 			sched = ResidencyTimeSlot.objects.filter(Laboratory=tableid).filter(SchedVar=get_var.SchedVar)
 			result_list = list(chain(labtoedit, sched))
 			lab_serialized = serializers.serialize('json', result_list)
@@ -741,35 +751,27 @@ def StudentSetResidency(request):
 
 	student = User.objects.get(Email=request.user.email)
 
-	if not StudentResidencySchedule.objects.filter(Student=student.NFCUniqueID).exists():
+	if request.method == 'POST':
+		sched = request.POST.getlist('sched[]', '')
+		student = request.POST.get('student_id', '')
+		lab = request.POST.get('lab_id', '')
 
-		print('pumasok tol');
-
-		if request.method == 'POST':
-			sched = request.POST.getlist('sched[]', '')
-			student = request.POST.get('student_id', '')
-			lab = request.POST.get('lab_id', '')
-
-			if student == '':
-				return render(request, 'Students/StudentSetResidency.html')
-
-			else:
-				for i in range(0, len(sched)):
-					ressched = StudentResidencySchedule(Student=student, Schedule=sched[i]);
-					ressched.save()
-					rt = ResidencyTimeSlot.objects.all().filter(Schedule=sched[i], Laboratory=lab)
-					print (rt[0].TakenSlot)
-					x = rt[0].TakenSlot + 1
-					print (x)
-					rt.update(TakenSlot=x)
-				return render(request, 'Students/StudentSetResidency.html')
+		if student == '':
+			return render(request, 'Students/StudentSetResidency.html')
 
 		else:
-			return render(request, 'Students/StudentSetResidency.html', {'student':student})
+			for i in range(0, len(sched)):
+				ressched = StudentResidencySchedule(Student=student, Schedule=sched[i]);
+				ressched.save()
+				rt = ResidencyTimeSlot.objects.all().filter(Schedule=sched[i], Laboratory=lab)
+				print (rt[0].TakenSlot)
+				x = rt[0].TakenSlot + 1
+				print (x)
+				rt.update(TakenSlot=x)
+			return render(request, 'Students/StudentSetResidency.html')
 
 	else:
-		print('tanga');
-		return render(request, 'Students/StudentSetResidency.html', {'studentx':student, 'Has': ' (You already have a residency schedule)'})
+		return render(request, 'Students/StudentSetResidency.html', {'student':student})
 
 def StudentEditResidency(request):
 	return render(request, 'Students/StudentEditResidency.html')

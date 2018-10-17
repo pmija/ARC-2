@@ -507,6 +507,28 @@
 
 			success: function(data){
 				$('#modal').empty();
+
+        var default_timeslots = [];             var days = [];
+        default_timeslots.push('07+30-09+00');  days.push('M');
+        default_timeslots.push('09+15-10+45');  days.push('T');
+        default_timeslots.push('11+00-12+30');  days.push('W');
+        default_timeslots.push('12+45-14+15');  days.push('H');
+        default_timeslots.push('14+30-16+00');  days.push('F');
+        default_timeslots.push('16+15-17+45');
+        default_timeslots.push('18+00-19+30');
+        default_timeslots.push('19+45-21+15');
+
+        for (var k = 0; k < default_timeslots.length; k++) {
+
+          for (var j = 0; j < days.length; j++) {
+
+            $('[id="' + days[j] + '_' + default_timeslots[k] + '"]').iCheck('uncheck').iCheck('update');  
+            $('[id="' + days[j] + '_' + default_timeslots[k] + '_slots"]').empty();
+
+          }
+
+        }
+
 				var newdata = JSON.parse(data);
         console.log(newdata);
 				document.getElementById("labid").value = newdata[0].pk;

@@ -85,9 +85,9 @@
 
 	                        <div class="col-md-8" id="curr-lab">
 
-	                          <h5><b>Laboratory:</b>&nbsp; {{student.Laboratory.LaboratoryName}}{{studentx.Laboratory.LaboratoryName}}{{Has}}</h5>
+	                          <h5><b>Laboratory:</b>&nbsp; {{student.Laboratory.LaboratoryName}}</h5>
 	                          <input type="hidden" name="lab_id" id="lab-id" value="{{student.Laboratory.LabID}}">
-	                          <input type="hidden" name="student_id" value="{{student.NFCUniqueID}}">
+	                          <input type="hidden" name="student_id" id="student-id" value="{{student.NFCUniqueID}}">
 
 	                        </div>
 
@@ -150,41 +150,42 @@
       $(document).ready(function(){
 
       	var labid = $('#lab-id').val();
+      	var student_nfc = $('#student-id').val();
 
         $.ajax({
 
 	        url: "ajax/setresidency",
 	        method: "POST",
-	        data:{ 'labid': labid, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
+	        data:{ 'labid': labid, 'student_nfc': student_nfc, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
 
 	        success: function(data){
 
-	        	var newdata = JSON.parse(data);
-	          console.log(newdata);
+	        var newdata = JSON.parse(data);
+	        console.log(newdata);
 
-	          var m = []; var m_slot = []; var m_time = [];
-	          var t = []; var t_slot = []; var t_time = [];
-	          var w = []; var w_slot = []; var w_time = [];
-	          var h = []; var h_slot = []; var h_time = [];
-	          var f = []; var f_slot = []; var f_time = [];
+	        var m = []; var m_slot = []; var m_time = [];
+	        var t = []; var t_slot = []; var t_time = [];
+	        var w = []; var w_slot = []; var w_time = [];
+	        var h = []; var h_slot = []; var h_time = [];
+	        var f = []; var f_slot = []; var f_time = [];
 
-	          function tConvert (time) {
-						  // Check correct time format and split into components
-						  time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+	        function tConvert (time) {
+				// Check correct time format and split into components
+				time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
-						  if (time.length > 1) { // If time format correct
-						    time = time.slice (1);  // Remove full string match value
-						    time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
-						    time[0] = +time[0] % 12 || 12; // Adjust hours
-						  }
-						  return time.join (''); // return adjusted time or original string
-						}
+				if (time.length > 1) { // If time format correct
+					time = time.slice (1);  // Remove full string match value
+					time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+					time[0] = +time[0] % 12 || 12; // Adjust hours
+				}
+				  return time.join (''); // return adjusted time or original string
+			}
 
 	          // ## APPEND FOR TD and POPULATE ARRAYS ## //
 
-	          for (var i = 0; i < newdata.length; i++) {
+			for (var i = 0; i < newdata.length; i++) {
 
-	          	if (newdata[i].fields.Schedule.includes("M")) {
+	          	if (newdata[i].fields.Schedule.includes("M") && newdata[i].model == 'ARC.residencytimeslot') {
 
 	          		var temp = newdata[i].fields.Schedule.substring(2);
 
@@ -208,7 +209,7 @@
 
 	          	}
 
-	          	else if (newdata[i].fields.Schedule.includes("T")) {
+	          	else if (newdata[i].fields.Schedule.includes("T") && newdata[i].model == 'ARC.residencytimeslot') {
 
 	          		var temp = newdata[i].fields.Schedule.substring(2);
 
@@ -232,7 +233,7 @@
 
 	          	}
 
-	          	else if (newdata[i].fields.Schedule.includes("W")) {
+	          	else if (newdata[i].fields.Schedule.includes("W") && newdata[i].model == 'ARC.residencytimeslot') {
 
 	          		var temp = newdata[i].fields.Schedule.substring(2);
 
@@ -255,14 +256,12 @@
 	          		w_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
 
 	          	}
-	          	else if (newdata[i].fields.Schedule.includes("H")) {
+	          	else if (newdata[i].fields.Schedule.includes("H") && newdata[i].model == 'ARC.residencytimeslot') {
 
 	          		var temp = newdata[i].fields.Schedule.substring(2);
 
 	          		for (var x = 0; x < 2; x++) {
-
 	          			temp = temp.replace("+", ":");
-
 	          		}
 
 	          		var split_temp = temp.split('-');
@@ -279,14 +278,12 @@
 
 	          	}
 
-	          	else if (newdata[i].fields.Schedule.includes("F")) {
+	          	else if (newdata[i].fields.Schedule.includes("F") && newdata[i].model == 'ARC.residencytimeslot') {
 
 	          		var temp = newdata[i].fields.Schedule.substring(2);
 
 	          		for (var x = 0; x < 2; x++) {
-
 	          			temp = temp.replace("+", ":");
-
 	          		}
 
 	          		var split_temp = temp.split('-');
@@ -303,12 +300,12 @@
 
 	          	}
 
-	          }
+	        }
 
-	          var max = Math.max(m.length, t.length, w.length, h.length, f.length);
-	          console.log('COUNTER FOR APPEND: ' + max);
+	        var max = Math.max(m.length, t.length, w.length, h.length, f.length);
+	        console.log('COUNTER FOR APPEND: ' + max);
 
-	          for (var i = 0; i < max; i++) {
+	        for (var i = 0; i < max; i++) {
 
 	          	$('#t-content').append('<tr align="center" id="row-'+ i +'"></tr>');
 
