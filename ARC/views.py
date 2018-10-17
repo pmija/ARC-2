@@ -349,8 +349,9 @@ def SetResidencyAjax(request):
 	sched = ResidencyTimeSlot.objects.filter(Laboratory=labid).filter(SchedVar=get_var.SchedVar)
 
 	if StudentResidencySchedule.objects.filter(Student=student_nfc).exists():
-		get_Svar = StudentResidencySchedule.objects.filter(Student=student_nfc).latest('RefSchedVar')
-		student_sched = StudentResidencySchedule.objects.filter(Student=student_nfc).filter(RefSchedVar=get_Svar.RefSchedVar)
+		get_Lvar = StudentResidencySchedule.objects.filter(Student=student_nfc).latest('RefSchedVar') # get most updated LAB sched
+		get_SLvar = StudentResidencySchedule.objects.filter(Student=student_nfc).latest('StudentSchedVar') # get most recent STUDENT LAB residency sched
+		student_sched = StudentResidencySchedule.objects.filter(Student=student_nfc).filter(RefSchedVar=get_Lvar.RefSchedVar).filter(StudentSchedVar=get_SLvar.StudentSchedVar)
 		result_list = list(chain(sched, student_sched))
 		item_serialized = serializers.serialize('json', result_list)
 

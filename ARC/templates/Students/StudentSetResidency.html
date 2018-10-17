@@ -163,6 +163,8 @@
 	        var newdata = JSON.parse(data);
 	        console.log(newdata);
 
+	        var student_time = [];
+
 	        var m = []; var m_slot = []; var m_time = [];
 	        var t = []; var t_slot = []; var t_time = [];
 	        var w = []; var w_slot = []; var w_time = [];
@@ -300,6 +302,13 @@
 
 	          	}
 
+	          	else if (newdata[i].model == 'ARC.studentresidencyschedule') {
+
+	          		student_time.push(newdata[i].fields.Schedule);
+	          		console.log(student_time[i]);
+
+	          	}
+
 	        }
 
 	        var max = Math.max(m.length, t.length, w.length, h.length, f.length);
@@ -330,7 +339,7 @@
 
 									'<td>\
 										<label style="text-align: center;">\
-											<input type="checkbox" class="flat" name="sched[]" value="'+ m[i] +'"> &nbsp; '+ m_time[i] +'\
+											<input type="checkbox" class="flat" id="'+ m[i] +'" name="sched[]" value="'+ m[i] +'"> &nbsp; '+ m_time[i] +'\
 										</label>\
 										<hr class="no-margin">\
 										<div style="text-align: center;">Slots: '+ m_slot[i] +'</div>\
@@ -361,7 +370,7 @@
 
 									'<td>\
 										<label>\
-											<input type="checkbox" class="flat" name="sched[]" value="'+ t[i] +'"> &nbsp; '+ t_time[i] +'\
+											<input type="checkbox" class="flat" id="'+ t[i] +'" name="sched[]" value="'+ t[i] +'"> &nbsp; '+ t_time[i] +'\
 										</label>\
 										<hr class="no-margin">\
 										<div style="text-align: center;">Slots: '+ t_slot[i] +'</div>\
@@ -392,7 +401,7 @@
 
 									'<td>\
 										<label>\
-											<input type="checkbox" class="flat" name="sched[]" value="'+ w[i] +'"> &nbsp; '+ w_time[i] +'\
+											<input type="checkbox" class="flat" id="'+ w[i] +'" name="sched[]" value="'+ w[i] +'"> &nbsp; '+ w_time[i] +'\
 										</label>\
 										<hr class="no-margin">\
 										<div style="text-align: center;">Slots: '+ w_slot[i] +'</div>\
@@ -423,7 +432,7 @@
 
 									'<td>\
 										<label>\
-											<input type="checkbox" class="flat" name="sched[]" value="'+ h[i] +'"> &nbsp; '+ h_time[i] +'\
+											<input type="checkbox" class="flat" id="'+ h[i] +'" name="sched[]" value="'+ h[i] +'"> &nbsp; '+ h_time[i] +'\
 										</label>\
 										<hr class="no-margin">\
 										<div style="text-align: center;">Slots: '+ h_slot[i] +'</div>\
@@ -454,7 +463,7 @@
 
 									'<td>\
 										<label>\
-											<input type="checkbox" class="flat" name="sched[]" value="'+ f[i] +'"> &nbsp; '+ f_time[i] +'\
+											<input type="checkbox" class="flat" id="'+ f[i] +'" name="sched[]" value="'+ f[i] +'"> &nbsp; '+ f_time[i] +'\
 										</label>\
 										<hr class="no-margin">\
 										<div style="text-align: center;">Slots: '+ f_slot[i] +'</div>\
@@ -467,6 +476,12 @@
 	          }
 
 	          $('#t-content').iCheck({checkboxClass: 'icheckbox_flat-green'});
+
+	          for (var k = 0; k < student_time.length; k++) {
+
+	          	$('[id="'+ student_time[k] +'"]').iCheck('check').iCheck('update');
+
+	          }
 
 	        }
 
