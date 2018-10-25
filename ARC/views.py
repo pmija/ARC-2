@@ -345,20 +345,25 @@ def SetResidencyAjax(request):
 		labid = request.POST['labid']
 		student_nfc = request.POST['student_nfc']
 
-	get_var = ResidencyTimeSlot.objects.filter(Laboratory=labid).latest('SchedVar')
-	sched = ResidencyTimeSlot.objects.filter(Laboratory=labid).filter(SchedVar=get_var.SchedVar)
+	if ResidencyTimeSlot.objects.filter(Laboratory=labid).exists():
 
-	if StudentResidencySchedule.objects.filter(Student=student_nfc).exists():
-		get_Lvar = StudentResidencySchedule.objects.filter(Student=student_nfc).latest('RefSchedVar') # get most updated LAB sched
-		get_SLvar = StudentResidencySchedule.objects.filter(Student=student_nfc).latest('StudentSchedVar') # get most recent STUDENT LAB residency sched
-		student_sched = StudentResidencySchedule.objects.filter(Student=student_nfc).filter(RefSchedVar=get_Lvar.RefSchedVar).filter(StudentSchedVar=get_SLvar.StudentSchedVar)
-		result_list = list(chain(sched, student_sched))
-		item_serialized = serializers.serialize('json', result_list)
+		get_var = ResidencyTimeSlot.objects.filter(Laboratory=labid).latest('SchedVar')
+		sched = ResidencyTimeSlot.objects.filter(Laboratory=labid).filter(SchedVar=get_var.SchedVar)
+
+		if StudentResidencySchedule.objects.filter(Student=student_nfc).exists():
+			schedvar = StudentResidencySchedule.objects.filter(Student=student_nfc).latest('RefSchedVar', 'StudentSchedVar') # get most updated LAB and STUDENT sched
+			student_sched = StudentResidencySchedule.objects.filter(Student=student_nfc).filter(RefSchedVar=schedvar.RefSchedVar).filter(StudentSchedVar=schedvar.StudentSchedVar)
+			result_list = list(chain(sched, student_sched))
+			item_serialized = serializers.serialize('json', result_list)
+
+		else:
+			item_serialized = serializers.serialize('json', sched)
+
+		return JsonResponse(item_serialized, safe=False)
 
 	else:
-		item_serialized = serializers.serialize('json', sched)
 
-	return JsonResponse(item_serialized, safe=False)
+		return JsonResponse(NULL, safe=False)
 
 def EditGroupAjax(request):
 	if request.method == 'POST':
@@ -372,8 +377,6 @@ def EditGroupAjax(request):
 	item_serialized = serializers.serialize('json', result_list, use_natural_foreign_keys=True)
 
 	return JsonResponse(item_serialized, safe=False)
-
-
 
 def EditUserAjax(request):
 	if request.method == 'POST':
@@ -399,8 +402,6 @@ def EditUserAjax(request):
 
 	item_serialized = serializers.serialize('json', result_list, use_natural_foreign_keys=True) #use this parameter to get foreign key objects
 	return JsonResponse(item_serialized, safe=False)
-
-
 
 def EditLabAjax(request):
 	if request.method == 'POST':
@@ -668,30 +669,41 @@ def AdminEditLaboratory(request):
 
 			changes = False
 			lab_obj = Ref_Laboratory.objects.get(LabID=labid)
-			get_var = ResidencyTimeSlot.objects.latest('SchedVar')
-			old_sched = ResidencyTimeSlot.objects.filter(Laboratory=labid).filter(SchedVar=get_var.SchedVar) # current sched used
-			next_var = get_var.SchedVar + 1
 
-			if len(sched) != old_sched.count(): #automatically edited since size is not the same
+			if ResidencyTimeSlot.objects.filter(Laboratory=labid).exists():
+
+				get_var = ResidencyTimeSlot.objects.latest('SchedVar', )
+				next_var = get_var.SchedVar + 1
+				old_sched = ResidencyTimeSlot.objects.filter(Laboratory=labid).filter(SchedVar=get_var.SchedVar) # current sched used
+
+				if len(sched) != old_sched.count(): #automatically edited since size is not the same
+
+					for m in range(0, len(sched)):
+						newsched = ResidencyTimeSlot(Laboratory=lab_obj, Schedule=sched[m], TotalSlot = lab[0].Capacity, TakenSlot=0, SchedVar=next_var);
+						newsched.save()
+
+				elif len(sched) == old_sched.count(): #find if changes are made
+
+					for m in range (0, old_sched.count()):
+						if old_sched[m].Schedule != sched[m]:
+							changes = True
+
+					if changes:
+
+						for x in range (0, len(sched)):
+							newsched = ResidencyTimeSlot(Laboratory=lab_obj, Schedule=sched[x], TotalSlot = lab[0].Capacity, TakenSlot=0, SchedVar=next_var);
+							newsched.save()
+
+					else:
+						print('no changes')
+
+			else:
+
+				next_var = 0;
 
 				for m in range(0, len(sched)):
 					newsched = ResidencyTimeSlot(Laboratory=lab_obj, Schedule=sched[m], TotalSlot = lab[0].Capacity, TakenSlot=0, SchedVar=next_var);
 					newsched.save()
-
-			elif len(sched) == old_sched.count(): #find if changes are made
-
-				for m in range (0, old_sched.count()):
-					if old_sched[m].Schedule != sched[m]:
-						changes = True
-
-				if changes:
-
-					for x in range (0, len(sched)):
-						newsched = ResidencyTimeSlot(Laboratory=lab_obj, Schedule=sched[x], TotalSlot = lab[0].Capacity, TakenSlot=0, SchedVar=next_var);
-						newsched.save()
-
-				else:
-					print('no changes')
 
 		Ref_Laboratory.objects.filter(LabID=labid).update(LaboratoryName=labname,RoomNum=roomno, Capacity=capacity, Status=status)
 		return render(request, 'Admin/AdminAddLaboratory.html', {'Labs': laboratories, 'Check': ['Success']})
@@ -752,26 +764,100 @@ def StudentSetResidency(request):
 
 	student = User.objects.get(Email=request.user.email)
 
-	if request.method == 'POST':
-		sched = request.POST.getlist('sched[]', '')
-		student = request.POST.get('student_id', '')
-		lab = request.POST.get('lab_id', '')
+	if ResidencyTimeSlot.objects.filter(Laboratory=student.Laboratory.LabID).exists():
 
-		if student == '':
-			return render(request, 'Students/StudentSetResidency.html')
+		get_var = ResidencyTimeSlot.objects.filter(Laboratory=student.Laboratory.LabID).latest('SchedVar')
+		l_var = get_var.SchedVar
+
+		if request.method == 'POST':
+
+			sched = request.POST.getlist('sched[]', '')
+			student_id = request.POST.get('student_id', '')
+			lab = request.POST.get('lab_id', '')
+			lab_var = request.POST.get('lab_var', '')
+			changes = False
+
+			if sched == '':
+				return render(request, 'Students/StudentSetResidency.html', {'student':student, 'edit':3 })
+
+			elif sched == '' and lab_var != '':
+				return render(request, 'Students/StudentSetResidency.html', {'student':student, 'lab_var':l_var, 'edit':0 })
+
+			else:
+
+				if StudentResidencySchedule.objects.filter(Student=student_id).exists():
+
+					schedvar = StudentResidencySchedule.objects.filter(Student=student_id).latest('RefSchedVar' ,'StudentSchedVar')
+					old_sched = StudentResidencySchedule.objects.filter(Student=student_id).filter(RefSchedVar=schedvar.RefSchedVar).filter(StudentSchedVar=schedvar.StudentSchedVar)
+
+					if len(sched) != old_sched.count():
+						changes = True
+
+					elif len(sched) == old_sched.count():
+
+						for k in range(0, old_sched.count()):
+
+							print('NEW: ' + sched[k] + ' | OLD: ' + old_sched[k].Schedule)
+
+							if sched[k] != old_sched[k].Schedule:
+								changes = True
+
+					if changes:
+
+						#outdated sched from lab
+						if not StudentResidencySchedule.objects.filter(Student=student_id).filter(RefSchedVar=lab_var).exists():
+
+							for i in range(0, len(sched)):
+
+								ressched = StudentResidencySchedule(Student=student_id, Schedule=sched[i], RefSchedVar=lab_var)
+								ressched.save()
+
+								rt = ResidencyTimeSlot.objects.all().filter(Schedule=sched[i], Laboratory=lab, SchedVar=lab_var)
+								x = rt[0].TakenSlot + 1
+								rt.update(TakenSlot=x)
+
+						else: #just editing current lab sched and has updated schedule from lab
+
+							next_var = schedvar.StudentSchedVar + 1
+
+							for m in range(0, old_sched.count()):
+
+								rts = ResidencyTimeSlot.objects.all().filter(Schedule=old_sched[m].Schedule, Laboratory=lab, SchedVar=lab_var)
+								x = rts[0].TakenSlot - 1
+								rts.update(TakenSlot=x)
+
+							for i in range(0, len(sched)):
+
+								ressched = StudentResidencySchedule(Student=student_id, Schedule=sched[i], StudentSchedVar=next_var, RefSchedVar=lab_var)
+								ressched.save()
+
+								rt = ResidencyTimeSlot.objects.all().filter(Schedule=sched[i], Laboratory=lab, SchedVar=lab_var)
+								x = rt[0].TakenSlot + 1
+								rt.update(TakenSlot=x)
+
+						return render(request, 'Students/StudentSetResidency.html', {'student':student, 'lab_var':l_var, 'edit':1}) #edited
+
+					else:
+
+						return render(request, 'Students/StudentSetResidency.html', {'student':student, 'lab_var':l_var, 'edit':0}) #no edit
+
+				else:
+
+					for i in range(0, len(sched)):
+
+						ressched = StudentResidencySchedule(Student=student_id, Schedule=sched[i], RefSchedVar=lab_var)
+						ressched.save()
+
+						rt = ResidencyTimeSlot.objects.all().filter(Schedule=sched[i], Laboratory=lab, SchedVar=lab_var)
+						x = rt[0].TakenSlot + 1
+						rt.update(TakenSlot=x)
+
+					return render(request, 'Students/StudentSetResidency.html', {'student':student, 'lab_var':l_var, 'edit':2})	#created first sched				
 
 		else:
-			for i in range(0, len(sched)):
-				ressched = StudentResidencySchedule(Student=student, Schedule=sched[i]);
-				ressched.save()
-				rt = ResidencyTimeSlot.objects.all().filter(Schedule=sched[i], Laboratory=lab)
-				print (rt[0].TakenSlot)
-				x = rt[0].TakenSlot + 1
-				print (x)
-				rt.update(TakenSlot=x)
-			return render(request, 'Students/StudentSetResidency.html')
+			return render(request, 'Students/StudentSetResidency.html', {'student':student, 'lab_var':l_var})
 
-	else:
+	else: #lab no sched available yet
 		return render(request, 'Students/StudentSetResidency.html', {'student':student})
 
 def StudentEditResidency(request):

@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -19,7 +20,7 @@
          <div class="col-md-3 left_col menu_fixed">
           <div class="left_col scroll-view">
             <div class="navbar nav_title">
-              <p class="site_title"><img src="images/sidebar-logo.png" id="sidebar-logo"> ARC</a>
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"></a>
             </div>
 
             <div class="clearfix"></div>
@@ -79,15 +80,17 @@
 	                        <div class="clearfix"></div>
 	                      </div>
 
-	                      <form method="POST">{% csrf_token %}
+	                      <form method="POST" id="my-form">{% csrf_token %}
 
 	                      <div class="x_content">
 
 	                        <div class="col-md-8" id="curr-lab">
 
-	                          <h5><b>Laboratory:</b>&nbsp; {{student.Laboratory.LaboratoryName}}</h5>
-	                          <input type="hidden" name="lab_id" id="lab-id" value="{{student.Laboratory.LabID}}">
-	                          <input type="hidden" name="student_id" id="student-id" value="{{student.NFCUniqueID}}">
+	                        	<h5><i>The checked boxes represent your current residency schedule if you have already set your residency schedule before.</i></h5>
+	                        	<h5><b>Laboratory:</b>&nbsp; {{student.Laboratory.LaboratoryName}}</h5>
+	                        	<input type="hidden" name="lab_id" id="lab-id" value="{{student.Laboratory.LabID}}">
+	                        	<input type="hidden" name="student_id" id="student-id" value="{{student.NFCUniqueID}}">
+	                        	<input type="hidden" name="lab_var" id="lab-var" value="{{lab_var}}">
 
 	                        </div>
 
@@ -147,10 +150,346 @@
 
     <script>
 
-      $(document).ready(function(){
+    function getData(data) {
 
-      	var labid = $('#lab-id').val();
+    	var newdata = JSON.parse(data);
+        console.log(newdata);
+
+        var student_time = [];
+        var lab_var;
+
+        var m = []; var m_slot = []; var m_time = [];
+        var t = []; var t_slot = []; var t_time = [];
+        var w = []; var w_slot = []; var w_time = [];
+        var h = []; var h_slot = []; var h_time = [];
+        var f = []; var f_slot = []; var f_time = [];
+
+        function tConvert (time) {
+			// Check correct time format and split into components
+			time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+			if (time.length > 1) { // If time format correct
+				time = time.slice (1);  // Remove full string match value
+				time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+				time[0] = +time[0] % 12 || 12; // Adjust hours
+			}
+			  return time.join (''); // return adjusted time or original string
+		}
+
+          // ## APPEND FOR TD and POPULATE ARRAYS ## //
+
+		for (var i = 0; i < newdata.length; i++) {
+
+          	if (newdata[i].fields.Schedule.includes("M") && newdata[i].model == 'ARC.residencytimeslot') {
+
+          		var temp = newdata[i].fields.Schedule.substring(2);
+
+          		for (var x = 0; x < 2; x++) {
+
+          			temp = temp.replace("+", ":");
+
+          		}
+
+          		var split_temp = temp.split('-');
+          		var temp1, temp2;
+
+          		temp1 = tConvert(split_temp[0]);
+							temp2 = tConvert(split_temp[1]);
+
+          		temp = temp1 + " - " + temp2;
+
+          		m_time.push(temp);
+          		m.push(newdata[i].fields.Schedule);
+          		m_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+          		lab_var = newdata[i].fields.SchedVar;
+
+          	}
+
+          	else if (newdata[i].fields.Schedule.includes("T") && newdata[i].model == 'ARC.residencytimeslot') {
+
+          		var temp = newdata[i].fields.Schedule.substring(2);
+
+          		for (var x = 0; x < 2; x++) {
+
+          			temp = temp.replace("+", ":");
+
+          		}
+
+          		var split_temp = temp.split('-');
+          		var temp1, temp2;
+
+          		temp1 = tConvert(split_temp[0]);
+							temp2 = tConvert(split_temp[1]);
+
+          		temp = temp1 + " - " + temp2;
+
+          		t_time.push(temp);
+          		t.push(newdata[i].fields.Schedule);
+          		t_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+          		lab_var = newdata[i].fields.SchedVar;
+
+          	}
+
+          	else if (newdata[i].fields.Schedule.includes("W") && newdata[i].model == 'ARC.residencytimeslot') {
+
+          		var temp = newdata[i].fields.Schedule.substring(2);
+
+          		for (var x = 0; x < 2; x++) {
+
+          			temp = temp.replace("+", ":");
+
+          		}
+
+          		var split_temp = temp.split('-');
+          		var temp1, temp2;
+
+          		temp1 = tConvert(split_temp[0]);
+							temp2 = tConvert(split_temp[1]);
+
+          		temp = temp1 + " - " + temp2;
+
+          		w_time.push(temp);
+          		w.push(newdata[i].fields.Schedule);
+          		w_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+          		lab_var = newdata[i].fields.SchedVar;
+
+          	}
+          	else if (newdata[i].fields.Schedule.includes("H") && newdata[i].model == 'ARC.residencytimeslot') {
+
+          		var temp = newdata[i].fields.Schedule.substring(2);
+
+          		for (var x = 0; x < 2; x++) {
+          			temp = temp.replace("+", ":");
+          		}
+
+          		var split_temp = temp.split('-');
+          		var temp1, temp2;
+
+          		temp1 = tConvert(split_temp[0]);
+							temp2 = tConvert(split_temp[1]);
+
+          		temp = temp1 + " - " + temp2;
+
+          		h_time.push(temp);
+          		h.push(newdata[i].fields.Schedule);
+          		h_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+          		lab_var = newdata[i].fields.SchedVar;
+
+          	}
+
+          	else if (newdata[i].fields.Schedule.includes("F") && newdata[i].model == 'ARC.residencytimeslot') {
+
+          		var temp = newdata[i].fields.Schedule.substring(2);
+
+          		for (var x = 0; x < 2; x++) {
+          			temp = temp.replace("+", ":");
+          		}
+
+          		var split_temp = temp.split('-');
+          		var temp1, temp2;
+
+          		temp1 = tConvert(split_temp[0]);
+							temp2 = tConvert(split_temp[1]);
+
+          		temp = temp1 + " - " + temp2;
+
+          		f_time.push(temp);
+          		f.push(newdata[i].fields.Schedule);
+          		f_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+          		lab_var = newdata[i].fields.SchedVar;
+
+          	}
+
+          	else if (newdata[i].model == 'ARC.studentresidencyschedule') {
+
+          		student_time.push(newdata[i].fields.Schedule);
+
+          	}
+
+        }
+
+        var max = Math.max(m.length, t.length, w.length, h.length, f.length);
+        console.log('COUNTER FOR APPEND: ' + max);
+
+        for (var i = 0; i < max; i++) {
+
+          	$('#t-content').append('<tr align="center" id="row-'+ i +'"></tr>');
+
+          	if (m.length <= i) {
+
+          		$('#row-'+ i).append(
+
+							'<td>\
+								<div class="row"></div>\
+								<div style="text-align: center;">\
+									<b>No timeslot available.</b>\
+								</div>\
+							</td>'
+
+							);
+
+          	}
+
+          	else {
+
+          		$('#row-'+ i).append(
+
+								'<td>\
+									<label style="text-align: center;">\
+										<input type="checkbox" class="flat" id="'+ m[i] +'" name="sched[]" value="'+ m[i] +'"> &nbsp; '+ m_time[i] +'\
+									</label>\
+									<hr class="no-margin">\
+									<div style="text-align: center;">Slots: '+ m_slot[i] +'</div>\
+								</td>'
+
+							);
+
+          	}
+
+          	if (t.length <= i) {
+
+          		$('#row-'+ i).append(
+
+							'<td>\
+								<div class="row"></div>\
+								<div style="text-align: center;">\
+									<b>No timeslot available.</b>\
+								</div>\
+							</td>'
+
+							);
+
+          	}
+
+          	else {
+
+          		$('#row-'+ i).append(
+
+								'<td>\
+									<label>\
+										<input type="checkbox" class="flat" id="'+ t[i] +'" name="sched[]" value="'+ t[i] +'"> &nbsp; '+ t_time[i] +'\
+									</label>\
+									<hr class="no-margin">\
+									<div style="text-align: center;">Slots: '+ t_slot[i] +'</div>\
+								</td>'
+
+							);
+
+          	}
+
+          	if (w.length <= i) {
+
+          		$('#row-'+ i).append(
+
+							'<td>\
+								<div class="row"></div>\
+								<div style="text-align: center;">\
+									<b>No timeslot available.</b>\
+								</div>\
+							</td>'
+
+							);
+
+          	}
+
+          	else {
+
+          		$('#row-'+ i).append(
+
+								'<td>\
+									<label>\
+										<input type="checkbox" class="flat" id="'+ w[i] +'" name="sched[]" value="'+ w[i] +'"> &nbsp; '+ w_time[i] +'\
+									</label>\
+									<hr class="no-margin">\
+									<div style="text-align: center;">Slots: '+ w_slot[i] +'</div>\
+								</td>'
+
+							);
+
+          	}
+
+          	if (h.length <= i) {
+
+          		$('#row-'+ i).append(
+
+							'<td>\
+								<div class="row"></div>\
+								<div style="text-align: center;">\
+									<b>No timeslot available.</b>\
+								</div>\
+							</td>'
+
+							);
+
+          	}
+
+          	else {
+
+          		$('#row-'+ i).append(
+
+								'<td>\
+									<label>\
+										<input type="checkbox" class="flat" id="'+ h[i] +'" name="sched[]" value="'+ h[i] +'"> &nbsp; '+ h_time[i] +'\
+									</label>\
+									<hr class="no-margin">\
+									<div style="text-align: center;">Slots: '+ h_slot[i] +'</div>\
+								</td>'
+
+							);
+
+          	}
+
+          	if (f.length <= i) {
+
+          		$('#row-'+ i).append(
+
+							'<td>\
+								<div class="row"></div>\
+								<div style="text-align: center;">\
+									<b>No timeslot available.</b>\
+								</div>\
+							</td>'
+
+							);
+
+          	}
+
+          	else {
+
+          		$('#row-'+ i).append(
+
+								'<td>\
+									<label>\
+										<input type="checkbox" class="flat" id="'+ f[i] +'" name="sched[]" value="'+ f[i] +'"> &nbsp; '+ f_time[i] +'\
+									</label>\
+									<hr class="no-margin">\
+									<div style="text-align: center;">Slots: '+ f_slot[i] +'</div>\
+								</td>'
+
+							);
+
+          	}
+
+          }
+
+          $('#t-content').iCheck({checkboxClass: 'icheckbox_flat-green'});
+          $('#svar').append('<input type="hidden" name="lab_var" value="'+ lab_var +'"');
+
+          for (var k = 0; k < student_time.length; k++) {
+
+          	console.log($('[id="'+ student_time[k] +'"]').val());
+          	$('[id="'+ student_time[k] +'"]').iCheck('check').iCheck('update');
+
+          }
+
+    }
+
+    $(window).load(function() {
+
+    	var labid = $('#lab-id').val();
       	var student_nfc = $('#student-id').val();
+
+      	console.log('loaded');
 
         $.ajax({
 
@@ -160,336 +499,67 @@
 
 	        success: function(data){
 
-	        var newdata = JSON.parse(data);
-	        console.log(newdata);
-
-	        var student_time = [];
-
-	        var m = []; var m_slot = []; var m_time = [];
-	        var t = []; var t_slot = []; var t_time = [];
-	        var w = []; var w_slot = []; var w_time = [];
-	        var h = []; var h_slot = []; var h_time = [];
-	        var f = []; var f_slot = []; var f_time = [];
-
-	        function tConvert (time) {
-				// Check correct time format and split into components
-				time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-
-				if (time.length > 1) { // If time format correct
-					time = time.slice (1);  // Remove full string match value
-					time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
-					time[0] = +time[0] % 12 || 12; // Adjust hours
-				}
-				  return time.join (''); // return adjusted time or original string
-			}
-
-	          // ## APPEND FOR TD and POPULATE ARRAYS ## //
-
-			for (var i = 0; i < newdata.length; i++) {
-
-	          	if (newdata[i].fields.Schedule.includes("M") && newdata[i].model == 'ARC.residencytimeslot') {
-
-	          		var temp = newdata[i].fields.Schedule.substring(2);
-
-	          		for (var x = 0; x < 2; x++) {
-
-	          			temp = temp.replace("+", ":");
-
-	          		}
-
-	          		var split_temp = temp.split('-');
-	          		var temp1, temp2;
-
-	          		temp1 = tConvert(split_temp[0]);
-								temp2 = tConvert(split_temp[1]);
-
-	          		temp = temp1 + " - " + temp2;
-
-	          		m_time.push(temp);
-	          		m.push(newdata[i].fields.Schedule);
-	          		m_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-
-	          	}
-
-	          	else if (newdata[i].fields.Schedule.includes("T") && newdata[i].model == 'ARC.residencytimeslot') {
-
-	          		var temp = newdata[i].fields.Schedule.substring(2);
-
-	          		for (var x = 0; x < 2; x++) {
-
-	          			temp = temp.replace("+", ":");
-
-	          		}
-
-	          		var split_temp = temp.split('-');
-	          		var temp1, temp2;
-
-	          		temp1 = tConvert(split_temp[0]);
-								temp2 = tConvert(split_temp[1]);
-
-	          		temp = temp1 + " - " + temp2;
-
-	          		t_time.push(temp);
-	          		t.push(newdata[i].fields.Schedule);
-	          		t_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-
-	          	}
-
-	          	else if (newdata[i].fields.Schedule.includes("W") && newdata[i].model == 'ARC.residencytimeslot') {
-
-	          		var temp = newdata[i].fields.Schedule.substring(2);
-
-	          		for (var x = 0; x < 2; x++) {
-
-	          			temp = temp.replace("+", ":");
-
-	          		}
-
-	          		var split_temp = temp.split('-');
-	          		var temp1, temp2;
-
-	          		temp1 = tConvert(split_temp[0]);
-								temp2 = tConvert(split_temp[1]);
-
-	          		temp = temp1 + " - " + temp2;
-
-	          		w_time.push(temp);
-	          		w.push(newdata[i].fields.Schedule);
-	          		w_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-
-	          	}
-	          	else if (newdata[i].fields.Schedule.includes("H") && newdata[i].model == 'ARC.residencytimeslot') {
-
-	          		var temp = newdata[i].fields.Schedule.substring(2);
-
-	          		for (var x = 0; x < 2; x++) {
-	          			temp = temp.replace("+", ":");
-	          		}
-
-	          		var split_temp = temp.split('-');
-	          		var temp1, temp2;
-
-	          		temp1 = tConvert(split_temp[0]);
-								temp2 = tConvert(split_temp[1]);
-
-	          		temp = temp1 + " - " + temp2;
-
-	          		h_time.push(temp);
-	          		h.push(newdata[i].fields.Schedule);
-	          		h_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-
-	          	}
-
-	          	else if (newdata[i].fields.Schedule.includes("F") && newdata[i].model == 'ARC.residencytimeslot') {
-
-	          		var temp = newdata[i].fields.Schedule.substring(2);
-
-	          		for (var x = 0; x < 2; x++) {
-	          			temp = temp.replace("+", ":");
-	          		}
-
-	          		var split_temp = temp.split('-');
-	          		var temp1, temp2;
-
-	          		temp1 = tConvert(split_temp[0]);
-								temp2 = tConvert(split_temp[1]);
-
-	          		temp = temp1 + " - " + temp2;
-
-	          		f_time.push(temp);
-	          		f.push(newdata[i].fields.Schedule);
-	          		f_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-
-	          	}
-
-	          	else if (newdata[i].model == 'ARC.studentresidencyschedule') {
-
-	          		student_time.push(newdata[i].fields.Schedule);
-	          		console.log(student_time[i]);
-
-	          	}
-
-	        }
-
-	        var max = Math.max(m.length, t.length, w.length, h.length, f.length);
-	        console.log('COUNTER FOR APPEND: ' + max);
-
-	        for (var i = 0; i < max; i++) {
-
-	          	$('#t-content').append('<tr align="center" id="row-'+ i +'"></tr>');
-
-	          	if (m.length <= i) {
-
-	          		$('#row-'+ i).append(
-
-								'<td>\
-									<div class="row"></div>\
-									<div style="text-align: center;">\
-										<b>No timeslot available.</b>\
-									</div>\
-								</td>'
-
-								);
-
-	          	}
-
-	          	else {
-
-	          		$('#row-'+ i).append(
-
-									'<td>\
-										<label style="text-align: center;">\
-											<input type="checkbox" class="flat" id="'+ m[i] +'" name="sched[]" value="'+ m[i] +'"> &nbsp; '+ m_time[i] +'\
-										</label>\
-										<hr class="no-margin">\
-										<div style="text-align: center;">Slots: '+ m_slot[i] +'</div>\
-									</td>'
-
-								);
-
-	          	}
-
-	          	if (t.length <= i) {
-
-	          		$('#row-'+ i).append(
-
-								'<td>\
-									<div class="row"></div>\
-									<div style="text-align: center;">\
-										<b>No timeslot available.</b>\
-									</div>\
-								</td>'
-
-								);
-
-	          	}
-
-	          	else {
-
-	          		$('#row-'+ i).append(
-
-									'<td>\
-										<label>\
-											<input type="checkbox" class="flat" id="'+ t[i] +'" name="sched[]" value="'+ t[i] +'"> &nbsp; '+ t_time[i] +'\
-										</label>\
-										<hr class="no-margin">\
-										<div style="text-align: center;">Slots: '+ t_slot[i] +'</div>\
-									</td>'
-
-								);
-
-	          	}
-
-	          	if (w.length <= i) {
-
-	          		$('#row-'+ i).append(
-
-								'<td>\
-									<div class="row"></div>\
-									<div style="text-align: center;">\
-										<b>No timeslot available.</b>\
-									</div>\
-								</td>'
-
-								);
-
-	          	}
-
-	          	else {
-
-	          		$('#row-'+ i).append(
-
-									'<td>\
-										<label>\
-											<input type="checkbox" class="flat" id="'+ w[i] +'" name="sched[]" value="'+ w[i] +'"> &nbsp; '+ w_time[i] +'\
-										</label>\
-										<hr class="no-margin">\
-										<div style="text-align: center;">Slots: '+ w_slot[i] +'</div>\
-									</td>'
-
-								);
-
-	          	}
-
-	          	if (h.length <= i) {
-
-	          		$('#row-'+ i).append(
-
-								'<td>\
-									<div class="row"></div>\
-									<div style="text-align: center;">\
-										<b>No timeslot available.</b>\
-									</div>\
-								</td>'
-
-								);
-
-	          	}
-
-	          	else {
-
-	          		$('#row-'+ i).append(
-
-									'<td>\
-										<label>\
-											<input type="checkbox" class="flat" id="'+ h[i] +'" name="sched[]" value="'+ h[i] +'"> &nbsp; '+ h_time[i] +'\
-										</label>\
-										<hr class="no-margin">\
-										<div style="text-align: center;">Slots: '+ h_slot[i] +'</div>\
-									</td>'
-
-								);
-
-	          	}
-
-	          	if (f.length <= i) {
-
-	          		$('#row-'+ i).append(
-
-								'<td>\
-									<div class="row"></div>\
-									<div style="text-align: center;">\
-										<b>No timeslot available.</b>\
-									</div>\
-								</td>'
-
-								);
-
-	          	}
-
-	          	else {
-
-	          		$('#row-'+ i).append(
-
-									'<td>\
-										<label>\
-											<input type="checkbox" class="flat" id="'+ f[i] +'" name="sched[]" value="'+ f[i] +'"> &nbsp; '+ f_time[i] +'\
-										</label>\
-										<hr class="no-margin">\
-										<div style="text-align: center;">Slots: '+ f_slot[i] +'</div>\
-									</td>'
-
-								);
-
-	          	}
-
-	          }
-
-	          $('#t-content').iCheck({checkboxClass: 'icheckbox_flat-green'});
-
-	          for (var k = 0; k < student_time.length; k++) {
-
-	          	$('[id="'+ student_time[k] +'"]').iCheck('check').iCheck('update');
-
-	          }
+	        	getData(data);
+	        	console.log('hello');
 
 	        }
 
         });
 
-      });
+    });
 
     </script>
+
+    {% block content7 %}
+	    {% if edit == 0 %}
+
+	      <script>
+	        new PNotify({
+	          title: 'You didn\'t do anything',
+	          text: 'You just clicked the submit button but didn\'t edit anything',
+	          type: 'info',
+	          styling: 'bootstrap3'
+	        });
+	      </script>
+
+	    {% endif %}
+	    {% if edit == 1 %}
+
+	      <script>
+	        new PNotify({
+	          title: 'Timeslots updated!',
+	          text: 'You have successfully updated your residency timeslot!',
+	          type: 'success',
+	          styling: 'bootstrap3'
+	        });
+	      </script>
+
+	    {% endif %}
+	    {% if edit == 2 %}
+
+	      <script>
+	        new PNotify({
+	          title: 'Timeslots submitted!',
+	          text: 'You have successfully added your first residency timeslot!',
+	          type: 'success',
+	          styling: 'bootstrap3'
+	        });
+	      </script>
+
+	    {% endif %}
+	    {% if edit == 3 %}
+
+	      <script>
+	        new PNotify({
+	          title: 'Your lab has no schedule available',
+	          text: 'Your lab has not set its schedule. Please contact your laboratory\'s admin.',
+	          type: 'warning',
+	          styling: 'bootstrap3'
+	        });
+	      </script>
+
+	    {% endif %}
+    {% endblock %}
 
   </body>
 </html>
