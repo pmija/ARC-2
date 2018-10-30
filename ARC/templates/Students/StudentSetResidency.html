@@ -319,14 +319,14 @@
 
           		$('#row-'+ i).append(
 
-							'<td>\
-								<div class="row"></div>\
-								<div style="text-align: center;">\
-									<b>No timeslot available.</b>\
-								</div>\
-							</td>'
+					'<td>\
+						<div class="row"></div>\
+						<div style="text-align: center;">\
+							<b>No timeslot available.</b>\
+						</div>\
+					</td>'
 
-							);
+				);
 
           	}
 
@@ -334,15 +334,21 @@
 
           		$('#row-'+ i).append(
 
-								'<td>\
-									<label style="text-align: center;">\
-										<input type="checkbox" class="flat" id="'+ m[i] +'" name="sched[]" value="'+ m[i] +'"> &nbsp; '+ m_time[i] +'\
-									</label>\
-									<hr class="no-margin">\
-									<div style="text-align: center;">Slots: '+ m_slot[i] +'</div>\
-								</td>'
+					'<td>\
+						<label style="text-align: center;">\
+							<input type="checkbox" class="flat" id="'+ m[i] +'" name="sched[]" value="'+ m[i] +'"> &nbsp; '+ m_time[i] +'\
+						</label>\
+						<hr class="no-margin">\
+						<div style="text-align: center;">Slots: '+ m_slot[i] +'</div>\
+					</td>'
 
-							);
+				);
+
+				if (m_slot[i] == 0) {
+
+					$('[id="'+ m[i] +'"]').iCheck('disable').iCheck('update');
+
+				}
 
           	}
 
@@ -350,14 +356,14 @@
 
           		$('#row-'+ i).append(
 
-							'<td>\
-								<div class="row"></div>\
-								<div style="text-align: center;">\
-									<b>No timeslot available.</b>\
-								</div>\
-							</td>'
+					'<td>\
+						<div class="row"></div>\
+						<div style="text-align: center;">\
+							<b>No timeslot available.</b>\
+						</div>\
+					</td>'
 
-							);
+				);
 
           	}
 
@@ -365,15 +371,21 @@
 
           		$('#row-'+ i).append(
 
-								'<td>\
-									<label>\
-										<input type="checkbox" class="flat" id="'+ t[i] +'" name="sched[]" value="'+ t[i] +'"> &nbsp; '+ t_time[i] +'\
-									</label>\
-									<hr class="no-margin">\
-									<div style="text-align: center;">Slots: '+ t_slot[i] +'</div>\
-								</td>'
+					'<td>\
+						<label>\
+							<input type="checkbox" class="flat" id="'+ t[i] +'" name="sched[]" value="'+ t[i] +'"> &nbsp; '+ t_time[i] +'\
+						</label>\
+						<hr class="no-margin">\
+						<div style="text-align: center;">Slots: '+ t_slot[i] +'</div>\
+					</td>'
 
-							);
+				);
+
+				if (t_slot[i] == 0) {
+
+					$('[id="'+ t[i] +'"]').iCheck('disable').iCheck('update');
+
+				}
 
           	}
 
@@ -381,14 +393,14 @@
 
           		$('#row-'+ i).append(
 
-							'<td>\
-								<div class="row"></div>\
-								<div style="text-align: center;">\
-									<b>No timeslot available.</b>\
-								</div>\
-							</td>'
+					'<td>\
+						<div class="row"></div>\
+						<div style="text-align: center;">\
+							<b>No timeslot available.</b>\
+						</div>\
+					</td>'
 
-							);
+				);
 
           	}
 
@@ -396,15 +408,21 @@
 
           		$('#row-'+ i).append(
 
-								'<td>\
-									<label>\
-										<input type="checkbox" class="flat" id="'+ w[i] +'" name="sched[]" value="'+ w[i] +'"> &nbsp; '+ w_time[i] +'\
-									</label>\
-									<hr class="no-margin">\
-									<div style="text-align: center;">Slots: '+ w_slot[i] +'</div>\
-								</td>'
+					'<td>\
+						<label>\
+							<input type="checkbox" class="flat" id="'+ w[i] +'" name="sched[]" value="'+ w[i] +'"> &nbsp; '+ w_time[i] +'\
+						</label>\
+						<hr class="no-margin">\
+						<div style="text-align: center;">Slots: '+ w_slot[i] +'</div>\
+					</td>'
 
-							);
+				);
+
+				if (w_slot[i] == 0) {
+
+					$('[id="'+ w[i] +'"]').iCheck('disable').iCheck('update');
+
+				}
 
           	}
 
@@ -412,14 +430,14 @@
 
           		$('#row-'+ i).append(
 
-							'<td>\
-								<div class="row"></div>\
-								<div style="text-align: center;">\
-									<b>No timeslot available.</b>\
-								</div>\
-							</td>'
+					'<td>\
+						<div class="row"></div>\
+						<div style="text-align: center;">\
+							<b>No timeslot available.</b>\
+						</div>\
+					</td>'
 
-							);
+				);
 
           	}
 
@@ -427,15 +445,21 @@
 
           		$('#row-'+ i).append(
 
-								'<td>\
-									<label>\
-										<input type="checkbox" class="flat" id="'+ h[i] +'" name="sched[]" value="'+ h[i] +'"> &nbsp; '+ h_time[i] +'\
-									</label>\
-									<hr class="no-margin">\
-									<div style="text-align: center;">Slots: '+ h_slot[i] +'</div>\
-								</td>'
+					'<td>\
+						<label>\
+							<input type="checkbox" class="flat" id="'+ h[i] +'" name="sched[]" value="'+ h[i] +'"> &nbsp; '+ h_time[i] +'\
+						</label>\
+						<hr class="no-margin">\
+						<div style="text-align: center;">Slots: '+ h_slot[i] +'</div>\
+					</td>'
 
-							);
+				);
+
+				if (h_slot[i] == 0) {
+
+					$('[id="'+ h[i] +'"]').iCheck('disable').iCheck('update');
+
+				}
 
           	}
 
@@ -443,14 +467,14 @@
 
           		$('#row-'+ i).append(
 
-							'<td>\
-								<div class="row"></div>\
-								<div style="text-align: center;">\
-									<b>No timeslot available.</b>\
-								</div>\
-							</td>'
+					'<td>\
+						<div class="row"></div>\
+						<div style="text-align: center;">\
+							<b>No timeslot available.</b>\
+						</div>\
+					</td>'
 
-							);
+				);
 
           	}
 
@@ -458,15 +482,21 @@
 
           		$('#row-'+ i).append(
 
-								'<td>\
-									<label>\
-										<input type="checkbox" class="flat" id="'+ f[i] +'" name="sched[]" value="'+ f[i] +'"> &nbsp; '+ f_time[i] +'\
-									</label>\
-									<hr class="no-margin">\
-									<div style="text-align: center;">Slots: '+ f_slot[i] +'</div>\
-								</td>'
+					'<td>\
+						<label>\
+							<input type="checkbox" class="flat" id="'+ f[i] +'" name="sched[]" value="'+ f[i] +'"> &nbsp; '+ f_time[i] +'\
+						</label>\
+						<hr class="no-margin">\
+						<div style="text-align: center;">Slots: '+ f_slot[i] +'</div>\
+					</td>'
 
-							);
+				);
+
+				if (f_slot[i] == 0) {
+
+					$('[id="'+ f[i] +'"]').iCheck('disable').iCheck('update');
+
+				}
 
           	}
 
@@ -478,6 +508,7 @@
           for (var k = 0; k < student_time.length; k++) {
 
           	console.log($('[id="'+ student_time[k] +'"]').val());
+          	$('[id="'+ student_time[k] +'"]').iCheck('enable').iCheck('update');
           	$('[id="'+ student_time[k] +'"]').iCheck('check').iCheck('update');
 
           }
