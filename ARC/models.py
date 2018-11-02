@@ -134,7 +134,7 @@ class Inventory(models.Model):
 	ItemStatus = models.IntegerField(default=1) 
 
 	def natural_key(self):
-		return self.ItemName, self.Description
+		return self.ItemName, self.Description, self.ItemType
 
 class AuditTable_Inventory(models.Model):
 	AuditID = models.AutoField(primary_key=True)

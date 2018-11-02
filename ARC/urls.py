@@ -126,14 +126,15 @@ urlpatterns = [
     url(r'ajax/checkcapajax', views.CheckCapacityAjax, name='Admin/CheckCapacityAjax'),
     url(r'ajax/setresidency', views.SetResidencyAjax, name='Admin/SetResidencyAjax'),
     url(r'ajax/evaluser', views.EvalUserAjax, name='Admin/EvalUserAjax'),
-    url(r'ajax/checkitemtype', views.checkItemType, name='checkItemType'),
-	url(r'ajax/returnitemajax', views.returnItemAjax, name='returnItemAjax'),
-	url(r'ajax/return', views.returnitem, name='return'),
     url(r'ajax/manageitems', views.ManageItemsAjax, name='FacultyTech/ManageItemsAjax'),
     url(r'ajax/itemdetails', views.ItemDetailsAjax, name='FacultyTech/ItemDetailsAjax'),
     url(r'ajax/itemlog', views.ItemLogAjax, name='FacultyTech/ItemLogAjax'),
     url(r'ajax/edititem', views.EditItemAjax, name='FacultyTech/EditItemAjax'),
-
+	
+	
+	#NEW AJAX KIM
+    url(r'ajax/getBorrowed', views.getBorrowed, name='getBorrowed'),
+	url(r'ajax/returnItem', views.returnItem, name='returnItem'),
 	#NFC
 	url(r'ajax/nfcajax', views.NFCAjax, name='NFCAjax'),
 	url(r'ajax/rfidajax', views.RFIDAjax, name='RFIDAjax'),

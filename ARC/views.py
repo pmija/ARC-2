@@ -103,15 +103,6 @@ def RFIDAjax(request):
 	return HttpResponse(json.dumps(JSONVal))
 #NFC
 
-#ReturnItem
-def checkItemType(request):
-	if request.method == 'POST':
-		uid = request.POST['id']
-		inv = Inventory.objects.filter(ItemUniqueID=uid)
-		print (inv[0].ItemType)
-		item_serialized = serializers.serialize('json', inv)
-		return JsonResponse(item_serialized, safe=False)
-#########
 
 def ManageItemsAjax(request):
 
@@ -160,51 +151,134 @@ def EditItemAjax(request):
 
 		return JsonResponse(item_serialized, safe=False)
 
-def returnItemAjax(request):
-	if request.method == 'POST':
-		pk = request.POST['pk']
-		type = request.POST['type']
-		if (type == "big"):
-			toup = AuditTable_Inventory.objects.filter(ItemID=pk, BorrowStatus=1)
-			if (len(toup) > 0):
-				toup.update(DateTimeReturned=datetime.datetime.now(), BorrowStatus=2)
-				inventory = AuditTable_Inventory.objects.all().filter(ItemID=pk)
-				inv_ares = inventory.aggregate(Max('AuditID'))
-				final = AuditTable_Inventory.objects.all().filter(AuditID=inv_ares['AuditID__max'])
-				finalx =  final.values_list();
-				print (finalx[0][2])
-				inv = Inventory.objects.all().values_list().filter(ItemID=finalx[0][2])
-				currentBorrow = int(inv[0][6])
-				qtyToSubtract = int(finalx[0][3])
-				finalQtyBorrowRemaining = currentBorrow - qtyToSubtract
-				print (finalQtyBorrowRemaining)
-				Inventory.objects.filter(ItemID=finalx[0][2]).update(QtyBorrowed=finalQtyBorrowRemaining)
-				item_serialized = serializers.serialize('json', final, use_natural_foreign_keys=True)
-				return JsonResponse(item_serialized, safe=False)
-			else:
-				tem_serialized = serializers.serialize('json', toup, use_natural_foreign_keys=True)
-				return JsonResponse(item_serialized, safe=False)
-		else:
-			inventory = AuditTable_Inventory.objects.all().filter(ItemID=pk, BorrowStatus=1)
-			finalx =  inventory.values_list();
-			print (finalx[0][2])
-			inv = Inventory.objects.all().values_list().filter(ItemID=finalx[0][2])
-			currentBorrow = int(inv[0][6])
-			qtyToSubtract = int(finalx[0][3])
-			finalQtyBorrowRemaining = currentBorrow - qtyToSubtract
-			print (finalQtyBorrowRemaining)
-			Inventory.objects.filter(ItemID=finalx[0][2]).update(QtyBorrowed=finalQtyBorrowRemaining)
-			item_serialized = serializers.serialize('json', inventory, use_natural_foreign_keys=True)
-			return JsonResponse(item_serialized, safe=False)
 
-def returnitem(request):
+		
+		
+#KIM NEW AJAX
+def getBorrowed(request):
 	if request.method == 'POST':
-		id = request.POST['id']
-		AuditTable_Inventory.objects.filter(AuditID=id).update(DateTimeReturned=datetime.datetime.now(), BorrowStatus=2)
-		inventory = AuditTable_Inventory.objects.all().filter(AuditID=id)
+		uid = request.POST['id']
+		inv = Inventory.objects.filter(ItemUniqueID=uid)
+		inventory = AuditTable_Inventory.objects.all().filter(ItemID=inv[0].pk, BorrowStatus=1)
 		item_serialized = serializers.serialize('json', inventory, use_natural_foreign_keys=True)
 		return JsonResponse(item_serialized, safe=False)
 
+def returnItem(request):
+	if request.method == 'POST':
+		id = request.POST['id']
+		qty = request.POST['qty']
+		type = request.POST['type']
+		qtyReturn = request.POST['qtyReturn']
+		returnType = request.POST['returnType']
+		qytDamage = request.POST['qytDamage']
+		rfidtag = request.POST['rfidtag']
+		if  returnType == 'complete':
+			subtracted =  int(qty) - int(qtyReturn)
+			if subtracted == 0:
+				AuditTable_Inventory.objects.filter(AuditID=id).update(DateTimeReturned=datetime.datetime.now(), BorrowStatus=2)
+				inv = Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag)
+				currentBorrow = int(inv[0][6])
+				qtyToSubtract = int(qtyReturn)
+				finalQtyBorrowRemaining = currentBorrow - qtyToSubtract
+				print (finalQtyBorrowRemaining)
+				Inventory.objects.filter(ItemUniqueID=rfidtag).update(QtyBorrowed=finalQtyBorrowRemaining)
+			else:
+				AuditTable_Inventory.objects.filter(AuditID=id).update(DateTimeReturned=datetime.datetime.now(), BorrowStatus=2)
+				inventory = AuditTable_Inventory.objects.all().values_list().filter(AuditID=id)
+				item_id = Inventory.objects.get(ItemID=inventory[0][2])
+				borrower = User.objects.get(UserID=inventory[0][6])
+				admin = User.objects.get(UserID=inventory[0][7])
+				auditInventory = AuditTable_Inventory(AuditAction=1, ItemID=item_id, Quantity=subtracted, DateTime=inventory[0][4], Borrower=borrower, Admin=admin, BorrowStatus=1)
+				auditInventory.save()
+				
+				AuditTable_Inventory.objects.filter(AuditID=id).update(DateTimeReturned=datetime.datetime.now(), BorrowStatus=2, Quantity=qtyReturn)
+				inv = Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag)
+				currentBorrow = int(inv[0][6])
+				qtyToSubtract = int(qtyReturn)
+				finalQtyBorrowRemaining = currentBorrow - qtyToSubtract
+				print (finalQtyBorrowRemaining)
+				Inventory.objects.filter(ItemUniqueID=rfidtag).update(QtyBorrowed=finalQtyBorrowRemaining)
+		else:
+			print(id, qty, type, qtyReturn, returnType, qytDamage, rfidtag)
+			subtracted =  int(qty) - int(qytDamage)
+			if subtracted == 0:
+				if type == 'big':
+					AuditTable_Inventory.objects.filter(AuditID=id).update(DateTimeReturned=datetime.datetime.now(), BorrowStatus=2)
+					inv = Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag)
+					currentBorrow = int(inv[0][6])
+					qtyToSubtract = int(qytDamage)
+					finalQtyBorrowRemaining = currentBorrow - qtyToSubtract
+					print (finalQtyBorrowRemaining)
+					Inventory.objects.filter(ItemUniqueID=rfidtag).update(QtyBorrowed=finalQtyBorrowRemaining)
+					Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag).update(ItemStatus = 2)
+					
+					inventory = AuditTable_Inventory.objects.all().values_list().filter(AuditID=id)
+					item_id = Inventory.objects.get(ItemID=inventory[0][2])
+					borrower = User.objects.get(UserID=inventory[0][6])
+					admin = User.objects.get(UserID=inventory[0][7])
+					auditInventory = AuditTable_Inventory(AuditAction=3, ItemID=item_id, Quantity=qytDamage, DateTime=datetime.datetime.now(), Borrower=borrower, Admin=admin)
+					auditInventory.save()
+				else:
+					AuditTable_Inventory.objects.filter(AuditID=id).update(DateTimeReturned=datetime.datetime.now(), BorrowStatus=2)
+					inv = Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag)
+					currentBorrow = int(inv[0][6])
+					qtyToSubtract = int(qytDamage)
+					finalQtyBorrowRemaining = currentBorrow - qtyToSubtract
+					currentQty = int(inv[0][4])
+					newQty = currentQty - qtyToSubtract
+					print (finalQtyBorrowRemaining)
+					Inventory.objects.filter(ItemUniqueID=rfidtag).update(QtyBorrowed=finalQtyBorrowRemaining, Quantity=newQty)
+					inventory = AuditTable_Inventory.objects.all().values_list().filter(AuditID=id)
+					item_id = Inventory.objects.get(ItemID=inventory[0][2])
+					borrower = User.objects.get(UserID=inventory[0][6])
+					admin = User.objects.get(UserID=inventory[0][7])
+					auditInventory = AuditTable_Inventory(AuditAction=3, ItemID=item_id, Quantity=qytDamage, DateTime=datetime.datetime.now(), Borrower=borrower, Admin=admin)
+					auditInventory.save()
+					if newQty == 0:
+						Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag).update(ItemStatus = 2)
+			else:
+				subtracted2 =  int(qty) - int(qtyReturn)
+				if subtracted2 == 0:
+					AuditTable_Inventory.objects.filter(AuditID=id).update(DateTimeReturned=datetime.datetime.now(), BorrowStatus=2)
+					inv = Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag)
+					currentBorrow = int(inv[0][6])
+					qtyToSubtract = int(qytDamage)
+					qtyToSubtract2 = int(qtyReturn)
+					finalQtyBorrowRemaining = currentBorrow - qtyToSubtract2
+					currentQty = int(inv[0][4])
+					newQty = currentQty - qtyToSubtract
+					print (finalQtyBorrowRemaining)
+					Inventory.objects.filter(ItemUniqueID=rfidtag).update(QtyBorrowed=finalQtyBorrowRemaining, Quantity=newQty)
+					inventory = AuditTable_Inventory.objects.all().values_list().filter(AuditID=id)
+					item_id = Inventory.objects.get(ItemID=inventory[0][2])
+					borrower = User.objects.get(UserID=inventory[0][6])
+					admin = User.objects.get(UserID=inventory[0][7])
+					auditInventory = AuditTable_Inventory(AuditAction=3, ItemID=item_id, Quantity=qytDamage, DateTime=datetime.datetime.now(), Borrower=borrower, Admin=admin)
+					auditInventory.save()
+					if newQty == 0:
+						Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag).update(ItemStatus = 2)
+				else:
+					AuditTable_Inventory.objects.filter(AuditID=id).update(DateTimeReturned=datetime.datetime.now(), BorrowStatus=2)
+					inv = Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag)
+					currentBorrow = int(inv[0][6])
+					qtyToSubtract = int(qytDamage)
+					qtyToSubtract2 = int(qtyReturn)
+					finalQtyBorrowRemaining = currentBorrow - qtyToSubtract2
+					currentQty = int(inv[0][4])
+					newQty = currentQty - qtyToSubtract
+					print (finalQtyBorrowRemaining)
+					Inventory.objects.filter(ItemUniqueID=rfidtag).update(QtyBorrowed=finalQtyBorrowRemaining, Quantity=newQty)
+					inventory = AuditTable_Inventory.objects.all().values_list().filter(AuditID=id)
+					item_id = Inventory.objects.get(ItemID=inventory[0][2])
+					borrower = User.objects.get(UserID=inventory[0][6])
+					admin = User.objects.get(UserID=inventory[0][7])
+					auditInventory = AuditTable_Inventory(AuditAction=1, ItemID=item_id, Quantity=subtracted2, DateTime=inventory[0][4], Borrower=borrower, Admin=admin, BorrowStatus=1)
+					auditInventory.save()
+					auditInventory = AuditTable_Inventory(AuditAction=3, ItemID=item_id, Quantity=qytDamage, DateTime=datetime.datetime.now(), Borrower=borrower, Admin=admin)
+					auditInventory.save()
+					if newQty == 0:
+						Inventory.objects.all().values_list().filter(ItemUniqueID=rfidtag).update(ItemStatus = 2)
+#########
 
 # Create your views here.
 

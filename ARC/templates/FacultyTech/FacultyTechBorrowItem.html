@@ -414,8 +414,10 @@
   function addClick(elem) {
     var id = elem.id;
 
-    var quantity = $('#quantity').val();
-    var curr_qty = $('#curr_qty').text();
+    var quantity = parseInt($('#quantity').val());
+    var curr_qty = parseInt($('#curr_qty').text());
+	console.log(quantity, curr_qty)
+	console.log(quantity > curr_qty)
 
     if (quantity <= curr_qty) {
 

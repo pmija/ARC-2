@@ -76,56 +76,101 @@
                   <div class="x_content">
 					<form action="" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left"> {% csrf_token %}
 
-					         <div class="form-group">
+					    <div class="form-group" style="display: none;">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="uniqueid">Item ID
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input type="number" id="uniqueid" name="uniqueid" required="required" class="form-control col-md-7 col-xs-12">
                         </div>
-                      </div>
+						</div>
                       <div class="form-group">
                         <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
 
                         </div>
                       </div>
-					<!-- LOG -->
-			 <div id="bigitem" style="display: none;">
+				
+				
+					<!-- IMPORTANT KIM -->
+					<div id="smallitem" style="display:initial">
+						<div align="center" >
+							<h4 id="title_table" style="margin-top:0px;"><b>Borrower's Log</b></h4>
+							<sup style="fonst-size: 6px;"><i>Note: Just scan the RFID of the Item and the Borrower's Log will update automatic</i></sup>
+							<h5 id="itemname"></h5>
+						</div>
+						<div class="table-responsive">
+						<table id="datatable-responsive" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
+							<thead style="background-color: #4CAF50;color:white">
+							  <tr>
+								<th class="column-title" id="date">Date Borrowed</th>
+								<th class="column-title" id="name">ID Number</th>
+								<th class="column-title" id="name">Borrower</th>
+								<th class="column-title" id="qty">Quantity</th>
+								<th class="column-title" id="lender">Lender</th>
+								<th class="column-title">Action</th>
+							  </tr>
+							</thead>
 
-			   </div>
+							<tbody id="borrowerTableBody">
+							</tbody>
+						</table>
+						</div>
+					</div>
+					
+					<div id="modalReturnItem" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+						<div class="modal-dialog modal-lg">
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" id="close" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+							  </button>
+							  <h4 class="modal-title" id="myModalLabel">Return Item Summary</h4>
+							</div>
+							<div class="modal-body">
+								<table class="table table-bordered">
+									<thead>
+										<th class="column-title">Borrower</th>
+										<th class="column-title">ID Number</th>
+										<th class="column-title">Item</th>
+										<th class="column-title" >Quantity</th>
+										<th class="column-title">Date Borrowed</th>
+									</thead>
+									<tbody id="modalTableBody">
+									</tbody>
+								</table>
+								<div align="center">
+									<div class="radio">
+										<label>
+											<input class="radio-pick" type="radio" checked="checked" value="complete" id="complete" name="optionsRadios"> Complete
+										</label>
+									</div>
+									<div class="radio">
+										<label>
+											<input class="radio-pick" type="radio" value="damaged" id="damaged" name="optionsRadios"> Damaged
+										</label>
+									</div>
+									<div class="form-group" style="max-width: 300px; display: none;" id="qtyDamagedArea">
+										<label class="control-label col-md-6 col-sm-6 col-xs-12">Qty damaged</label>
+										<div class="col-md-6 col-sm-6 col-xs-12">
+											<input id="inputQtyDamaged" type="int" class="form-control">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+							  
+							</div>
 
-			  <div id="smallitem" style="display:none">
-				<h5 align="center" id="itemname"></h5>
-				<br><h4 id="title_table" align="center" style="margin-top:0px;"><b>Borrower's Log</b></h4>
-				<div class="table-responsive">
-				<table id="datatable-responsive" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
-					<thead style="background-color: #4CAF50;color:white">
-					  <tr>
-						<th class="column-title" id="name">ID Number</th>
-						<th class="column-title" id="name">Name</th>
-						<th class="column-title" id="qty">Quantity</th>
-						<th class="column-title" id="date">Date Borrowed</th>
-						<th class="column-title">Action</th>
-					  </tr>
-					</thead>
-
-					<tbody id="toAppend">
-					</tbody>
-				</table>
-				</div>
-			  </div>
-
-
+						  </div>
+						</div>
+					</div>
+					
+					<!-- IMPORTANT KIM -->
+			  
+			  
                   </div>
                 </div>
               </div>
             </div>
-			<div id="userinfo" style="width:100%; visibility: hidden;" >
-			</div>
-
-
-
-
-                    </form>
+			</form>
           </div>
         </div>
         <!-- /page content -->
@@ -135,157 +180,127 @@
       </div>
     </div>
 
-  {% include 'import-js.html' %}
+	{% include 'import-js.html' %}
 
-  <script>
-
-
-$(document).ready(
-  function() {
-
-    setInterval(function() {
-    $.ajax({url: 'ajax/rfidajax',
-              type: 'GET',
-              success: function(response) {
-          var data = JSON.parse(response);
-          if(data['ready']==true){
-
-            var x = document.getElementById('uniqueid');
-            x.value = data['tag'];
-            appendModal(x);
-          }
-
-              }
-          });
-    }, 1000);
-  });
-
-  $('#smallitem').hide();
-  $('#bigitem').hide();
-	function appendModal(elem){
-		var type;
-		console.log(elem.value);
-		var id = elem.value;
-		$.ajax({
-			url: "/ajax/checkitemtype",
-			method: "POST",
-			data:{
-				'id':id,
-				 'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
-			},
-			success: function(data){
-				var newdata = JSON.parse(data);
-				console.log(newdata);
-				type = newdata[0].fields.ItemType;
-				pk = newdata[0].pk;
-				console.log(type);
-				$.ajax({
-					url: "/ajax/returnitemajax",
-					method: "POST",
-					data:{
-						'pk': pk,
-						'type': type,
-						'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
-					},
-					success: function(data){
-						var newdata2 = JSON.parse(data);
-						console.log(newdata2);
-						if (newdata2.length == 0){
-						}
-						else{
-							if (type == "small"){
-								$('#itemname').empty();
-								$('#toAppend').empty();
-								$('#smallitem').show();
-								$('#itemname').append('<b>Item Name: </b> &nbsp; '+newdata2[0].fields.ItemID[0] + " " + newdata2[0].fields.ItemID[1]+'')
-								for  (var i = 0; i< newdata2.length; i++){
-
-									var datetime = moment(newdata2[i].fields.DateTime).format('MMMM D, YYYY h:mm:ss a');
-									$('#toAppend').append('<tr>\
-									  <td>'+newdata2[i].fields.Borrower[2]+'</td>\
-									  <td>'+newdata2[i].fields.Borrower[0]+'</td>\
-									  <td>'+newdata2[i].fields.Quantity+'</td>\
-									  <td>'+datetime+'</td>\
-									  <td align="center"><button type="button" id="'+newdata2[i].pk+'" name="returnbutton" onclick="toReturn(this)" class="btn btn-danger">Return</button></td>\
-									</tr>')
-								}
-							}
-							else{
-								var datetime = moment(newdata2[0].fields.DateTime).format('MMMM D, YYYY h:mm:ss a');
-								var datetime2 = moment(newdata2[0].fields.DateTimeReturned).format('MMMM D, YYYY h:mm:ss a');
-								$('#bigitem').show();
-								$('#bigitem').append('\
-								<div style="width:700px;margin-left:150px;"class="row">\
-								<div style="float:left;margin-left:42px;height:70px;width:350px;" class="column">\
-									<h5><b>Item Name: </b> &nbsp; '+newdata2[0].fields.ItemID[0]+ " " + newdata2[0].fields.ItemID[1] + '</h5>\
-									<h5><b>Borrowers Name: </b> &nbsp; '+newdata2[0].fields.Borrower[0]+'</h5>\
-									<h5><b>ID Number: </b> &nbsp; '+newdata2[0].fields.Borrower[2]+'</h5>\
-								</div>\
-								<div style="float:right;margin-right:0px;height:70px;width:300px;" class="column" >\
-									<h5><b>Date Borrowed: </b> &nbsp; '+datetime+'</h5>\
-									<h5><b>Date Returned: </b> &nbsp; '+datetime2+'</h5>\
-								</div>\
-								</div>')
-
-								myClick();
-							}
-						}
-
+	<script>
+	let rfidtag;
+	if($('#damaged').is(':checked')) {
+		value = 'damaged'; 
+		$('#qtyDamagedArea').show(); 
+	}
+	else{
+		value = 'complete'
+	}
+	$('.radio-pick').change(function(){
+		value = $(this).val();
+		if (value === 'damaged'){
+			$('#qtyDamagedArea').show();
+		}
+		else{
+			$('#qtyDamagedArea').hide();
+		}
+	});
+		
+	window.onload = () =>{
+		setInterval(() =>{
+			$.ajax({
+				url: 'ajax/rfidajax',
+				type: 'GET',
+				success: (response) =>{
+					let data = JSON.parse(response);
+					if(data['ready']==true){
+						let elem = document.getElementById('uniqueid');
+						elem.value = data['tag'];
+						rfidtag = data['tag'];
+						item.appendItemInformation(elem);
 					}
-				});
-			}
-		});
+				}
+			});
+		}, 1000);
 	}
-
-
-	function myClick() {
-	  setTimeout(
-		function() {
-			$('#smallitem').hide();
-			$('#bigitem').hide();
-			$('#bigitem').empty();
-			$('#toAppend').empty();
-		}, 3000);
-	}
-
-	function toReturn(elem){
-		var id = elem.id;
-		console.log(id);
-
-		var p = elem.parentNode.parentNode;
-		p.parentNode.removeChild(p);
-
-		$.ajax({
-			url: "/ajax/return",
-			method: "POST",
-			data:{
-				'id':id,
-				 'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
-			},
-			success: function(data){
-				console.log('return');
-				var newdata2 = JSON.parse(data);
-
-								var datetime = moment(newdata2[0].fields.DateTime).format('MMMM D, YYYY h:mm:ss a');
-								var datetime2 = moment(newdata2[0].fields.DateTimeReturned).format('MMMM D, YYYY h:mm:ss a');
-								$('#bigitem').show();
-								$('#bigitem').append('\
-								<div style="width:700px;margin-left:150px;"class="row">\
-								<div style="float:left;margin-left:42px;height:70px;width:350px;" class="column">\
-									<h5><b>Item Name: </b> &nbsp; '+newdata2[0].fields.ItemID[0]+'</h5>\
-									<h5><b>Borrowers Name: </b> &nbsp; '+newdata2[0].fields.Borrower[0]+'</h5>\
-									<h5><b>ID Number: </b> &nbsp; '+newdata2[0].fields.Borrower[2]+'</h5>\
-								</div>\
-								<div style="float:right;margin-right:0px;height:70px;width:300px;" class="column" >\
-									<h5><b>Date Borrowed: </b> &nbsp; '+datetime+'</h5>\
-									<h5><b>Date Returned: </b> &nbsp; '+datetime2+'</h5>\
-								</div>\
-								</div>')
-
-								myClick();
+	
+	let item = {
+		appendItemInformation: (elem) =>{
+			let id = elem.value;
+			$.ajax({
+				url: "/ajax/getBorrowed",
+				method: "POST",
+				data:{
+					'id':id,
+					'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+				},
+				success: (data) =>{
+					let parsedData = JSON.parse(data);
+					console.log(parsedData)
+					if (parsedData.length != 0){
+						$('#itemname').empty();
+						$('#borrowerTableBody').empty();
+						$('#itemname').append('<b>Item Name: </b> &nbsp; '+parsedData[0].fields.ItemID[0] + " " + parsedData[0].fields.ItemID[1]+'')
+						for  (let i = 0; i< parsedData.length; i++){
+							let datetime = moment(parsedData[i].fields.DateTime).format('MMMM D, YYYY h:mm:ss a');
+							$('#borrowerTableBody').append('\
+								<tr>\
+									<td>'+datetime+'</td>\
+									<td>'+parsedData[i].fields.Borrower[2]+'</td>\
+									<td>'+parsedData[i].fields.Borrower[0]+'</td>\
+									<td align="right">'+parsedData[i].fields.Quantity+'</td>\
+									<td>'+parsedData[i].fields.Admin[0]+'</td>\
+									<td align="center">\
+										<button data="'+ parsedData[i].fields.ItemID[0]+ " " + parsedData[i].fields.ItemID[1] +'" data1="'+parsedData[i].fields.ItemID[2]+'" data2="'+parsedData[i].fields.Quantity+'" data3="'+parsedData[i].fields.Borrower[0]+'" data4="'+parsedData[i].fields.Borrower[2]+'" data5="'+datetime+'" id="'+parsedData[i].pk+'" onclick="item.showModalReturn(this)" class="btn btn-danger"  data-toggle="modal" data-target="#modalReturnItem" type="button" >Return</button>\
+									</td>\
+								</tr>\
+								')
+							}
+					}
+				}
+			});	
+		},
+		
+		showModalReturn: (elem) =>{
+			$('#inputQtyDamaged').val(elem.attributes.data2.nodeValue);
+			$('.modal-footer').empty();
+			$('.modal-footer').append('<button type="button" data="'+elem.attributes.data2.nodeValue+'" data1="'+elem.attributes.data1.nodeValue+'" onclick="item.returnItem(this)" class="btn btn-primary" id="'+elem.id+'">Confirm</button>');
+			$('#modalTableBody').empty();
+			$('#modalTableBody').append('\
+				<tr>\
+					<td>'+elem.attributes.data3.nodeValue+'</td>\
+					<td>'+elem.attributes.data4.nodeValue+'</td>\
+					<td>'+elem.attributes.data.nodeValue+'</td>\
+					<td align="center"><input id="inputQty" value='+elem.attributes.data2.nodeValue+' style="max-width: 70px;"type="int" class="form-control"></td>\
+					<td>'+elem.attributes.data5.nodeValue+'</td>\
+				</tr>\
+			');
+			if (elem.attributes.data1.nodeValue !== 'small'){
+				$('#inputQty').prop('disabled', 'disabled')
+				$('#inputQtyDamaged').prop('disabled', 'disabled')
 			}
-		});
-
+		},
+		
+		returnItem: (elem) =>{
+			new PNotify({
+				title: 'Done Returning Item',
+				type: 'success',
+				styling: 'bootstrap3'
+            });
+			$('#itemname').empty();
+			$('#borrowerTableBody').empty();
+			$('#modalReturnItem').modal('hide');
+			info = {id: elem.id, qty: elem.attributes.data.nodeValue, qtyReturn: $('#inputQty').val(), returnType: $('#selectValue').val()}
+			$.ajax({
+				url: "/ajax/returnItem",
+				method: "POST",
+				data:{
+					'id': elem.id,
+					'qty': elem.attributes.data.nodeValue, 
+					'type': elem.attributes.data1.nodeValue, 
+					'qtyReturn': $('#inputQty').val(),
+					'returnType': value,
+					'qytDamage': $('#inputQtyDamaged').val(),
+					'rfidtag': rfidtag,
+					'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+				}
+			});
+		}
 	}
   </script>
 
