@@ -934,6 +934,9 @@ def StudentSetResidency(request):
 	else: #lab no sched available yet
 		return render(request, 'Students/StudentSetResidency.html', {'student':student})
 
+def StudentHome(request):
+	return render(request, 'Students/StudentHome.html')
+
 def StudentEditResidency(request):
 	return render(request, 'Students/StudentEditResidency.html')
 

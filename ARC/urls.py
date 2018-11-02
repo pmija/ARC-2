@@ -44,7 +44,7 @@ urlpatterns = [
     url(r'Student/Profile$', views.StudentProfile, name='Student/Profile'),
     #Dashboard
     url(r'^Student$', views.StudentDashboard, name='Student/Dashboard'),
-    url(r'^Student/Calendar$', views.StudentDashboard2, name='Student/Calendar'),
+    url(r'^Student/Home$', views.StudentHome, name='Student/Home'),
     #Item Lending
     url(r'^Student/BorrowItem$', views.StudentBorrowItem, name='Student/BorrowItem'),
     url(r'^Student/ReturnItem$', views.StudentReturnItem, name='Student/ReturnItem'),
