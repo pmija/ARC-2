@@ -935,7 +935,9 @@ def StudentSetResidency(request):
 		return render(request, 'Students/StudentSetResidency.html', {'student':student})
 
 def StudentHome(request):
-	return render(request, 'Students/StudentHome.html')
+	borrowed = AuditTable_Inventory.objects.filter(AuditAction='1').filter(Borrower=User.objects.get(Email=request.user.email)).filter(DateTimeReturned=None)
+	print(borrowed)
+	return render(request, 'Students/StudentHome.html',{'borrowed':borrowed})
 
 def StudentEditResidency(request):
 	return render(request, 'Students/StudentEditResidency.html')
@@ -1758,6 +1760,11 @@ def FacultyTechResidencyReport(request):
 	return render(request,'FacultyTech/FacultyTechResidencyReport.html',{'actual_total':actual_total,'actual_residency':actual_residency,'user':user,'data':data,'actual':actual})
 #<--END-->
 
+def FacultyTechLabReport(request):
+	return render(request, 'FacultyTech/FacultyTechLabReport.html')
+
+def FacultyTechTimeslotReport(request):
+	return render(request, 'FacultyTech/FacultyTechTimeslotReport.html')
 
 def FacultyTechGroupsInventory(request):
 	return render(request, 'FacultyTech/FacultyTechGroupsInventory.html')

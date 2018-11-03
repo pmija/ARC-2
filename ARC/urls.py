@@ -105,6 +105,8 @@ urlpatterns = [
     url(r'^FacultyTech/ResidencyReport$', views.FacultyTechResidencyReport, name='FacultyTech/ResidencyReport'),
     url(r'^FacultyTech/InventoryReport$', views.FacultyTechInventoryReport, name='FacultyTech/InventoryReport'),
     url(r'^FacultyTech/BorrowedItems$', views.FacultyTechBorrowedItems, name='FacultyTech/BorrowedItems'),
+    url(r'^FacultyTech/LabReport$', views.FacultyTechLabReport, name='FacultyTech/LabReport'),
+    url(r'^FacultyTech/TimeslotReport$', views.FacultyTechTimeslotReport, name='FacultyTech/TimeslotReport'),
     url(r'^FacultyTech/GroupsInventory$', views.FacultyTechGroupsInventory, name='FacultyTech/GroupsInventory'),
     #Inbox
     url(r'^FacultyTech/Inbox$', views.FacultyTechInbox, name='FacultyTech/Inbox'),
