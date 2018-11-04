@@ -245,12 +245,16 @@ def getUserTimeInInfo(request):
 							print(finalTaken)
 							ResidencyTimeSlot.objects.filter(Laboratory=studentLab, Schedule=sched, SchedVar=maxDummyCurrent).update(TakenSlot=finalTaken)
 						
-							actualres = ActualResidency(Student=student, DateTime=datetime.datetime.now(), TimeIn=datetime.datetime.now(), Timeout=datetime.datetime.now(), ResidencyType=2, ResidencyStatus=1,  Schedule=sched)
+							actualres = ActualResidency(Student=student, DateTime=datetime.datetime.now(), TimeIn=datetime.datetime.now(), TimeOut=datetime.datetime.now(), ResidencyType=2, ResidencyStatus=1,  Schedule=sched)
 							actualres.save()
 							ares = ActualResidency.objects.all().values_list()
 							inv_ares = ares.aggregate(Max('ActualResidencyID'))
 							ares2 = ActualResidency.objects.filter(ActualResidencyID=inv_ares['ActualResidencyID__max'])
 							res_serialized = serializers.serialize('json', ares2, use_natural_foreign_keys=True)
+							return JsonResponse(res_serialized, safe=False)
+						else:
+							nonexisting = {}
+							res_serialized = serializers.serialize('json', nonexisting, use_natural_foreign_keys=True)
 							return JsonResponse(res_serialized, safe=False)
 					else:
 						nonexisting = {}

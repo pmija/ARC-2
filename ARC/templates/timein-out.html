@@ -105,6 +105,7 @@
 				},
 				success: (data) =>{
 					let parsedData = JSON.parse(data);
+					console.log(parsedData === null)
 					if(parsedData.length === 0){
 						console.log('Lab is currently not available')
 						$('#userinfo').append('<h2 style="color: red;" align="center">Lab is currently unavailable</h2>')
@@ -157,7 +158,6 @@
 							
 							let value_start = splitin[0].split(':')
 							let value_end = splitout[0].split(':')
-
 							start.setHours(value_start[0], value_start[1], value_start[2], 0)
 							end.setHours(value_end[0], value_end[1], value_end[2], 0)
 							
@@ -199,7 +199,6 @@
 		}
 	
 	}
-
 	</script>
   </body>
 </html>

@@ -191,7 +191,7 @@
 	else{
 		value = 'complete'
 	}
-	$('.radio-pick').change(() =>{
+	$('.radio-pick').change(function(){
 		value = $(this).val();
 		if (value === 'damaged'){
 			$('#qtyDamagedArea').show();
