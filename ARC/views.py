@@ -967,6 +967,8 @@ def StudentSetResidency(request):
 						#outdated sched from lab
 						if not StudentResidencySchedule.objects.filter(Student=student_id).filter(RefSchedVar=lab_var).exists():
 
+							StudentResidencySchedule.objects.all().filter(Student=student_id).filter(RefSchedVar=schedvar.RefSchedVar).filter(StudentSchedVar=schedvar.StudentSchedVar).update(DateChanged=datetime.date.today())
+
 							for i in range(0, len(sched)):
 
 								ressched = StudentResidencySchedule(Student=student_id, Schedule=sched[i], RefSchedVar=lab_var)
@@ -979,6 +981,8 @@ def StudentSetResidency(request):
 						else: #just editing current lab sched and has updated schedule from lab
 
 							next_var = schedvar.StudentSchedVar + 1
+
+							StudentResidencySchedule.objects.all().filter(Student=student_id).filter(RefSchedVar=schedvar.RefSchedVar).filter(StudentSchedVar=schedvar.StudentSchedVar).update(DateChanged=datetime.date.today())
 
 							for m in range(0, old_sched.count()):
 

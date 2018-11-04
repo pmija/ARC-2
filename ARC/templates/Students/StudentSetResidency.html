@@ -67,7 +67,7 @@
               <div class="col-md-12">
 
                     <!-- Manual Item Entry for Borrowing -->
-										<!-- START Table -->
+                    <!-- START Table -->
 
                     <div class="row">
 
@@ -75,62 +75,62 @@
 
                       <div class="x_panel">
 
-	                      <div class="x_title">
-	                        <h4><b>Set Timeslot for Residency</b></h4>
-	                        <div class="clearfix"></div>
-	                      </div>
+                        <div class="x_title">
+                          <h4><b>Set Timeslot for Residency</b></h4>
+                          <div class="clearfix"></div>
+                        </div>
 
-	                      <form method="POST" id="my-form">{% csrf_token %}
+                        <form method="POST" id="my-form">{% csrf_token %}
 
-	                      <div class="x_content">
+                        <div class="x_content">
 
-	                        <div class="col-md-8" id="curr-lab">
+                          <div class="col-md-8" id="curr-lab">
 
-	                        	<h5><i>The checked boxes represent your current residency schedule if you have already set your residency schedule before.</i></h5>
-	                        	<h5><b>Laboratory:</b>&nbsp; {{student.Laboratory.LaboratoryName}}</h5>
-	                        	<input type="hidden" name="lab_id" id="lab-id" value="{{student.Laboratory.LabID}}">
-	                        	<input type="hidden" name="student_id" id="student-id" value="{{student.NFCUniqueID}}">
-	                        	<input type="hidden" name="lab_var" id="lab-var" value="{{lab_var}}">
+                            <h5><i>The checked boxes represent your current residency schedule if you have already set your residency schedule before.</i></h5>
+                            <h5><b>Laboratory:</b>&nbsp; {{student.Laboratory.LaboratoryName}}</h5>
+                            <input type="hidden" name="lab_id" id="lab-id" value="{{student.Laboratory.LabID}}">
+                            <input type="hidden" name="student_id" id="student-id" value="{{student.NFCUniqueID}}">
+                            <input type="hidden" name="lab_var" id="lab-var" value="{{lab_var}}">
 
-	                        </div>
+                          </div>
 
-	                        <div class="row"></div>
+                          <div class="row"></div>
 
-	                        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
-	                          <thead>
-	                            <tr id="t-header">
+                          <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%">
+                            <thead>
+                              <tr id="t-header">
 
-	                            	<th style="width: 20%; text-align: center;">Monday</th>
-	                            	<th style="width: 20%; text-align: center;">Tuesday</th>
-	                            	<th style="width: 20%; text-align: center;">Wednesday</th>
-	                            	<th style="width: 20%; text-align: center;">Thursday</th>
-	                            	<th style="width: 20%; text-align: center;">Friday</th>
+                                <th style="width: 20%; text-align: center;">Monday</th>
+                                <th style="width: 20%; text-align: center;">Tuesday</th>
+                                <th style="width: 20%; text-align: center;">Wednesday</th>
+                                <th style="width: 20%; text-align: center;">Thursday</th>
+                                <th style="width: 20%; text-align: center;">Friday</th>
 
-	                            </tr>
-	                          </thead>
-	                          <tbody id="t-content">
-	                          </tbody>
-	                        </table>
+                              </tr>
+                            </thead>
+                            <tbody id="t-content">
+                            </tbody>
+                          </table>
 
-	                        <hr class="no-margin">
+                          <hr class="no-margin">
 
-	                        <div class="form-group">
-	                          <div class="col-md-12" align="center">
-	                            <button type="submit" class="btn btn-success" value="{{student.NFCUniqueID}}" name="NFC_ID">
-	                            Submit Residency</button>
-	                          </div>
-	                        </div><div class="row"></div>
+                          <div class="form-group">
+                            <div class="col-md-12" align="center">
+                              <button type="submit" class="btn btn-success" value="{{student.NFCUniqueID}}" name="NFC_ID">
+                              Submit Residency</button>
+                            </div>
+                          </div><div class="row"></div>
 
-	                      </div>
+                        </div>
 
-	                    	</form>
+                        </form>
 
                       </div>
 
                     </div>
                     </div>
 
-						        <!-- END Table -->
+                    <!-- END Table -->
 
                   </div>
                 </div>
@@ -152,7 +152,7 @@
 
     function getData(data) {
 
-    	var newdata = JSON.parse(data);
+      var newdata = JSON.parse(data);
         console.log(newdata);
 
         var student_time = [];
@@ -165,146 +165,146 @@
         var f = []; var f_slot = []; var f_time = [];
 
         function tConvert (time) {
-			// Check correct time format and split into components
-			time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+      // Check correct time format and split into components
+      time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
-			if (time.length > 1) { // If time format correct
-				time = time.slice (1);  // Remove full string match value
-				time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
-				time[0] = +time[0] % 12 || 12; // Adjust hours
-			}
-			  return time.join (''); // return adjusted time or original string
-		}
+      if (time.length > 1) { // If time format correct
+        time = time.slice (1);  // Remove full string match value
+        time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+        time[0] = +time[0] % 12 || 12; // Adjust hours
+      }
+        return time.join (''); // return adjusted time or original string
+    }
 
           // ## APPEND FOR TD and POPULATE ARRAYS ## //
 
-		for (var i = 0; i < newdata.length; i++) {
+    for (var i = 0; i < newdata.length; i++) {
 
-          	if (newdata[i].fields.Schedule.includes("M") && newdata[i].model == 'ARC.residencytimeslot') {
+            if (newdata[i].fields.Schedule.includes("M") && newdata[i].model == 'ARC.residencytimeslot') {
 
-          		var temp = newdata[i].fields.Schedule.substring(2);
+              var temp = newdata[i].fields.Schedule.substring(2);
 
-          		for (var x = 0; x < 2; x++) {
+              for (var x = 0; x < 2; x++) {
 
-          			temp = temp.replace("+", ":");
+                temp = temp.replace("+", ":");
 
-          		}
+              }
 
-          		var split_temp = temp.split('-');
-          		var temp1, temp2;
+              var split_temp = temp.split('-');
+              var temp1, temp2;
 
-          		temp1 = tConvert(split_temp[0]);
-							temp2 = tConvert(split_temp[1]);
+              temp1 = tConvert(split_temp[0]);
+              temp2 = tConvert(split_temp[1]);
 
-          		temp = temp1 + " - " + temp2;
+              temp = temp1 + " - " + temp2;
 
-          		m_time.push(temp);
-          		m.push(newdata[i].fields.Schedule);
-          		m_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-          		lab_var = newdata[i].fields.SchedVar;
+              m_time.push(temp);
+              m.push(newdata[i].fields.Schedule);
+              m_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+              lab_var = newdata[i].fields.SchedVar;
 
-          	}
+            }
 
-          	else if (newdata[i].fields.Schedule.includes("T") && newdata[i].model == 'ARC.residencytimeslot') {
+            else if (newdata[i].fields.Schedule.includes("T") && newdata[i].model == 'ARC.residencytimeslot') {
 
-          		var temp = newdata[i].fields.Schedule.substring(2);
+              var temp = newdata[i].fields.Schedule.substring(2);
 
-          		for (var x = 0; x < 2; x++) {
+              for (var x = 0; x < 2; x++) {
 
-          			temp = temp.replace("+", ":");
+                temp = temp.replace("+", ":");
 
-          		}
+              }
 
-          		var split_temp = temp.split('-');
-          		var temp1, temp2;
+              var split_temp = temp.split('-');
+              var temp1, temp2;
 
-          		temp1 = tConvert(split_temp[0]);
-							temp2 = tConvert(split_temp[1]);
+              temp1 = tConvert(split_temp[0]);
+              temp2 = tConvert(split_temp[1]);
 
-          		temp = temp1 + " - " + temp2;
+              temp = temp1 + " - " + temp2;
 
-          		t_time.push(temp);
-          		t.push(newdata[i].fields.Schedule);
-          		t_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-          		lab_var = newdata[i].fields.SchedVar;
+              t_time.push(temp);
+              t.push(newdata[i].fields.Schedule);
+              t_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+              lab_var = newdata[i].fields.SchedVar;
 
-          	}
+            }
 
-          	else if (newdata[i].fields.Schedule.includes("W") && newdata[i].model == 'ARC.residencytimeslot') {
+            else if (newdata[i].fields.Schedule.includes("W") && newdata[i].model == 'ARC.residencytimeslot') {
 
-          		var temp = newdata[i].fields.Schedule.substring(2);
+              var temp = newdata[i].fields.Schedule.substring(2);
 
-          		for (var x = 0; x < 2; x++) {
+              for (var x = 0; x < 2; x++) {
 
-          			temp = temp.replace("+", ":");
+                temp = temp.replace("+", ":");
 
-          		}
+              }
 
-          		var split_temp = temp.split('-');
-          		var temp1, temp2;
+              var split_temp = temp.split('-');
+              var temp1, temp2;
 
-          		temp1 = tConvert(split_temp[0]);
-							temp2 = tConvert(split_temp[1]);
+              temp1 = tConvert(split_temp[0]);
+              temp2 = tConvert(split_temp[1]);
 
-          		temp = temp1 + " - " + temp2;
+              temp = temp1 + " - " + temp2;
 
-          		w_time.push(temp);
-          		w.push(newdata[i].fields.Schedule);
-          		w_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-          		lab_var = newdata[i].fields.SchedVar;
+              w_time.push(temp);
+              w.push(newdata[i].fields.Schedule);
+              w_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+              lab_var = newdata[i].fields.SchedVar;
 
-          	}
-          	else if (newdata[i].fields.Schedule.includes("H") && newdata[i].model == 'ARC.residencytimeslot') {
+            }
+            else if (newdata[i].fields.Schedule.includes("H") && newdata[i].model == 'ARC.residencytimeslot') {
 
-          		var temp = newdata[i].fields.Schedule.substring(2);
+              var temp = newdata[i].fields.Schedule.substring(2);
 
-          		for (var x = 0; x < 2; x++) {
-          			temp = temp.replace("+", ":");
-          		}
+              for (var x = 0; x < 2; x++) {
+                temp = temp.replace("+", ":");
+              }
 
-          		var split_temp = temp.split('-');
-          		var temp1, temp2;
+              var split_temp = temp.split('-');
+              var temp1, temp2;
 
-          		temp1 = tConvert(split_temp[0]);
-							temp2 = tConvert(split_temp[1]);
+              temp1 = tConvert(split_temp[0]);
+              temp2 = tConvert(split_temp[1]);
 
-          		temp = temp1 + " - " + temp2;
+              temp = temp1 + " - " + temp2;
 
-          		h_time.push(temp);
-          		h.push(newdata[i].fields.Schedule);
-          		h_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-          		lab_var = newdata[i].fields.SchedVar;
+              h_time.push(temp);
+              h.push(newdata[i].fields.Schedule);
+              h_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+              lab_var = newdata[i].fields.SchedVar;
 
-          	}
+            }
 
-          	else if (newdata[i].fields.Schedule.includes("F") && newdata[i].model == 'ARC.residencytimeslot') {
+            else if (newdata[i].fields.Schedule.includes("F") && newdata[i].model == 'ARC.residencytimeslot') {
 
-          		var temp = newdata[i].fields.Schedule.substring(2);
+              var temp = newdata[i].fields.Schedule.substring(2);
 
-          		for (var x = 0; x < 2; x++) {
-          			temp = temp.replace("+", ":");
-          		}
+              for (var x = 0; x < 2; x++) {
+                temp = temp.replace("+", ":");
+              }
 
-          		var split_temp = temp.split('-');
-          		var temp1, temp2;
+              var split_temp = temp.split('-');
+              var temp1, temp2;
 
-          		temp1 = tConvert(split_temp[0]);
-							temp2 = tConvert(split_temp[1]);
+              temp1 = tConvert(split_temp[0]);
+              temp2 = tConvert(split_temp[1]);
 
-          		temp = temp1 + " - " + temp2;
+              temp = temp1 + " - " + temp2;
 
-          		f_time.push(temp);
-          		f.push(newdata[i].fields.Schedule);
-          		f_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
-          		lab_var = newdata[i].fields.SchedVar;
+              f_time.push(temp);
+              f.push(newdata[i].fields.Schedule);
+              f_slot.push(newdata[i].fields.TotalSlot - newdata[i].fields.TakenSlot);
+              lab_var = newdata[i].fields.SchedVar;
 
-          	}
+            }
 
-          	else if (newdata[i].model == 'ARC.studentresidencyschedule') {
+            else if (newdata[i].model == 'ARC.studentresidencyschedule') {
 
-          		student_time.push(newdata[i].fields.Schedule);
+              student_time.push(newdata[i].fields.Schedule);
 
-          	}
+            }
 
         }
 
@@ -313,192 +313,192 @@
 
         for (var i = 0; i < max; i++) {
 
-          	$('#t-content').append('<tr align="center" id="row-'+ i +'"></tr>');
+            $('#t-content').append('<tr align="center" id="row-'+ i +'"></tr>');
 
-          	if (m.length <= i) {
+            if (m.length <= i) {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<div class="row"></div>\
-						<div style="text-align: center;">\
-							<b>No timeslot available.</b>\
-						</div>\
-					</td>'
+          '<td>\
+            <div class="row"></div>\
+            <div style="text-align: center;">\
+              <b>No timeslot available.</b>\
+            </div>\
+          </td>'
 
-				);
+        );
 
-          	}
+            }
 
-          	else {
+            else {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<label style="text-align: center;">\
-							<input type="checkbox" class="flat" id="'+ m[i] +'" name="sched[]" value="'+ m[i] +'"> &nbsp; '+ m_time[i] +'\
-						</label>\
-						<hr class="no-margin">\
-						<div style="text-align: center;">Slots: '+ m_slot[i] +'</div>\
-					</td>'
+          '<td>\
+            <label style="text-align: center;">\
+              <input type="checkbox" class="flat" id="'+ m[i] +'" name="sched[]" value="'+ m[i] +'"> &nbsp; '+ m_time[i] +'\
+            </label>\
+            <hr class="no-margin">\
+            <div style="text-align: center;">Slots: '+ m_slot[i] +'</div>\
+          </td>'
 
-				);
+        );
 
-				if (m_slot[i] == 0) {
+        if (m_slot[i] == 0) {
 
-					$('[id="'+ m[i] +'"]').iCheck('disable').iCheck('update');
+          $('[id="'+ m[i] +'"]').iCheck('disable').iCheck('update');
 
-				}
+        }
 
-          	}
+            }
 
-          	if (t.length <= i) {
+            if (t.length <= i) {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<div class="row"></div>\
-						<div style="text-align: center;">\
-							<b>No timeslot available.</b>\
-						</div>\
-					</td>'
+          '<td>\
+            <div class="row"></div>\
+            <div style="text-align: center;">\
+              <b>No timeslot available.</b>\
+            </div>\
+          </td>'
 
-				);
+        );
 
-          	}
+            }
 
-          	else {
+            else {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<label>\
-							<input type="checkbox" class="flat" id="'+ t[i] +'" name="sched[]" value="'+ t[i] +'"> &nbsp; '+ t_time[i] +'\
-						</label>\
-						<hr class="no-margin">\
-						<div style="text-align: center;">Slots: '+ t_slot[i] +'</div>\
-					</td>'
+          '<td>\
+            <label>\
+              <input type="checkbox" class="flat" id="'+ t[i] +'" name="sched[]" value="'+ t[i] +'"> &nbsp; '+ t_time[i] +'\
+            </label>\
+            <hr class="no-margin">\
+            <div style="text-align: center;">Slots: '+ t_slot[i] +'</div>\
+          </td>'
 
-				);
+        );
 
-				if (t_slot[i] == 0) {
+        if (t_slot[i] == 0) {
 
-					$('[id="'+ t[i] +'"]').iCheck('disable').iCheck('update');
+          $('[id="'+ t[i] +'"]').iCheck('disable').iCheck('update');
 
-				}
+        }
 
-          	}
+            }
 
-          	if (w.length <= i) {
+            if (w.length <= i) {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<div class="row"></div>\
-						<div style="text-align: center;">\
-							<b>No timeslot available.</b>\
-						</div>\
-					</td>'
+          '<td>\
+            <div class="row"></div>\
+            <div style="text-align: center;">\
+              <b>No timeslot available.</b>\
+            </div>\
+          </td>'
 
-				);
+        );
 
-          	}
+            }
 
-          	else {
+            else {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<label>\
-							<input type="checkbox" class="flat" id="'+ w[i] +'" name="sched[]" value="'+ w[i] +'"> &nbsp; '+ w_time[i] +'\
-						</label>\
-						<hr class="no-margin">\
-						<div style="text-align: center;">Slots: '+ w_slot[i] +'</div>\
-					</td>'
+          '<td>\
+            <label>\
+              <input type="checkbox" class="flat" id="'+ w[i] +'" name="sched[]" value="'+ w[i] +'"> &nbsp; '+ w_time[i] +'\
+            </label>\
+            <hr class="no-margin">\
+            <div style="text-align: center;">Slots: '+ w_slot[i] +'</div>\
+          </td>'
 
-				);
+        );
 
-				if (w_slot[i] == 0) {
+        if (w_slot[i] == 0) {
 
-					$('[id="'+ w[i] +'"]').iCheck('disable').iCheck('update');
+          $('[id="'+ w[i] +'"]').iCheck('disable').iCheck('update');
 
-				}
+        }
 
-          	}
+            }
 
-          	if (h.length <= i) {
+            if (h.length <= i) {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<div class="row"></div>\
-						<div style="text-align: center;">\
-							<b>No timeslot available.</b>\
-						</div>\
-					</td>'
+          '<td>\
+            <div class="row"></div>\
+            <div style="text-align: center;">\
+              <b>No timeslot available.</b>\
+            </div>\
+          </td>'
 
-				);
+        );
 
-          	}
+            }
 
-          	else {
+            else {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<label>\
-							<input type="checkbox" class="flat" id="'+ h[i] +'" name="sched[]" value="'+ h[i] +'"> &nbsp; '+ h_time[i] +'\
-						</label>\
-						<hr class="no-margin">\
-						<div style="text-align: center;">Slots: '+ h_slot[i] +'</div>\
-					</td>'
+          '<td>\
+            <label>\
+              <input type="checkbox" class="flat" id="'+ h[i] +'" name="sched[]" value="'+ h[i] +'"> &nbsp; '+ h_time[i] +'\
+            </label>\
+            <hr class="no-margin">\
+            <div style="text-align: center;">Slots: '+ h_slot[i] +'</div>\
+          </td>'
 
-				);
+        );
 
-				if (h_slot[i] == 0) {
+        if (h_slot[i] == 0) {
 
-					$('[id="'+ h[i] +'"]').iCheck('disable').iCheck('update');
+          $('[id="'+ h[i] +'"]').iCheck('disable').iCheck('update');
 
-				}
+        }
 
-          	}
+            }
 
-          	if (f.length <= i) {
+            if (f.length <= i) {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<div class="row"></div>\
-						<div style="text-align: center;">\
-							<b>No timeslot available.</b>\
-						</div>\
-					</td>'
+          '<td>\
+            <div class="row"></div>\
+            <div style="text-align: center;">\
+              <b>No timeslot available.</b>\
+            </div>\
+          </td>'
 
-				);
+        );
 
-          	}
+            }
 
-          	else {
+            else {
 
-          		$('#row-'+ i).append(
+              $('#row-'+ i).append(
 
-					'<td>\
-						<label>\
-							<input type="checkbox" class="flat" id="'+ f[i] +'" name="sched[]" value="'+ f[i] +'"> &nbsp; '+ f_time[i] +'\
-						</label>\
-						<hr class="no-margin">\
-						<div style="text-align: center;">Slots: '+ f_slot[i] +'</div>\
-					</td>'
+          '<td>\
+            <label>\
+              <input type="checkbox" class="flat" id="'+ f[i] +'" name="sched[]" value="'+ f[i] +'"> &nbsp; '+ f_time[i] +'\
+            </label>\
+            <hr class="no-margin">\
+            <div style="text-align: center;">Slots: '+ f_slot[i] +'</div>\
+          </td>'
 
-				);
+        );
 
-				if (f_slot[i] == 0) {
+        if (f_slot[i] == 0) {
 
-					$('[id="'+ f[i] +'"]').iCheck('disable').iCheck('update');
+          $('[id="'+ f[i] +'"]').iCheck('disable').iCheck('update');
 
-				}
+        }
 
-          	}
+            }
 
           }
 
@@ -507,9 +507,9 @@
 
           for (var k = 0; k < student_time.length; k++) {
 
-          	console.log($('[id="'+ student_time[k] +'"]').val());
-          	$('[id="'+ student_time[k] +'"]').iCheck('enable').iCheck('update');
-          	$('[id="'+ student_time[k] +'"]').iCheck('check').iCheck('update');
+            console.log($('[id="'+ student_time[k] +'"]').val());
+            $('[id="'+ student_time[k] +'"]').iCheck('enable').iCheck('update');
+            $('[id="'+ student_time[k] +'"]').iCheck('check').iCheck('update');
 
           }
 
@@ -517,79 +517,79 @@
 
     $(window).load(function() {
 
-    	var labid = $('#lab-id').val();
-      	var student_nfc = $('#student-id').val();
+      var labid = $('#lab-id').val();
+      var student_nfc = $('#student-id').val();
 
-      	console.log('loaded');
+      console.log('loaded');
 
-        $.ajax({
+      $.ajax({
 
-	        url: "ajax/setresidency",
-	        method: "POST",
-	        data:{ 'labid': labid, 'student_nfc': student_nfc, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
+        url: "ajax/setresidency",
+        method: "POST",
+        data:{ 'labid': labid, 'student_nfc': student_nfc, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
 
-	        success: function(data){
+        success: function(data){
 
-	        	getData(data);
-	        	console.log('hello');
+          getData(data);
+          console.log('hello');
 
-	        }
+        }
 
-        });
+      });
 
     });
 
     </script>
 
     {% block content7 %}
-	    {% if edit == 0 %}
+      {% if edit == 0 %}
 
-	      <script>
-	        new PNotify({
-	          title: 'You didn\'t do anything',
-	          text: 'You just clicked the submit button but didn\'t edit anything',
-	          type: 'info',
-	          styling: 'bootstrap3'
-	        });
-	      </script>
+        <script>
+          new PNotify({
+            title: 'You didn\'t do anything',
+            text: 'You just clicked the submit button but didn\'t edit anything',
+            type: 'info',
+            styling: 'bootstrap3'
+          });
+        </script>
 
-	    {% endif %}
-	    {% if edit == 1 %}
+      {% endif %}
+      {% if edit == 1 %}
 
-	      <script>
-	        new PNotify({
-	          title: 'Timeslots updated!',
-	          text: 'You have successfully updated your residency timeslot!',
-	          type: 'success',
-	          styling: 'bootstrap3'
-	        });
-	      </script>
+        <script>
+          new PNotify({
+            title: 'Timeslots updated!',
+            text: 'You have successfully updated your residency timeslot!',
+            type: 'success',
+            styling: 'bootstrap3'
+          });
+        </script>
 
-	    {% endif %}
-	    {% if edit == 2 %}
+      {% endif %}
+      {% if edit == 2 %}
 
-	      <script>
-	        new PNotify({
-	          title: 'Timeslots submitted!',
-	          text: 'You have successfully added your first residency timeslot!',
-	          type: 'success',
-	          styling: 'bootstrap3'
-	        });
-	      </script>
+        <script>
+          new PNotify({
+            title: 'Timeslots submitted!',
+            text: 'You have successfully added your first residency timeslot!',
+            type: 'success',
+            styling: 'bootstrap3'
+          });
+        </script>
 
-	    {% endif %}
-	    {% if edit == 3 %}
+      {% endif %}
+      {% if edit == 3 %}
 
-	      <script>
-	        new PNotify({
-	          title: 'Your lab has no schedule available',
-	          text: 'Your lab has not set its schedule. Please contact your laboratory\'s admin.',
-	          type: 'warning',
-	          styling: 'bootstrap3'
-	        });
-	      </script>
+        <script>
+          new PNotify({
+            title: 'Your lab has no schedule available',
+            text: 'Your lab has not set its schedule. Please contact your laboratory\'s admin.',
+            type: 'warning',
+            styling: 'bootstrap3'
+          });
+        </script>
 
-	    {% endif %}
+      {% endif %}
     {% endblock %}
 
   </body>

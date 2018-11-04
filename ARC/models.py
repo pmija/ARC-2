@@ -120,6 +120,8 @@ class StudentResidencySchedule(models.Model):
 	StudentSchedVar = models.IntegerField(default=0)
 	Student =  models.CharField(max_length=250,default='')
 	Schedule =  models.CharField(max_length=50,default='')
+	DateReserved = models.DateField(default=datetime.date.today)
+	DateChanged = models.DateField(default=None, blank=True, null=True)
 
 class Ref_AuditAction(models.Model):
 	AuditActionID = models.AutoField(primary_key=True)
