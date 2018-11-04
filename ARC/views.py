@@ -528,12 +528,16 @@ def register(request):
 		mobileno = request.POST.get('mobileno', '')
 		remarks = request.POST.get('remarks','')
 		degreeno = request.POST.get('degree','')
+		department = request.POST.get('department','')
 		if(degreeno == '0'):
 			degree = None
 		else:
 			degree = Ref_Degree.objects.get(DegreeID=degreeno)
-
-		user_obj = User (Remarks=remarks, IDNumber = idnum, Email = emailadd, Name = fname +" " + lname, PhoneNumber = mobileno, Type=None, adviser=None,Degree=degree,group=None,Department=None,Laboratory=None)
+		if(department == '0'):
+			department = None
+		else:
+			department = Ref_Department.objects.get(DepartmentID=department)
+		user_obj = User (Remarks=remarks, IDNumber = idnum, Email = emailadd, Name = fname +" " + lname, PhoneNumber = mobileno, Type=None, adviser=None,Degree=degree,Department=department,group=None,Laboratory=None)
 		user_obj.save();
 		return redirect('logout')
 	else:
@@ -542,8 +546,9 @@ def register(request):
 		first_name = request.user.first_name # Gets logged in user's last
 		last_name = request.user.last_name # Gets logged in user's first name
 		Degree = Ref_Degree.objects.all()
+		Department = Ref_Department.objects.all()
 		# Send data to template to render data to the screen
-		return render(request,'register.html',{'email':email,'first_name':first_name,'last_name':last_name,'degree':Degree})
+		return render(request,'register.html',{'email':email,'first_name':first_name,'last_name':last_name,'degree':Degree,'department':Department})
 
 
 def pending(request):
