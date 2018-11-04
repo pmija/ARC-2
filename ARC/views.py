@@ -1850,9 +1850,93 @@ def FacultyTechResidencyReport(request):
 #<--END-->
 
 def FacultyTechLabReport(request):
-	return render(request, 'FacultyTech/FacultyTechLabReport.html')
+	if request.method == 'POST':
+		request.session['slotid'] = request.POST.get('slotid','')
+		return redirect('FacultyTech/TimeslotReport')
+	laboratory = User.objects.get(Email=request.user.email).Laboratory
+	timeslots = ResidencyTimeSlot.objects.filter(Laboratory=laboratory)
+	slots = []
+	monday = []
+	tuesday = []
+	wednesday = []
+	thursday = []
+	friday = []
+	for s in timeslots:
+		sched_list = s.Schedule.split('_')
+		if sched_list[0] == 'M':
+			a = sched_list[1].replace("+", ":")
+			b = a.split('-')
+			t1 = b[0]
+			t2 = b[1]
+			time1 = time.strftime("%I:%M",time.strptime(t1, "%H:%M"))
+			time2 = time.strftime("%I:%M %p",time.strptime(t2, "%H:%M"))
+			final = time1 + "-" + time2
+			slots.append({'Sched':final,'Total':s.TotalSlot,'Taken':s.TakenSlot,'Available':s.TotalSlot-s.TakenSlot,'Name':s.Schedule})
+			monday.append(slots)
+
+		elif sched_list[0] == 'T':
+			a = sched_list[1].replace("+", ":")
+			b = a.split('-')
+			t1 = b[0]
+			t2 = b[1]
+			time1 = time.strftime("%I:%M",time.strptime(t1, "%H:%M"))
+			time2 = time.strftime("%I:%M %p",time.strptime(t2, "%H:%M"))
+			final = time1 + "-" + time2
+			slots.append({'Sched':final,'Total':s.TotalSlot,'Taken':s.TakenSlot,'Available':s.TotalSlot-s.TakenSlot,'Name':s.Schedule})
+			tuesday.append(slots)
+
+		elif sched_list[0] == 'W':
+			a = sched_list[1].replace("+", ":")
+			b = a.split('-')
+			t1 = b[0]
+			t2 = b[1]
+			time1 = time.strftime("%I:%M",time.strptime(t1, "%H:%M"))
+			time2 = time.strftime("%I:%M %p",time.strptime(t2, "%H:%M"))
+			final = time1 + "-" + time2
+			slots.append({'Sched':final,'Total':s.TotalSlot,'Taken':s.TakenSlot,'Available':s.TotalSlot-s.TakenSlot,'Name':s.Schedule})
+			wednesday.append(slots)
+
+		elif sched_list[0] == 'H':
+			a = sched_list[1].replace("+", ":")
+			b = a.split('-')
+			t1 = b[0]
+			t2 = b[1]
+			time1 = time.strftime("%I:%M",time.strptime(t1, "%H:%M"))
+			time2 = time.strftime("%I:%M %p",time.strptime(t2, "%H:%M"))
+			final = time1 + "-" + time2
+			slots.append({'Sched':final,'Total':s.TotalSlot,'Taken':s.TakenSlot,'Available':s.TotalSlot-s.TakenSlot,'Name':s.Schedule})
+			thursday.append(slots)
+
+		elif sched_list[0] == 'F':
+			a = sched_list[1].replace("+", ":")
+			b = a.split('-')
+			t1 = b[0]
+			t2 = b[1]
+			time1 = time.strftime("%I:%M",time.strptime(t1, "%H:%M"))
+			time2 = time.strftime("%I:%M %p",time.strptime(t2, "%H:%M"))
+			final = time1 + "-" + time2
+			slots.append({'Sched':final,'Total':s.TotalSlot,'Taken':s.TakenSlot,'Available':s.TotalSlot-s.TakenSlot,'Name':s.Schedule})
+			friday.append(slots)
+
+		slots = []
+
+	return render(request, 'FacultyTech/FacultyTechLabReport.html',{'monday':monday,'tuesday':tuesday,'wednesday':wednesday,'thursday':thursday,'friday':friday})
+
 
 def FacultyTechTimeslotReport(request):
+	slotid = request.session['slotid']
+
+	residency = StudentResidencySchedule.objects.filter(Schedule=slotid)
+	print(residency)
+	student_list = residency.values_list('Student')
+	student_info = []
+	for s in student_list:
+		str = ''.join(s)
+		user = User.objects.get(NFCUniqueID=str)
+		student_info.append({'ID':user.UserID,'Name':user.Name,'Group':user.group.GroupName})
+
+
+	return render(request, 'FacultyTech/FacultyTechTimeslotReport.html',{'student_info':student_info})
 	return render(request, 'FacultyTech/FacultyTechTimeslotReport.html')
 
 def FacultyTechGroupsInventory(request):

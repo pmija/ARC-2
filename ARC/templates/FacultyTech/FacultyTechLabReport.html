@@ -11,7 +11,21 @@
     <title>ARC | </title>
 
   {% include 'import-css.html' %}
+  <style>
+  .btn {
+  border: none;
+  outline: none;
+  padding: 10px 16px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  }
 
+    /* Style the active class (and buttons on mouse-over) */
+    .pressed, .btn:hover {
+      background-color: #4CAF50;
+      color: white;
+    }
+</style>
   </head>
 
   <body class="nav-md">
@@ -72,10 +86,18 @@
 				</div>
 
 			  <div style="margin-top:0px;" class="ln_solid"></div>
-		    
+              <!-- Control buttons -->
+                <div id="myBtnContainer">
+                  <button class="btn pressed" onclick="M()">M</button>
+                  <button class="btn" onclick="T()">T</button>
+                  <button class="btn" onclick="W()">W</button>
+                  <button class="btn" onclick="H()">H</button>
+                  <button class="btn" onclick="F()">F</button>
+                </div>
 
-				<!-- AUDIT -->
-			  <div style="margin-top:3%;" id="audit">
+				<!-- M -->
+			  <div style="margin-top:0%; display: none;" id="M">
+                  <br><h4 id="title_table" align="center" style="margin-top:0px;"><b>Monday</b></h4>
 				<div class="table-responsive">
 				<table id="table1" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
 					<thead style="background-color: #4CAF50;color:white">
@@ -89,23 +111,159 @@
 					</thead>
 
 					<tbody>
-            {%for b in audit %}
-            <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="actions"><button type="submit" name="user_id" value= class="btn btn-info">View</button>
-            </tr>
-            {%endfor%}
-					</tbody>
-				</table>
-				</div>
-			  </div>
+                    {%for m in monday %}
+                    <tr>
+                    {%for key in m%}
+                    <form method="POST" action="{% url 'FacultyTech/LabReport'%}">{%csrf_token%}
+                    <td>{{key.Sched}}</td>
+                    <td>{{key.Total}}</td>
+                    <td>{{key.Taken}}</td>
+                    <td>{{key.Available}}</td>
+                    <td class="actions"><button type="submit" name="slotid" value={{key.Name}} class="btn">View</button>
+                    </tr>
+                      </form>
+                    {%endfor%}
+                    {%endfor%}
+        					</tbody>
+        				</table>
+        				</div>
+        			  </div>
+                  <!-- T -->
+                <div style="margin-top:%; display: none;" id="T">
+                    <br><h4 id="title_table" align="center" style="margin-top:0px;"><b>Tuesday</b></h4>
+                  <div class="table-responsive">
+                  <table id="table1" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
+                      <thead style="background-color: #4CAF50;color:white">
+                        <tr>
+                          <th class="column-title">Timeslot</th>
+                          <th class="column-title">Total Slots</th>
+                          <th class="column-title">Taken Slots</th>
+                          <th class="column-title">Available Slots</th>
+                          <th class="column-title">Actions</th>
+                        </tr>
+                      </thead>
 
+                      <tbody>
+                          {%for m in tuesday %}
+                          <tr>
+                          {%for key in m%}
+                          <form method="POST" action="{% url 'FacultyTech/LabReport'%}">{%csrf_token%}
+                          <td>{{key.Sched}}</td>
+                          <td>{{key.Total}}</td>
+                          <td>{{key.Taken}}</td>
+                          <td>{{key.Available}}</td>
+                          <td class="actions"><button type="submit" name="slotid" value={{key.Name}} class="btn">View</button>
+                          </tr>
+                            </form>
+                          {%endfor%}
+                          {%endfor%}
+                              </tbody>
+                          </table>
+                          </div>
+                        </div>
 
+                        <!-- W -->
+                      <div style="margin-top:%; display: none;" id="W">
+                          <br><h4 id="title_table" align="center" style="margin-top:0px;"><b>Wednesday</b></h4>
+                        <div class="table-responsive">
+                        <table id="table1" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
+                            <thead style="background-color: #4CAF50;color:white">
+                              <tr>
+                                <th class="column-title">Timeslot</th>
+                                <th class="column-title">Total Slots</th>
+                                <th class="column-title">Taken Slots</th>
+                                <th class="column-title">Available Slots</th>
+                                <th class="column-title">Actions</th>
+                              </tr>
+                            </thead>
 
-			  
+                            <tbody>
+                                {%for m in wednesday %}
+                                <tr>
+                                {%for key in m%}
+                                <form method="POST" action="{% url 'FacultyTech/LabReport'%}">{%csrf_token%}
+                                <td>{{key.Sched}}</td>
+                                <td>{{key.Total}}</td>
+                                <td>{{key.Taken}}</td>
+                                <td>{{key.Available}}</td>
+                                <td class="actions"><button type="submit" name="slotid" value={{key.Name}} class="btn">View</button>
+                                </tr>
+                                  </form>
+                                {%endfor%}
+                                {%endfor%}
+                                    </tbody>
+                                </table>
+                                </div>
+                              </div>
+
+                              <!-- H -->
+                            <div style="margin-top:%; display: none;" id="H">
+                                <br><h4 id="title_table" align="center" style="margin-top:0px;"><b>Thursday</b></h4>
+                              <div class="table-responsive">
+                              <table id="table1" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
+                                  <thead style="background-color: #4CAF50;color:white">
+                                    <tr>
+                                      <th class="column-title">Timeslot</th>
+                                      <th class="column-title">Total Slots</th>
+                                      <th class="column-title">Taken Slots</th>
+                                      <th class="column-title">Available Slots</th>
+                                      <th class="column-title">Actions</th>
+                                    </tr>
+                                  </thead>
+
+                                  <tbody>
+                                      {%for m in thursday %}
+                                      <tr>
+                                      {%for key in m%}
+                                      <form method="POST" action="{% url 'FacultyTech/LabReport'%}">{%csrf_token%}
+                                      <td>{{key.Sched}}</td>
+                                      <td>{{key.Total}}</td>
+                                      <td>{{key.Taken}}</td>
+                                      <td>{{key.Available}}</td>
+                                      <td class="actions"><button type="submit" name="slotid" value={{key.Name}} class="btn">View</button>
+                                      </tr>
+                                        </form>
+                                      {%endfor%}
+                                      {%endfor%}
+                                          </tbody>
+                                      </table>
+                                      </div>
+                                    </div>
+
+                                    <!-- F -->
+                                  <div style="margin-top:%; display: none;" id="F">
+                                      <br><h4 id="title_table" align="center" style="margin-top:0px;"><b>Friday</b></h4>
+                                    <div class="table-responsive">
+                                    <table id="table1" class="display table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%" align="center">
+                                        <thead style="background-color: #4CAF50;color:white">
+                                          <tr>
+                                            <th class="column-title">Timeslot</th>
+                                            <th class="column-title">Total Slots</th>
+                                            <th class="column-title">Taken Slots</th>
+                                            <th class="column-title">Available Slots</th>
+                                            <th class="column-title">Actions</th>
+                                          </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {%for m in friday %}
+                                            <tr>
+                                            {%for key in m%}
+                                            <form method="POST" action="{% url 'FacultyTech/LabReport'%}">{%csrf_token%}
+                                            <td>{{key.Sched}}</td>
+                                            <td>{{key.Total}}</td>
+                                            <td>{{key.Taken}}</td>
+                                            <td>{{key.Available}}</td>
+                                            <td class="actions"><button type="submit" name="slotid" value={{key.Name}} class="btn">View</button>
+                                            </tr>
+                                              </form>
+                                            {%endfor%}
+                                            {%endfor%}
+                                                </tbody>
+                                            </table>
+                                            </div>
+                                          </div>
+
 			  </div>
 
 
@@ -124,10 +282,68 @@
 
     <!-- jQuery -->
     {% include 'import-js.html' %}
-	<script>
+    <script>
+    $('#M').show();
+    // Get the container element
+    var btnContainer = document.getElementById("myBtnContainer");
+
+    // Get all buttons with class="btn" inside the container
+    var btns = btnContainer.getElementsByClassName("btn");
+    console.log(btns);
+    // Loop through the buttons and add the active class to the current/clicked button
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function() {
+        var current = document.getElementsByClassName("btn pressed");
+        console.log(current[0])
+        current[0].classList.remove('pressed');
+        this.className += " pressed";
+      });
+    }
+
+	function M() {
+     $('#M').show();
+	 $('#T').hide();
+	 $('#W').hide();
+     $('#H').hide();
+	 $('#F').hide();
+	}
+
+    function T() {
+     $('#T').show();
+	 $('#M').hide();
+	 $('#W').hide();
+     $('#H').hide();
+	 $('#F').hide();
+	}
+
+    function W() {
+     $('#W').show();
+	 $('#T').hide();
+	 $('#M').hide();
+     $('#H').hide();
+	 $('#F').hide();
+	}
+
+    function H() {
+     $('#H').show();
+	 $('#T').hide();
+	 $('#W').hide();
+     $('#M').hide();
+	 $('#F').hide();
+	}
+
+    function F() {
+     $('#F').show();
+	 $('#T').hide();
+	 $('#W').hide();
+     $('#H').hide();
+	 $('#M').hide();
+	}
 
 	$(document).ready(function() {
     $('table.display').dataTable();
+
+
 } )	;
 	</script>
 

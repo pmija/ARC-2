@@ -131,7 +131,12 @@
             {%for b in borrowed%}
             <tr>
                 <td>{{b.DateTime}}</td>
-            <td>{{b.DateTimeReturned}}</td>
+                {%if b.DateTimeReturned == None%}
+            <td>On Hand</td>
+                {%endif%}
+                {%if b.DateTimeReturned != None%}
+                <td>{{b.DateTimeReturned}}</td>
+                {%endif%}
             <td>{{b.ItemID.ItemName}}</td>
             <td>{{b.Quantity}}</td>
             <td>{{b.Borrower.Name}}</td>

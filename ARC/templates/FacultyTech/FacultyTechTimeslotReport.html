@@ -72,7 +72,7 @@
 				</div>
 
 			  <div style="margin-top:0px;" class="ln_solid"></div>
-		    
+
 
 				<!-- AUDIT -->
 			  <div style="margin-top:3%;" id="audit">
@@ -83,15 +83,16 @@
 						<th style="width: 11%">ID Number</th>
             <th style="width: 18%">Full Name</th>
             <th style="width: 14%">Group Name</th>
+
 					  </tr>
 					</thead>
 
 					<tbody>
-            {%for b in audit %}
+            {%for s in student_info %}
             <tr>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{{s.ID}}</td>
+            <td>{{s.Name}}</td>
+            <td>{{s.Group}}</td>
             </tr>
             {%endfor%}
 					</tbody>
@@ -101,7 +102,7 @@
 
 
 
-			  
+
 			  </div>
 
 
