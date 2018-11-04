@@ -1,0 +1,341 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ARC | </title>
+
+  	{% include 'import-css.html' %}
+
+  </head>
+
+  <body class="nav-md">
+    <div class="container body">
+      <div class="main_container">
+         <div class="col-md-3 left_col menu_fixed">
+          <div class="left_col scroll-view">
+            <div class="navbar nav_title">
+              <p class="site_title"><img src="{% static 'production/images/sidebar-logo.png' %}" id="sidebar-logo"> ARC</a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            <!-- menu profile quick info -->
+
+            <!-- /menu profile quick info -->
+
+            <br />
+
+            <!-- sidebar menu -->
+            {% include 'faculty-tech-sidebar.html' %}
+            <!-- /sidebar menu -->
+          </div>
+        </div>
+
+        <!-- top navigation -->
+        <div class="top_nav">
+          <div class="nav_menu">
+            <nav>
+
+                <ul class="nav navbar-nav navbar-right">
+                  <li class="">
+                    <a href="{%url 'logout' %}">Log Out &nbsp;<i class="fa fa-sign-out-alt"></i></a>
+                  </li>
+                </ul>
+
+                  <ul class="nav navbar-nav navbar-left">
+                    <li id="welcome-banner">
+                      Welcome! {{faculty.Name}}
+                    </li>
+                  </ul>
+
+            </nav>
+          </div>
+        </div>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="x_panel">
+                <div class="x_title">
+                  <h2>Manage Students</h2>
+                  <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+
+								<!-- START Table-->
+                <div class="row">
+        					<div class="col-md-12 col-sm-12 col-xs-12">
+
+        						<div class="clearfix">
+
+                    <form method="POST" action="">{% csrf_token %}
+
+          						<table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead style="background-color: #4CAF50; color:white;">
+                          <tr>
+                            <th>Name</th>
+                            <th>Group</th>
+                            <th>Access</th>
+                            <th>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for User in students_set %}
+                          <tr>
+                            <td>{{User.Name}}</td>
+                            <td>{{User.Group}}</td>
+                            {% if Group.GroupStatus == 1 %}
+                            <td>Enabled</td>
+                            {% else %}
+                            <td>Disabled</td>
+                            {% endif %}
+                            <td class="actions"><button type="button" id="{{Group.GroupID}}" class="btn btn-primary" onclick="editClick(this)" data-toggle="modal" data-target=".div-edit-group-modal" value="">&nbsp;Edit Group&nbsp;</button></td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+
+                    </form>
+
+                    </div>
+        					</div>
+
+						      <!-- END Table-->
+
+                  <!-- MODAL FOR USER DETAILS -->
+                  <!-- MODAL FOR USER DETAILS -->
+
+                  <div class="modal fade div-edit-group-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                  <div class="modal-dialog modal-sm" id="edit-group-modal">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                      </button>
+                      <h4 class="modal-title" id="myModalLabel2">Group Information</h4>
+                    </div>
+                    <div class="modal-body">
+
+                    <form method="POST" action="" class="form-horizontal form-label-left">{% csrf_token %}
+
+
+
+                          <div style="margin-left: 10px" class="form-group">
+                            <label class="control-label col-md-2 col-xs-12" for="quantity">Group Name</label>
+                            <div class="col-md-8 col-sm-6 col-xs-12" id="group-name">
+
+                              <!-- AJAX -->
+
+                            </div>
+                          </div>
+
+                          <div style="margin-left: 10px" class="form-group">
+                            <label class="control-label col-md-2 col-xs-12">Laboratory</label>
+                            <div class="col-md-8 col-sm-6 col-xs-12">
+                              <select id="lab" class="form-control" name="lab" required>
+                              </select>
+                            </div>
+                          </div>
+
+                        <br>
+                        <div style="margin-left:20px;" id="edit_member">
+
+                          <div class="form-group">
+                            <div class="col-md-7" style="width:620px;">
+                            <select multiple="multiple" id="non-member" size="8" name="members[]" required>
+
+                              <!-- AJAX -->
+
+                            </select>
+                            </div>
+                          </div>
+
+                        </div>
+
+                    <div class="modal-footer" id="footer-buttons">
+                      <!-- AJAX -->
+                    </div>
+
+                    </form>
+
+                  </div>
+                  </div>
+                  </div>
+
+                  <!-- END MODAL FOR USER DETAILS -->
+                  <!-- END MODAL FOR USER DETAILS -->
+
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page content -->
+
+    {% include 'import-js.html' %}
+
+    <script>
+
+      var membereditor = $('select[name="members[]"]').bootstrapDualListbox({
+        selectedListLabel: 'Current Members',
+        nonSelectedListLabel: 'Available Students'
+      });
+
+      function editClick(elem) {
+        var id = elem.id;
+
+        $.ajax({
+
+          url: "ajax/managegroups",
+          method: "POST",
+          data:{ 'id': id, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val() },
+
+          success: function(data){
+
+            $('#group-name').empty();
+            $('#lab').empty();
+            $('#not-member').empty();
+            $('#footer-buttons').empty();
+            $('#non-member').empty();
+
+            var newdata = JSON.parse(data);
+            console.log(newdata);
+
+            var lab = [];
+            var member = [];
+            var nonmember = [];
+
+            var x = 0;
+            var y = 0;
+            var z = 0;
+
+            for (var i = 1; i < newdata.length; i++) {
+
+              if (newdata[i].model == 'ARC.user' && newdata[i].fields.group == null) {
+
+                nonmember[x] = newdata[i].pk; // store user id
+                nonmember[x+1] = newdata[i].fields.Name;  // store user name
+
+                //console.log(nonmember[x+1]);
+
+                x+=2;
+
+              }
+
+              else if (newdata[i].model == 'ARC.user' && newdata[i].fields.group != null) {
+
+                member[y] = newdata[i].pk;
+                member[y+1] = newdata[i].fields.Name;
+                y+=2;
+
+              }
+
+              else if (newdata[i].model == 'ARC.ref_laboratory') {
+
+                lab[z] = newdata[i].pk;
+                lab[z+1] = newdata[i].fields.LaboratoryName;
+                z+=2;
+
+              }
+            }
+
+            $('#footer-buttons').append(
+
+              '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\
+              <button type="submit" class="btn btn-success" name="submit" value="'+ newdata[0].pk +'">Accept Changes</button>'
+
+            );
+
+            for (var i = 0; i < member.length; i+=2) {
+
+              $('#footer-buttons').append(
+
+                '<input type="hidden" name="orig_member_id[]" value="'+ member[i] +'">'
+
+              );
+
+            }
+
+            $('#group-name').append(
+              '<input type="input" name="groupname" value="'+ newdata[0].fields.GroupName +'" required="required" class="form-control col-md-12 col-xs-12">'
+            );
+
+            $('#lab').append(
+              '<option value="'+ newdata[0].fields.lab[1] +'">'+ newdata[0].fields.lab[0] +'</option>'
+            );
+
+            // All for loops are incremented by 2 because the arrays are
+            // filled with the order of: lab[0] = id, lab[0+1] = description
+            // That means lab[0] = 0, lab[0+1] = cehci, lab[2] = 1, lab[2+1] = cite4d, etc...
+
+            for (var i = 0; i < lab.length; i+=2) { // Populate labs dropdown
+              if (lab[i+1] != newdata[0].fields.lab[0]) {
+
+                $('#lab').append(
+                  '<option value="'+ lab[i] +'">'+ lab[i+1] +'</option>'
+                );
+
+              }
+            }
+
+
+            for (var i = 0; i < nonmember.length; i+=2) { // Populate non member box
+
+                $('#non-member').append(
+                  '<option value="'+ nonmember[i] +'">'+ nonmember[i+1] +'</option>'
+                );
+
+            }
+
+            // ############## START DUAL LIST BOX POPULATE ############## //
+
+            for (var i = 0; i < member.length; i+=2) { // Populate non member box
+
+                $('#non-member').append(
+                  '<option value="'+ member[i] +'" selected="selected">'+ member[i+1] +'</option>'
+                );
+
+            }
+
+            membereditor.bootstrapDualListbox('refresh');
+
+            // ############## END DUAL LIST BOX POPULATE ############## //
+
+          }
+
+        });
+
+      }
+
+    </script>
+
+    {% block check %}
+      {% for c in Check %}
+        {% if c == 'Success' %}
+
+          <script>
+
+            new PNotify({
+              title: 'Done Editing a Group',
+              text: 'You have successfully edited a group!',
+              type: 'success',
+              styling: 'bootstrap3'
+            });
+
+          </script>
+
+        {% endif %}
+      {% endfor %}
+    {% endblock %}
+
+  </body>
+</html>

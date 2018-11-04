@@ -49,7 +49,7 @@
 			  <div class="form-group">
 				<label class="control-label col-md-3 col-sm-3 col-xs-12" for="uniqueid">Unique ID Number</label>
                    <div class="col-md-8 col-sm-6 col-xs-12">
-                      <input type="text" id="uniqueid" required="required" onchange="hello(this)" class="form-control col-md-7 col-xs-12">
+                      <input type="text" id="uniqueid" class="form-control col-md-7 col-xs-12">
                    </div>
               </div>
               <div class="clearfix"></div>
@@ -63,282 +63,57 @@
     </div>
 	{% include 'import-js.html' %}
 	<script>
-	function hello(elem){
-		studentid = elem.value;
-		var currTimeSlot = "";
-		var d = new Date();
-		var hour = d.getHours();
-		var min = d.getMinutes();
-		var sec = d.getSeconds();
-		var day = d.getDay();
-		var actualday = "";
-		var hourmin = hour + ":" + min + ":"+ sec + "";
-		//var hourmin = "7:45:00";
-		var parsedHourMin = Date.parse(hourmin)
-		if (day == 1){ actualday = "M"; }
-		if (day == 2){ actualday = "T"; }
-		if (day == 3){ actualday = "W"; }
-		if (day == 4){ actualday = "H"; }
-		if (day == 5){ actualday = "F"; }
-		if (day == 6){ actualday = "S"; }
-		//actualday = "M";
-
-		time = "9:00:00"
-		parsedTime = Date.parse(time);
-		if (parsedHourMin < parsedTime){
-			currTimeSlot = "7:30-9:00";
-		}
-		else {
-			time = "10:45:00"
-			parsedTime = Date.parse(time);
-			if (parsedHourMin < parsedTime){
-				currTimeSlot = "9:15-10:45";
-			}
-			else{
-				time = "12:30:00"
-				parsedTime = Date.parse(time);
-				if (parsedHourMin < parsedTime){
-					currTimeSlot = "11:00-12:30";
-				}
-				else{
-					time = "14:15:00"
-					parsedTime = Date.parse(time);
-					if (parsedHourMin < parsedTime){
-						currTimeSlot = "12:45-14:15";
+	let nfc;
+	let time = 1000;
+	let prev;
+	window.onload = () =>{
+		setInterval(() =>{
+			$.ajax({
+				url: 'ajax/nfcajax',
+				type: 'GET',
+				success: (response) =>{
+      				var data = JSON.parse(response);
+      				if(data['ready']==true){
+						if(prev !== data['tag']){
+							var elem = document.getElementById('uniqueid');
+							elem.value = data['tag'];
+							nfc = data['tag'];
+							prev = data['tag'];
+							timeinout.getUserInformation(elem);
+							setTimeout(() => {
+								prev = '';
+							}, 5000)
+						}
+      				}
+            	}
+			});
+		}, time);
+	}
+	
+	let timeinout = {
+		getUserInformation: (elem) =>{
+			let id = elem.value;
+			console.log(id)
+			$.ajax({
+				url: "/ajax/getUserTimeInInfo",
+				method: "POST",
+				data:{
+					'id':id,
+					'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
+				},
+				success: (data) =>{
+					let parsedData = JSON.parse(data);
+					if(parsedData.length === 0){
+						console.log('Lab is currently not available')
 					}
 					else{
-						time = "16:00:00"
-						parsedTime = Date.parse(time);
-						if (parsedHourMin < parsedTime){
-							currTimeSlot = "14:30-16:00";
-						}
-						else{
-							time = "17:45:00"
-							parsedTime = Date.parse(time);
-							if (parsedHourMin < parsedTime){
-								currTimeSlot = "16:15-17:45";
-							}
-							else{
-								time = "19:30:00"
-								parsedTime = Date.parse(time);
-								if (parsedHourMin < parsedTime){
-									currTimeSlot = "18:00-19:30";
-								}
-								else{
-									time = "21:15:00"
-									parsedTime = Date.parse(time);
-									if (parsedHourMin < parsedTime){
-										currTimeSlot = "19:45-21:15";
-									}
-									else{
-										currTimeSlot = "La salle is closed";
-									}
-								}
-							}
-						}
+						console.log(parsedData)
 					}
 				}
-			}
+			});
 		}
-
-		/*
-		- Check if student exists
-		- Check if time in or out
-			- If time in, check if nasa sched
-				- if nasa sched, time in lang
-				- else, check if may vacant for slot
-					- if may vacant, time in
-					- else, dont allow
-			- If time out, time out
-		*/
-
-		//CHECK IF STUDENT EXISTS
-		$.ajax({
-			url: "/ajax/getuserinfo",
-			method: "POST",
-			data:{
-				'studentid':studentid,
-				 'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
-			},
-
-			success: function(data){
-				var newdata = JSON.parse(data);
-				console.log(newdata);
-				if (newdata.length != 0){
-					$('#userinfo').empty();
-					$('#userinfo').append('\
-						<div class="wrap">\
-							<div class="left" style="margin-left:30%;float:left;">\
-								<h5 id="time">Time in:</h5><h6></h6>\
-								<h5 id="time2">Time out:</h5><h6></h6>\
-							</div>\
-							<div class="right" style="margin-right:30%;float:right;">\
-								<h5>Name:</h5><h6>'+ newdata[0].fields.Name +'</h6>\
-								<h5>Student No:</h5><h6>'+ newdata[0].fields.IDNumber +'</h6>\
-							</div>\
-						</div>')
-					var lab = newdata[0].fields.Laboratory;
-					var dbid = newdata[0].pk;
-					//CHECK IF TIME IN OR OUT
-					$.ajax({
-						url: "/ajax/gettimein",
-						method: "POST",
-						data:{
-							'dbid':dbid,
-							'studentid':studentid,
-							'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
-						},
-						success: function(data2){
-							var newdata2 = JSON.parse(data2);
-							console.log(newdata2);
-							if (newdata2[0].model == "ARC.studentresidencyschedule"){
-								console.log("Hello");
-								//CHECK IF NASA SCHED OR NOT
-								$.ajax({
-									url: "/ajax/resajax",
-									method: "POST",
-									data:{
-										'studentid':studentid,
-										 'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
-									},
-									success: function(data){
-										var newdata = JSON.parse(data);
-										var tf = false;
-										console.log(newdata.length);
-										for (var i = 0; i < newdata.length; i++){
-											var tosplit = newdata[i].fields.Schedule;
-											tosplit = tosplit.replace("+", ":");
-											console.log(tosplit);
-											tosplit = tosplit.replace("+", ":");
-											console.log(tosplit);
-											var res = tosplit.split("_");
-											var res2 = res[1].split("-");
-											var starttime = res2[0]+":00";
-											var endtime = res2[1]+":00";
-											console.log(actualday + ":" + res[0]);
-											console.log(starttime + ":" + endtime);
-											parsedstarttime = Date.parse(starttime);
-											parsedendtime = Date.parse(endtime);
-											parsedHourMin2 = Date.parse(hourmin);
-											if (actualday == res[0]){
-												if (parsedHourMin2 >= parsedstarttime   &&  parsedHourMin2 <= parsedendtime){
-													tf = true;
-													console.log("yes");
-												}
-											}
-										}
-										if (tf == true){
-											$.ajax({
-												url: "/ajax/inserttimein",
-												method: "POST",
-												data:{
-													'studentid':studentid,
-													'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
-												},
-
-												success: function(data2){
-													var newdata2 = JSON.parse(data2);
-													$('#time').empty();
-													$('#time').append('Time in: </h5><h6>'+newdata2[0].fields.TimeIn+'</h6>')
-													document.getElementById("userinfo").style.visibility = "visible";
-												}
-											});
-										}
-										else{
-											var joincurrtimeslot = "" + actualday + "_" + currTimeSlot;
-											joincurrtimeslot = joincurrtimeslot.replace(":", "+");
-											joincurrtimeslot = joincurrtimeslot.replace(":", "+");
-											$.ajax({
-												url: "/ajax/checkcapajax",
-												method: "POST",
-												data:{
-													'lab':lab,
-													'joincurrtimeslot': joincurrtimeslot,
-													'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
-												},
-												success: function(data){
-													var newdata = JSON.parse(data);
-													console.log(newdata);
-													if (newdata.length == 0){
-														$('#userinfo').empty();
-														$('#userinfo').append('<h2 style="color: red;" align="center">Lab is currently unavailable</h2>')
-														document.getElementById("userinfo").style.visibility = "visible";
-													}
-													else{
-														if (newdata[0].fields.TakenSlot == newdata[0].fields.TotalSlot){
-															$('#userinfo').empty();
-															$('#userinfo').append('<h2 style="color: red;">Lab is full</h2>')
-															document.getElementById("userinfo").style.visibility = "visible";
-														}
-														else{
-															$.ajax({
-																url: "/ajax/inserttimein",
-																method: "POST",
-																data:{
-																	'studentid':studentid,
-																	'csrfmiddlewaretoken':$( 'input[name=csrfmiddlewaretoken]' ).val()
-																},
-
-																success: function(data2){
-																	var newdata2 = JSON.parse(data2);
-																	$('#time').empty();
-																	$('#time').append('Time in: </h5><h6>'+newdata2[0].fields.TimeIn+'</h6>')
-																	document.getElementById("userinfo").style.visibility = "visible";
-																}
-															});
-														}
-													}
-												}
-											});
-										}
-									}
-								});
-
-							}
-							else{
-								$('#time').empty();
-								$('#time').append('Time in: </h5><h6>'+newdata2[0].fields.TimeIn+'</h6>')
-								$('#time2').empty();
-								$('#time2').append('Time out: </h5><h6>'+newdata2[0].fields.TimeOut+'</h6>')
-								document.getElementById("userinfo").style.visibility = "visible";
-							}
-						}
-					});
-				}
-				else{
-					$('#userinfo').empty();
-				}
-				myClick();
-			}
-		});
+	
 	}
-
-	function myClick() {
-	  setTimeout(
-		function() {
-		  $('#userinfo').empty();
-		   $("#uniqueid").val('');
-		   document.getElementById("userinfo").style.visibility = "hidden";
-		}, 5000);
-	}
-
-	$(document).ready(
-
-        function() {
-		setInterval(function() {
-		$.ajax({url: 'ajax/nfcajax',
-            	type: 'GET',
-            	success: function(response) {
-      					var data = JSON.parse(response);
-      					if(data['ready']==true){
-      						var x = document.getElementById('uniqueid');
-      						x.value = data['tag'];
-      						hello(x);
-      					}
-            	}
-	        });
-		}, 1000);
-	});
 
 	</script>
   </body>

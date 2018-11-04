@@ -87,6 +87,7 @@ urlpatterns = [
     url(r'^FacultyTech$', views.FacultyTechDashboard, name='FacultyTech/Dashboard'),
     url(r'^FacultyTech/Calendar$', views.FacultyTechCalendar, name='FacultyTech/Calendar'),
 	url(r'^FacultyTech/Profile$', views.FacultyTechProfile, name='FacultyTech/Profile'),
+	url(r'^FacultyTech/ManageStudents$', views.FacultyTechManageStudents, name='FacultyTech/ManageStudents'),
     #Inventory
     url(r'^FacultyTech/AddItem$', views.FacultyTechAddItem, name='FacultyTech/AddItem'),
     url(r'^FacultyTech/ManageItems$', views.FacultyTechManageItems, name='FacultyTech/ManageItems'),
@@ -119,13 +120,9 @@ urlpatterns = [
     url(r'ajax/borrowitem', views.BorrowItemAjax, name='FacultyTech/BorrowItemAjax'),
     url(r'ajax/manualborrowitem', views.BorrowItemManAjax, name='FacultyTech/BorrowItemManAjax'),
     url(r'ajax/getuserinfo', views.UserInfoAjax, name='FacultyTech/UserInfoAjax'),
-    url(r'ajax/gettimein', views.TimeInOutAjax, name='TimeInOutAjax'),
     url(r'ajax/manageusers', views.EditUserAjax, name='Admin/EditUserAjax'),
     url(r'ajax/managegroups', views.EditGroupAjax, name='Admin/EditGroupAjax'),
     url(r'ajax/schedajax', views.SchedAjax, name='Admin/SchedAjax'),
-	url(r'ajax/resajax', views.ResAjax, name='Admin/ResAjax'),
-    url(r'ajax/inserttimein', views.TimeInAjax, name='Admin/TimeInAjax'),
-    url(r'ajax/checkcapajax', views.CheckCapacityAjax, name='Admin/CheckCapacityAjax'),
     url(r'ajax/setresidency', views.SetResidencyAjax, name='Admin/SetResidencyAjax'),
     url(r'ajax/evaluser', views.EvalUserAjax, name='Admin/EvalUserAjax'),
     url(r'ajax/manageitems', views.ManageItemsAjax, name='FacultyTech/ManageItemsAjax'),
@@ -137,6 +134,7 @@ urlpatterns = [
 	#NEW AJAX KIM
     url(r'ajax/getBorrowed', views.getBorrowed, name='getBorrowed'),
 	url(r'ajax/returnItem', views.returnItem, name='returnItem'),
+	url(r'ajax/getUserTimeInInfo', views.getUserTimeInInfo, name='getUserTimeInInfo'),
 	#NFC
 	url(r'ajax/nfcajax', views.NFCAjax, name='NFCAjax'),
 	url(r'ajax/rfidajax', views.RFIDAjax, name='RFIDAjax'),

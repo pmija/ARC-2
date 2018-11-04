@@ -69,7 +69,9 @@ class ActualResidency(models.Model):
 	DateTime = models.DateField()
 	TimeIn = models.TimeField()
 	TimeOut = models.TimeField(blank=True, null=True)
+	ResidencyType = models.IntegerField(blank=True, null=True)
 	ResidencyStatus = models.IntegerField(blank=True, null=True)
+	Schedule =  models.CharField(max_length=50,default='')
 
 class Ref_Term(models.Model):
 	TermID = models.AutoField(primary_key=True)

@@ -150,15 +150,139 @@ def EditItemAjax(request):
 		item_serialized = serializers.serialize('json', item)
 
 		return JsonResponse(item_serialized, safe=False)
-
-
-		
-		
+	
 #KIM NEW AJAX
+def getUserTimeInInfo(request):
+	if request.method == 'POST':
+		id = request.POST['id']
+		student = User.objects.get(NFCUniqueID=id)
+		studentInfo = User.objects.all().values_list().filter(NFCUniqueID=id)
+		studentLab = studentInfo[0][14]
+		residency = ActualResidency.objects.all().values_list().filter(Student=student, ResidencyStatus=1)
+		if not residency:	
+			timein = datetime.datetime.time(datetime.datetime.now())
+			day = datetime.datetime.today().weekday()
+			if day == 0:
+				schedDay = 'M'
+			elif day == 1:
+				schedDay = 'T'
+			elif day == 2:
+				schedDay = 'W'
+			elif day == 4:
+				schedDay = 'H'
+			elif day == 5:
+				schedDay = 'F'
+				
+			time915 = timein.replace(hour=9, minute=15, second=0, microsecond=0)
+			time1100 = timein.replace(hour=11, minute=0, second=0, microsecond=0)
+			time1245 = timein.replace(hour=12, minute=45, second=0, microsecond=0)
+			time1430 = timein.replace(hour=14, minute=30, second=0, microsecond=0)
+			time1615 = timein.replace(hour=16, minute=15, second=0, microsecond=0)
+			time1800 = timein.replace(hour=18, minute=0, second=0, microsecond=0)
+			time1930 = timein.replace(hour=19, minute=30, second=0, microsecond=0)
+			time2100 = timein.replace(hour=21, minute=0, second=0, microsecond=0)
+			if timein < time915:
+				sched = schedDay + '_07+30-09+00'
+			elif timein < time1100:
+				sched = schedDay + '_09+15-10+45'
+			elif timein < time1245:
+				sched = schedDay + '_11+00-12+30'
+			elif timein < time1430:
+				sched = schedDay + '_12+45-14+15'
+			elif timein < time1615:
+				sched = schedDay + '_14+30-16+00'
+			elif timein < time1800:
+				sched = schedDay + '_16+15-17+45'
+			elif timein < time1930:
+				sched = schedDay + '_18+00-19+30'
+			elif timein < time2100:
+				sched = schedDay + '_19+30-21+00'
+			studentSched = StudentResidencySchedule.objects.all().values_list().filter(Student=id)
+			
+			if studentSched:
+				dummySched = StudentResidencySchedule.objects.all().values_list().filter(Student=id).latest('RefSchedVar', 'StudentSchedVar')
+				max = dummySched[2]
+				residencySched = StudentResidencySchedule.objects.all().values_list().filter(Student=id, Schedule=sched, StudentSchedVar=max)
+				print(residencySched)
+				if residencySched:
+					#type1
+					actualres = ActualResidency(Student=student, DateTime=datetime.datetime.now(), TimeIn=datetime.datetime.now(), ResidencyType=1, ResidencyStatus=1,  Schedule=sched)
+					actualres.save()
+					ares = ActualResidency.objects.all().values_list()
+					inv_ares = ares.aggregate(Max('ActualResidencyID'))
+					ares2 = ActualResidency.objects.filter(ActualResidencyID=inv_ares['ActualResidencyID__max'])
+					res_serialized = serializers.serialize('json', ares2, use_natural_foreign_keys=True)
+					return JsonResponse(res_serialized, safe=False)
+				else:
+					dummyCurrentSched = ResidencyTimeSlot.objects.all().values_list().filter(Laboratory=studentLab).latest('SchedVar')
+					maxCurrentSched = dummyCurrentSched[5]
+					currentSched = ResidencyTimeSlot.objects.all().values_list().filter(Laboratory=studentLab, Schedule=sched, SchedVar=maxCurrentSched)
+					if currentSched:
+						#type2
+						print(currentSched)
+						capacity = currentSched[0][3]
+						takenSlot = currentSched[0][4]
+						print(capacity, takenSlot)
+						if capacity != takenSlot:
+							dummyCurrentSched = ResidencyTimeSlot.objects.all().values_list().filter(Laboratory=studentLab).latest('SchedVar')
+							maxDummyCurrent = dummyCurrentSched[5]
+							print(maxDummyCurrent)
+							currentSched = ResidencyTimeSlot.objects.all().values_list().filter(Laboratory=studentLab, SchedVar=maxDummyCurrent, Schedule=sched)
+							print(currentSched)
+							currentTaken = currentSched[0][4]
+							finalTaken = int(currentTaken) + 1
+							print(finalTaken)
+							ResidencyTimeSlot.objects.filter(Laboratory=studentLab, Schedule=sched, SchedVar=maxDummyCurrent).update(TakenSlot=finalTaken)
+						
+							actualres = ActualResidency(Student=student, DateTime=datetime.datetime.now(), TimeIn=datetime.datetime.now(), ResidencyType=2, ResidencyStatus=1,  Schedule=sched)
+							actualres.save()
+							ares = ActualResidency.objects.all().values_list()
+							inv_ares = ares.aggregate(Max('ActualResidencyID'))
+							ares2 = ActualResidency.objects.filter(ActualResidencyID=inv_ares['ActualResidencyID__max'])
+							res_serialized = serializers.serialize('json', ares2, use_natural_foreign_keys=True)
+							return JsonResponse(res_serialized, safe=False)
+					else:
+						nonexisting = {}
+						res_serialized = serializers.serialize('json', nonexisting, use_natural_foreign_keys=True)
+						return JsonResponse(res_serialized, safe=False)
+		else:
+			timeoutActual = ActualResidency.objects.all().values_list().filter(Student=student, ResidencyStatus=1)
+			actualSched = timeoutActual[0][3]
+			type = timeoutActual[0][5]
+			
+			if type == 1:
+				ActualResidency.objects.filter(Student=student, ResidencyStatus=1).update(TimeOut=datetime.datetime.now(), ResidencyStatus=2)
+				actualResidency = ActualResidency.objects.all().values_list()
+				agg_residency = actualResidency.aggregate(Max('ActualResidencyID'))
+				finalResidency = ActualResidency.objects.filter(ActualResidencyID=agg_residency['ActualResidencyID__max'])
+				res_serialized = serializers.serialize('json', finalResidency, use_natural_foreign_keys=True)
+				return JsonResponse(res_serialized, safe=False)
+			if type == 2:
+				dummyActual = ActualResidency.objects.all().values_list().filter(Student=student, ResidencyStatus=1)
+				dummyActualSched = dummyActual[0][7]
+				
+				dummyCurrentSched = ResidencyTimeSlot.objects.all().values_list().filter(Laboratory=studentLab).latest('SchedVar')
+				maxDummyCurrent = dummyCurrentSched[5]
+				print(maxDummyCurrent)
+				currentSched = ResidencyTimeSlot.objects.all().values_list().filter(Laboratory=studentLab, SchedVar=maxDummyCurrent, Schedule=dummyActualSched)
+				print(currentSched)
+				currentTaken = currentSched[0][4]
+				finalTaken = int(currentTaken) - 1
+				print(finalTaken)
+				ResidencyTimeSlot.objects.filter(Laboratory=studentLab, Schedule=dummyActualSched, SchedVar=maxDummyCurrent).update(TakenSlot=finalTaken)
+				
+				ActualResidency.objects.filter(Student=student, ResidencyStatus=1).update(TimeOut=datetime.datetime.now(), ResidencyStatus=2)
+				actualResidency = ActualResidency.objects.all().values_list()
+				agg_residency = actualResidency.aggregate(Max('ActualResidencyID'))
+				finalResidency = ActualResidency.objects.filter(ActualResidencyID=agg_residency['ActualResidencyID__max'])
+				res_serialized = serializers.serialize('json', finalResidency, use_natural_foreign_keys=True)
+				return JsonResponse(res_serialized, safe=False)
+				
+	
 def getBorrowed(request):
 	if request.method == 'POST':
-		uid = request.POST['id']
-		inv = Inventory.objects.filter(ItemUniqueID=uid)
+		id = request.POST['id']
+		inv = Inventory.objects.filter(ItemUniqueID=id)
 		inventory = AuditTable_Inventory.objects.all().filter(ItemID=inv[0].pk, BorrowStatus=1)
 		item_serialized = serializers.serialize('json', inventory, use_natural_foreign_keys=True)
 		return JsonResponse(item_serialized, safe=False)
@@ -517,52 +641,6 @@ def UserInfoAjax(request):
 
 		return JsonResponse(user_serialized, safe=False)
 
-def TimeInOutAjax(request):
-	if request.method == 'POST':
-		studentid = request.POST['studentid']
-		dbid = request.POST['dbid']
-		print (dbid)
-		stud = User.objects.get(NFCUniqueID=studentid)
-		res = ActualResidency.objects.all().values_list().filter(Student=stud, ResidencyStatus=1)
-		if not res:
-			sched = StudentResidencySchedule.objects.filter(Student=studentid)
-			item_serialized = serializers.serialize('json', sched)
-			return JsonResponse(item_serialized, safe=False)
-		else:
-			ActualResidency.objects.filter(Student=stud, ResidencyStatus=1).update(TimeOut=datetime.datetime.now(),  ResidencyStatus=2)
-			ares = ActualResidency.objects.all().values_list()
-			print(ares)
-			inv_ares = ares.aggregate(Max('ActualResidencyID'))
-			print (inv_ares)
-			ares2 = ActualResidency.objects.filter(ActualResidencyID=inv_ares['ActualResidencyID__max'])
-			print (ares2)
-			res_serialized = serializers.serialize('json', ares2)
-			return JsonResponse(res_serialized, safe=False)
-
-def TimeInAjax(request):
-	if request.method == 'POST':
-		studentid = request.POST['studentid']
-		print(studentid)
-		stud = User.objects.get(NFCUniqueID=studentid)
-		actualres = ActualResidency(Student=stud, DateTime=datetime.datetime.now(), TimeIn=datetime.datetime.now(), ResidencyStatus=1)
-		actualres.save()
-		ares = ActualResidency.objects.all().values_list()
-		print(ares)
-		inv_ares = ares.aggregate(Max('ActualResidencyID'))
-		print (inv_ares)
-		ares2 = ActualResidency.objects.filter(ActualResidencyID=inv_ares['ActualResidencyID__max'])
-		print (ares2)
-		res_serialized = serializers.serialize('json', ares2)
-		return JsonResponse(res_serialized, safe=False)
-
-def CheckCapacityAjax(request):
-	if request.method == 'POST':
-		id = request.POST['lab']
-		currTimeSlot = request.POST['joincurrtimeslot']
-		sched = ResidencyTimeSlot.objects.filter(Laboratory=id, Schedule=currTimeSlot)
-		item_serialized = serializers.serialize('json', sched)
-		return JsonResponse(item_serialized, safe=False)
-
 
 def SchedAjax(request):
 	if request.method == 'POST':
@@ -572,15 +650,7 @@ def SchedAjax(request):
 
 		return JsonResponse(item_serialized, safe=False)
 
-def ResAjax(request):
-	if request.method == 'POST':
-		id = request.POST['studentid']
-		print("Hello: " +id)
-		sched = StudentResidencySchedule.objects.filter(Student=id)
-		print(sched)
-		item_serialized = serializers.serialize('json', sched)
 
-		return JsonResponse(item_serialized, safe=False)
 
 def timeinout(request):
 	if request.method == 'POST':
@@ -1507,6 +1577,14 @@ def FacultyTechReturnItem2(request):
 def FacultyTechBorrowedItems(request):
 	return render(request, 'FacultyTech/FacultyTechBorrowedItems.html')
 
+@login_required
+@user_passes_test(facultytech_check,redirect_field_name='FacultyTech/ManageStudents')
+def FacultyTechManageStudents(request):
+	UserID = User.objects.get(Email=request.user.email)
+	students_set = User.objects.filter(adviser=UserID.UserID)
+	
+	return render(request, 'FacultyTech/FacultyTechManageStudents.html', {'students_set':students_set, 'Check': ['Success']})
+	
 @login_required
 @user_passes_test(facultytech_check,redirect_field_name='FacultyTech/ManageGroups')
 def FacultyTechManageGroups(request):
