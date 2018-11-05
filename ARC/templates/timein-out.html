@@ -115,7 +115,7 @@
 						console.log(parsedData)
 						document.getElementById("userinfo").style.display = "initial";
 						timeinout.hide();
-						if(parsedData[0].fields.TimeOut === null){
+						if(parsedData[0].fields.ResidencyStatus === 1){
 							if (parsedData[0].fields.ResidencyType === 1){
 								type = 'Timed in within residency schedule'
 							}
@@ -171,7 +171,7 @@
 							var finalDiff = tempTime.hours() + tempTime.minutes();
 							$('#userinfo').empty();
 							$('#userinfo').append('\
-								<h2 align="center">Time in</h2>\
+								<h2 align="center">Time out</h2>\
 								<div class="wrap">\
 									<div class="left" style="margin-left:30%;float:left;">\
 										<h5 id="time2">Residency Type:</h5><h6>'+ type +'</h6>\

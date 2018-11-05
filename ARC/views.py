@@ -173,6 +173,8 @@ def getUserTimeInInfo(request):
 			elif day == 5:
 				schedDay = 'F'
 				
+			
+				
 			time915 = timein.replace(hour=9, minute=15, second=0, microsecond=0)
 			time1100 = timein.replace(hour=11, minute=0, second=0, microsecond=0)
 			time1245 = timein.replace(hour=12, minute=45, second=0, microsecond=0)
@@ -183,20 +185,29 @@ def getUserTimeInInfo(request):
 			time2100 = timein.replace(hour=21, minute=0, second=0, microsecond=0)
 			if timein < time915:
 				sched = schedDay + '_07+30-09+00'
+				timeout = time915
 			elif timein < time1100:
 				sched = schedDay + '_09+15-10+45'
+				timeout = time1100
 			elif timein < time1245:
 				sched = schedDay + '_11+00-12+30'
+				timeout = time1245
 			elif timein < time1430:
 				sched = schedDay + '_12+45-14+15'
+				timeout = time1430
 			elif timein < time1615:
 				sched = schedDay + '_14+30-16+00'
+				timeout = time1615
 			elif timein < time1800:
 				sched = schedDay + '_16+15-17+45'
+				timeout = time1800
 			elif timein < time1930:
 				sched = schedDay + '_18+00-19+30'
+				timeout = time1930
 			elif timein < time2100:
 				sched = schedDay + '_19+30-21+00'
+				timeout = time2100
+			
 			studentSched = StudentResidencySchedule.objects.all().values_list().filter(Student=id)
 			
 			if studentSched:
@@ -206,7 +217,7 @@ def getUserTimeInInfo(request):
 				print(residencySched)
 				if residencySched:
 					#type1
-					actualres = ActualResidency(Student=student, DateTime=datetime.datetime.now(), TimeIn=datetime.datetime.now(), ResidencyType=1, ResidencyStatus=1,  Schedule=sched)
+					actualres = ActualResidency(Student=student, DateTime=datetime.datetime.now(), TimeIn=datetime.datetime.now(), TimeOut=timeout, ResidencyType=1, ResidencyStatus=1,  Schedule=sched)
 					actualres.save()
 					ares = ActualResidency.objects.all().values_list()
 					inv_ares = ares.aggregate(Max('ActualResidencyID'))
@@ -234,7 +245,7 @@ def getUserTimeInInfo(request):
 							print(finalTaken)
 							ResidencyTimeSlot.objects.filter(Laboratory=studentLab, Schedule=sched, SchedVar=maxDummyCurrent).update(TakenSlot=finalTaken)
 						
-							actualres = ActualResidency(Student=student, DateTime=datetime.datetime.now(), TimeIn=datetime.datetime.now(), ResidencyType=2, ResidencyStatus=1,  Schedule=sched)
+							actualres = ActualResidency(Student=student, DateTime=datetime.datetime.now(), TimeIn=datetime.datetime.now(), Timeout=datetime.datetime.now(), ResidencyType=2, ResidencyStatus=1,  Schedule=sched)
 							actualres.save()
 							ares = ActualResidency.objects.all().values_list()
 							inv_ares = ares.aggregate(Max('ActualResidencyID'))
