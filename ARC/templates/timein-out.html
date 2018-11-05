@@ -114,7 +114,7 @@
 					else{
 						console.log(parsedData)
 						document.getElementById("userinfo").style.display = "initial";
-						//timeinout.hide();
+						timeinout.hide();
 						if(parsedData[0].fields.TimeOut === null){
 							if (parsedData[0].fields.ResidencyType === 1){
 								type = 'Timed in within residency schedule'
@@ -174,7 +174,7 @@
 								<h2 align="center">Time in</h2>\
 								<div class="wrap">\
 									<div class="left" style="margin-left:30%;float:left;">\
-										<h5 id="time2">Residency Type:</h5><h6>'+ parsedData[0].fields.ResidencyType +'</h6>\
+										<h5 id="time2">Residency Type:</h5><h6>'+ type +'</h6>\
 										<h5 id="time">Time in:</h5><h6>'+ splitin[0] +'</h6>\
 										<h5 id="time">Time out:</h5><h6>'+ splitout[0] +'</h6>\
 										<h5 id="time">Duration:</h5><h6>'+ tempTime.hours() + " hour(s) and " + tempTime.minutes() +' minute(s)</h6>\
@@ -195,7 +195,7 @@
 			setTimeout(() => {
 				$('#userinfo').empty();
 				document.getElementById("userinfo").style.dispaly = "none";
-			}, 3000)
+			}, 5000)
 		}
 	
 	}
