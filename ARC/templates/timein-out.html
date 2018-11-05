@@ -59,9 +59,11 @@
 
     </div>
 
-    <div id="userinfo" style="width:100%; visibility: hidden;" >
+    <div id="userinfo" style="width:100%; display: none;" >
     </div>
+	
 	{% include 'import-js.html' %}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 	<script>
 	let nfc;
 	let time = 1000;
@@ -105,12 +107,95 @@
 					let parsedData = JSON.parse(data);
 					if(parsedData.length === 0){
 						console.log('Lab is currently not available')
+						$('#userinfo').append('<h2 style="color: red;" align="center">Lab is currently unavailable</h2>')
+						document.getElementById("userinfo").style.display = "initial";
+						timeinout.hide();
 					}
 					else{
 						console.log(parsedData)
+						document.getElementById("userinfo").style.display = "initial";
+						//timeinout.hide();
+						if(parsedData[0].fields.TimeOut === null){
+							if (parsedData[0].fields.ResidencyType === 1){
+								type = 'Timed in within residency schedule'
+							}
+							else{
+								type = 'Timed in out of residency schedule'
+							}
+							
+							let timein = parsedData[0].fields.TimeIn;
+							let splitin = timein.split('.')
+							$('#userinfo').empty();
+							$('#userinfo').append('\
+								<h2 align="center">Time in</h2>\
+								<div class="wrap">\
+									<div class="left" style="margin-left:30%;float:left;">\
+										<h5 id="time2">Residency Type:</h5><h6>'+ type +'</h6>\
+										<h5 id="time">Time in:</h5><h6>'+ splitin[0] +'</h6>\
+									</div>\
+									<div class="right" style="margin-right:30%;float:right;">\
+										<h5>Name:</h5><h6>'+ parsedData[0].fields.Student[0] +'</h6>\
+										<h5>Student No:</h5><h6>'+ parsedData[0].fields.Student[2] +'</h6>\
+									</div>\
+								</div>')
+						}
+						else{
+							if (parsedData[0].fields.ResidencyType === 1){
+								type = 'Timed in within residency schedule'
+							}
+							else{
+								type = 'Timed in out of residency schedule'
+							}
+							
+							let timein = parsedData[0].fields.TimeIn;
+							let splitin = timein.split('.')
+							let timeout = parsedData[0].fields.TimeOut;
+							let splitout = timeout.split('.')
+							
+							var start = new Date();
+							var end = new Date();
+							
+							let value_start = splitin[0].split(':')
+							let value_end = splitout[0].split(':')
+
+							start.setHours(value_start[0], value_start[1], value_start[2], 0)
+							end.setHours(value_end[0], value_end[1], value_end[2], 0)
+							
+							let newstart = moment(start).format('MMMM D, YYYY h:mm:ss a');
+							console.log(newstart)
+							let newend = moment(end).format('MMMM D, YYYY h:mm:ss a');
+							console.log(newend)
+							var timeDiff = Math.abs(end.getTime() - start.getTime());
+							
+							var tempTime = moment.duration(timeDiff);
+							var finalDiff = tempTime.hours() + tempTime.minutes();
+							$('#userinfo').empty();
+							$('#userinfo').append('\
+								<h2 align="center">Time in</h2>\
+								<div class="wrap">\
+									<div class="left" style="margin-left:30%;float:left;">\
+										<h5 id="time2">Residency Type:</h5><h6>'+ parsedData[0].fields.ResidencyType +'</h6>\
+										<h5 id="time">Time in:</h5><h6>'+ splitin[0] +'</h6>\
+										<h5 id="time">Time out:</h5><h6>'+ splitout[0] +'</h6>\
+										<h5 id="time">Duration:</h5><h6>'+ tempTime.hours() + " hour(s) and " + tempTime.minutes() +' minute(s)</h6>\
+									</div>\
+									<div class="right" style="margin-right:30%;float:right;">\
+										<h5>Name:</h5><h6>'+ parsedData[0].fields.Student[0] +'</h6>\
+										<h5>Student No:</h5><h6>'+ parsedData[0].fields.Student[2] +'</h6>\
+									</div>\
+								</div>')
+						}
+						
 					}
 				}
 			});
+		},
+		
+		hide: () =>{
+			setTimeout(() => {
+				$('#userinfo').empty();
+				document.getElementById("userinfo").style.dispaly = "none";
+			}, 3000)
 		}
 	
 	}
